@@ -1,0 +1,10 @@
+{
+    "name": "trackmenot", 
+    "license": "MPL 2.0", 
+    "author": "", 
+    "version": "0.1", 
+    "fullName": "trackmenot", 
+    "main": "trackmenot", 
+    "id": "jid1-BbI8N70DA5zQpQ", 
+    "description": "TrackMeNot rebuild with the Add-on SDK"
+}
