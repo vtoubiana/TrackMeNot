@@ -3,7 +3,7 @@
   var tmn_option_engine = '';
   var options = null;
   
-  onclick="toggleTabFrame();"
+
   
   $("#trackmenot-menu-useTab").click(toggleTabFrame);
   
@@ -20,10 +20,10 @@
    }
       
      function toggleTabFrame() {
-        tmn.changeTabStatus(!options.useTab);
-        
-        tmn.saveOptions();
-        TRACKMENOT.Menus.onLoadMenu();      
+        options.useTab = !options.useTab
+        tmn_options = {"options":options};	 	  			 
+        self.port.emit("TMNSaveOptions",tmn_options.options); 
+        loadMenu(tmn_options)
       }
       
       $("#trackmenot-menu-win").click(function() {
@@ -32,25 +32,21 @@
     
       function loadMenu( panel_inputs) {
 
-        options = panel_inputs.options;        
-        tmn_option_query = panel_inputs.query;
-        tmn_option_engine =  panel_inputs.engine;
-        $("#trackmenot-label").html(tmn_option_engine+': '+ tmn_option_query); 
+        options = panel_inputs.options;  
+        if ( panel_inputs.query && panel_inputs.engine )
+            $("#trackmenot-label").html(panel_inputs.query+': '+ panel_inputs.engine); 
 
       
-        var enbTxt = getElement(document,"trackmenot-menu-enabled");	
-        var enbImg = getElement(document,"trackmenot-img-enabled");	
-	      if ( options.enabled) {
-         enbTxt.innerHTML = 'Disable TMN';
-         enbImg.src = "images/skin/off_icon.png";
+	if ( options.enabled) {
+         $("#trackmenot-menu-enabled").html('Disable TMN');
+         $("#trackmenot-img-enabled").attr("src", "images/skin/off_icon.png");
         }  else {
-         enbTxt.innerHTML = 'Enable TMN';
-         enbImg.src = "images/skin/on_icon.png";
+         $("#trackmenot-menu-enabled").html('Enable TMN');
+         $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
         }
     	
-    	  var tabTxt = getElement(document,"trackmenot-menu-useTab");	
-    	  if (options.useTab)  tabTxt.innerHTML = 'Switch to Frame Mode';
-    	  else tabTxt.innerHTML = 'Switch to Tab Mode'
+    	  if (options.useTab)  $("#trackmenot-menu-useTab").html('Switch to Frame Mode');
+    	  else $("#trackmenot-menu-useTab").html('Switch to Tab Mode')
       
       }
 
