@@ -9,35 +9,31 @@ $("#apply-options").click( function() {
     self.port.emit("TMNSaveOptions",tmn_options.options);
     }
 );
+
+$("#show-log").click( function() {	
+    self.port.emit("TMNOptionsLog");
+    }
+);
 	
 
 
 function TMNSetOptionsMenu( tab_inputs) {
     var options = tab_inputs.options;
     var feedList = options.feedList;
-    var checkbox = null;
+    console.log("Enabled: " +options.enabled)
 
+	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
+	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
+	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
+	$("#trackmenot-opt-burstEnabled").prop('checked',options.burstMode);
 
-    checkbox = getElement(document,"trackmenot-opt-enabled");	
-    if (checkbox != null && options.enabled)  checkbox.checked = true;
-    else checkbox.checked =false;
-
-    var checkboxTab = getElement(document,"trackmenot-opt-useTab");	
-    if (checkboxTab != null && options.useTab)  checkboxTab.checked = true;	
-    else checkboxTab.checked =  false;
-
-    var checkboxBurst = getElement(document,"trackmenot-opt-burstMode");	
-    if (checkboxBurst != null && options.burstMode)  checkboxBurst.checked = true;	
-    else checkboxBurst.checked =  false;
-
-    checkbox = getElement(document,"trackmenot-opt-burstEnabled");
-      if (checkbox != null)   checkbox.setAttribute("checked", tmn.dataTMN._burstEnabled);
-      
-    var seedElt= getElement(document,"trackmenot-seed");
-    if(seedElt) seedElt.setAttribute("value",feedList);
+	
+    $("#trackmenot-seed").val(feedList);
+	
+	
     var engines = options.searchEngines.split(',');
     for( var i=0; i< engines.length;i++) 
-        getElement(document,engines[i]).checked = true;
+        $("#"+engines[i]).prop('checked',true);
 
     setFrequencyMenu(options.timeout);
 }
@@ -51,20 +47,11 @@ function setFrequencyMenu(timeout){
     $('#trackmenot-opt-timeout option[value=' +timeout+ ']').prop('selected', true);
 }
 
-
-
-	
-	
-function getElement(doc,aID){
-    return (doc.getElementById) ? doc.getElementById(aID): doc.all[aID];
-} 	
-
 	
 
 	
   
-function showLog() {
-    var logs = JSON.parse(ss.storage.logs-tmn);
+function TMNShowLog(logs) {
     var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';        
     htmlStr += '<th>Engine</th>';
@@ -88,7 +75,7 @@ function showLog() {
         htmlStr += '</font></tr>';
     }
     htmlStr += '</table>';
-    document.getElementById('tmn_logs_container').innerHTML = htmlStr;
+    $('#tmn_logs_container').html(htmlStr);
 }
   
 function clearLog() {
@@ -107,9 +94,11 @@ function validFeed() {
 
 function saveOptions() {
     var options = {};
-    options.enabled =  $("#trackmenot-opt-enabled").checked;
-    options.useTab = $("#trackmenot-opt-useTab").checked;
-    options.burstMode = $("#trackmenot-opt-burstMode").checked; 
+    options.enabled =  $("#trackmenot-opt-enabled").is(':checked');
+	
+	console.log("Saved Enabled: "+options.enabled )
+    options.useTab = $("#trackmenot-opt-useTab").is(':checked');
+    options.burstMode = $("#trackmenot-opt-burstMode").is(':checked'); 
     options.timeout = $("#trackmenot-opt-timeout").val();
     setFrequencyMenu(options.timeout);
 

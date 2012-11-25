@@ -8,7 +8,7 @@
   $("#trackmenot-menu-useTab").click(toggleTabFrame);
   
   function  _cout (msg) { console.log(msg);  }
-  function getElement(doc,aID){ return (doc.getElementById) ? doc.getElementById(aID): doc.all[aID];} 	
+
     
   function toggleOnOff() {         
           if( options.enabled) tmn.stopTMN();
