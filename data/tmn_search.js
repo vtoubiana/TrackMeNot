@@ -180,7 +180,8 @@ TRACKMENOT.TMNInjected = function() {
     }
 	 
  
-    function clickButton(docFrame) {     
+    function clickButton(docFrame) {  
+        console.log("click on button")
         var button = getButtonMap[engine](docFrame)
         clickThroughIfUsingTab();
         clickElt(button);	
@@ -295,9 +296,15 @@ TRACKMENOT.TMNInjected = function() {
             updateStatus(queryToSend);
             nextPress = roll(50,250);
             window.setTimeout( clickButton, nextPress, doc); 
+            window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
     
+    function sendCurrentURL() {
+         var response = {url: window.location.href }; 
+          self.port.emit("TMNUpdateURL",response); 
+        
+    }
     
     function queryToURL ( url, query) {
         if (Math.random() < 0.9)
@@ -334,6 +341,7 @@ TRACKMENOT.TMNInjected = function() {
                     searchBox.selectionEnd = 0;         
                     var chara = new Array();
                     typeQuery( queryToSend, 0, searchBox, chara,docFrame,false )
+                    return null
                 } else {       
                     
                     tmnCurrentURL =  encodedUrl;
@@ -359,30 +367,31 @@ TRACKMENOT.TMNInjected = function() {
     
     function getTMNCurrentURL() {
         request = {tmn: "currentURL"}
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
  
     }     
      
     function sendPageLoaded() {
         request = { tmn: "pageLoaded"} 
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     } 
     
      
     function _log(msg) {
         request = { tmnLog: msg}
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     }
      
     function updateStatus(msg) {
+        console.log("Updating status: "+msg)
         request = { updateStatus: msg } 
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     }     
 
     function setCurrentURLMap( eng, url ) {
         var Eng_URL = eng + "--" + url; 
         request = {setURLMap: Eng_URL } 
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     }
      
      
@@ -395,14 +404,14 @@ TRACKMENOT.TMNInjected = function() {
      
     function clickThroughIfUsingTab() {
         request = {tmn: "useTab" } 
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     }
      
     function notifyUserSearch(eng, url) {
         // Here we update the regecxpfpor the queried engine
         updateURLRegexp(eng, url);
         request = {userSearch: eng } 
-        self.port.emit("TMNREQUEST",request); 
+        self.port.emit("TMNRequest",request); 
     }
   	  	
     return {
@@ -427,8 +436,10 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
-                var response = {url: encodedurl }; 
-                self.port.emit("TMNUpdateURL",response); 
+                if ( encodedurl != null ) {
+                    var response = {url: encodedurl }; 
+                    self.port.emit("TMNUpdateURL",response); 
+                }
             }
             return; // snub them.
         } ,
@@ -450,7 +461,7 @@ TRACKMENOT.TMNInjected = function() {
   
         checkIsActiveTab : function() { 
             request = {tmn: "isActiveTab" } 
-            self.port.emit("TMNREQUEST",request);          
+            self.port.emit("TMNRequest",request);          
         } , 
   
         hasLoaded :function(){
