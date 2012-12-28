@@ -259,8 +259,7 @@ TRACKMENOT.TMNInjected = function() {
   
   
   
-    function typeQuery( queryToSend, currIndex, searchBox, chara,doc,isIncr ) {
-        var win = window;  
+    function typeQuery( queryToSend, currIndex, searchBox, chara,doc,isIncr ) { 
         var nextPress ;
         tmnCurrentQuery = queryToSend;
         console.log("The tab will type: "+queryToSend )
@@ -290,13 +289,17 @@ TRACKMENOT.TMNInjected = function() {
                 }     
                 searchBox.value += queryToSend[currIndex++];
                 nextPress = roll(50,250);
-                win.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
+                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
             }
         } else {
             updateStatus(queryToSend);
             nextPress = roll(50,250);
             window.setTimeout( clickButton, nextPress, doc); 
+<<<<<<< HEAD
             window.setTimeout( sendCurrentURL, nextpress+1)
+=======
+			window.setTimeout( sendPageLoaded, nextPress+2); 
+>>>>>>> Tab bow working
         }
     }
     
@@ -324,11 +327,20 @@ TRACKMENOT.TMNInjected = function() {
         var host = window.location.host;
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
-        _cout('Set the query UR query: ' +encodedUrl);  
+        _cout('Set the query UR query: ' +encodedUrl);   
+        var logEntry = JSON.stringify({
+            'type' : 'query', 
+            "engine" : engine, 
+            'mode' : tmn_mode, 
+            'query' : queryToSend, 
+            'id' : tmn_id
+        });
+        _log(logEntry)
         //chrome.tabs.update(tmn_tab_id, { 'url' : encodedUrl});
-        if ( !host.match(reg) || engine!='google') { //for other engine we should fix the URL stuff
+        if ( !host.match(reg) || engine!='google') { //for other engine we should fix the URL 
             window.location.href = encodedUrl;
             clickThroughIfUsingTab();
+			 return encodedUrl;	
         } else {
                 var docFrame =  document;
                 var searchBox = getSearchBoxMap[engine](docFrame);
@@ -340,30 +352,27 @@ TRACKMENOT.TMNInjected = function() {
                     searchBox.selectionStart = 0;    
                     searchBox.selectionEnd = 0;         
                     var chara = new Array();
+<<<<<<< HEAD
                     typeQuery( queryToSend, 0, searchBox, chara,docFrame,false )
                     return null
                 } else {       
                     
+=======
+                    typeQuery( queryToSend, 0, searchBox, chara,docFrame,false );
+					return null;
+                } else {                  
+>>>>>>> Tab bow working
                     tmnCurrentURL =  encodedUrl;
                     _cout("The searchbox can not be found " )
                     window.location.href = encodedUrl;
                     clickThroughIfUsingTab();
+					return encodedUrl;	
                 }  
         }
-        var logEntry = JSON.stringify({
-            'type' : 'query', 
-            "engine" : engine, 
-            'mode' : tmn_mode, 
-            'query' : queryToSend, 
-            'id' : tmn_id
-        });
-        _log(logEntry)
-        return encodedUrl;	
+       
     } 
     
-    function getTMNCurrentURLRes(response) { 
-            TRACKMENOT.TMNInjected.setTMNCurrentURL(response.url);
-    }
+
     
     function getTMNCurrentURL() {
         request = {tmn: "currentURL"}
@@ -412,22 +421,30 @@ TRACKMENOT.TMNInjected = function() {
         updateURLRegexp(eng, url);
         request = {userSearch: eng } 
         self.port.emit("TMNRequest",request); 
+<<<<<<< HEAD
     }
+=======
+    }    
+	
+	 function setTMNCurrentURL(url) {
+            tmnCurrentURL=  url;     
+            _cout("Current TMN loc: "+ tmnCurrentURL + " Current doc loc: " + window.location.href)
+            //if ( window.location.href == tmnCurrentURL )  {
+				var message = {url: tmnCurrentURL};
+				self.port.emit("TMNUpdateURL", message);
+                sendPageLoaded();
+            //}
+        }
+>>>>>>> Tab bow working
   	  	
     return {
   
-        setTMNCurrentURL : function(url) {
-            tmnCurrentURL=  url;
-            var loc = document.location.href;               
-            _cout("Current TMN loc: "+ tmnCurrentURL + " Current doc loc: " + loc)
-            if ( loc == tmnCurrentURL )  {
-                sendPageLoaded();
-            }
-        },
+
         
         
   
         handleRequest : function(request) {
+			_cout("Received: "+ request)
             if (request.tmnQuery) {       
                 var tmn_query = request.tmnQuery; 
                 old_engine = engine;
@@ -436,10 +453,16 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
+<<<<<<< HEAD
                 if ( encodedurl != null ) {
                     var response = {url: encodedurl }; 
                     self.port.emit("TMNUpdateURL",response); 
                 }
+=======
+				if (encodedurl != null) {
+					window.setTimeout(function() { setTMNCurrentURL(encodedurl)},200);
+				}
+>>>>>>> Tab bow working
             }
             return; // snub them.
         } ,
