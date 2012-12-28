@@ -295,11 +295,7 @@ TRACKMENOT.TMNInjected = function() {
             updateStatus(queryToSend);
             nextPress = roll(50,250);
             window.setTimeout( clickButton, nextPress, doc); 
-<<<<<<< HEAD
             window.setTimeout( sendCurrentURL, nextpress+1)
-=======
-			window.setTimeout( sendPageLoaded, nextPress+2); 
->>>>>>> Tab bow working
         }
     }
     
@@ -352,16 +348,9 @@ TRACKMENOT.TMNInjected = function() {
                     searchBox.selectionStart = 0;    
                     searchBox.selectionEnd = 0;         
                     var chara = new Array();
-<<<<<<< HEAD
-                    typeQuery( queryToSend, 0, searchBox, chara,docFrame,false )
-                    return null
-                } else {       
-                    
-=======
                     typeQuery( queryToSend, 0, searchBox, chara,docFrame,false );
 					return null;
                 } else {                  
->>>>>>> Tab bow working
                     tmnCurrentURL =  encodedUrl;
                     _cout("The searchbox can not be found " )
                     window.location.href = encodedUrl;
@@ -421,9 +410,7 @@ TRACKMENOT.TMNInjected = function() {
         updateURLRegexp(eng, url);
         request = {userSearch: eng } 
         self.port.emit("TMNRequest",request); 
-<<<<<<< HEAD
-    }
-=======
+
     }    
 	
 	 function setTMNCurrentURL(url) {
@@ -435,7 +422,7 @@ TRACKMENOT.TMNInjected = function() {
                 sendPageLoaded();
             //}
         }
->>>>>>> Tab bow working
+
   	  	
     return {
   
@@ -453,16 +440,10 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
-<<<<<<< HEAD
-                if ( encodedurl != null ) {
-                    var response = {url: encodedurl }; 
-                    self.port.emit("TMNUpdateURL",response); 
-                }
-=======
 				if (encodedurl != null) {
 					window.setTimeout(function() { setTMNCurrentURL(encodedurl)},200);
 				}
->>>>>>> Tab bow working
+
             }
             return; // snub them.
         } ,
