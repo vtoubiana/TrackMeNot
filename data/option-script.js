@@ -51,7 +51,9 @@ function setFrequencyMenu(timeout){
 
 	
   
-function TMNShowLog(logs) {
+function TMNShowLog(tmnlogs) {
+	var logs = tmnlogs.logs
+	alert(logs)
     var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';        
     htmlStr += '<th>Engine</th>';
@@ -75,6 +77,7 @@ function TMNShowLog(logs) {
         htmlStr += '</font></tr>';
     }
     htmlStr += '</table>';
+	alert(htmlStr)
     $('#tmn_logs_container').html(htmlStr);
 }
   
@@ -114,6 +117,7 @@ function saveOptions() {
 }
         
 self.port.on("TMNSetOptionsMenu",TMNSetOptionsMenu)
+self.port.on("TMNSendLogs",TMNShowLog)
    
   
 
