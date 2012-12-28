@@ -263,7 +263,7 @@ TRACKMENOT.TMNInjected = function() {
         var nextPress ;
         tmnCurrentQuery = queryToSend;
         console.log("The tab will type: "+queryToSend )
-        clickElt(searchBox);
+        //clickElt(searchBox);
         if (currIndex < queryToSend.length  ) {
             // var suggestElt = getQuerySuggestion(doc);	
             if ( false && Math.random() < 0.02 && suggestElt.length >0 ) {
@@ -273,14 +273,14 @@ TRACKMENOT.TMNInjected = function() {
                 blurElt(searchBox);
                 updateStatus( engine, isIncr, tmn._stripTags(suggestElt[index_].innerHTML) );
                 return;
-            } else {  
-          
+            } else {   
                 if (  currIndex == 0 || queryToSend[currIndex-1]==" " ) {
                     var newWord = queryToSend.substring(currIndex).split(" ")[0];
                     if( searchBox.value.indexOf(newWord)>=0 ) {
                         currIndex+= newWord.length;
                         searchBox.selectionEnd+= newWord.length+1;
                         searchBox.selectionStart =searchBox.selectionEnd;
+						_cout(searchBox.value);
                         updateStatus(searchBox.value);
                         nextPress = roll(50,250);
                         window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
@@ -288,11 +288,13 @@ TRACKMENOT.TMNInjected = function() {
                     }
                 }     
                 searchBox.value += queryToSend[currIndex++];
+				updateStatus(searchBox.value);
                 nextPress = roll(50,250);
                 window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
             }
         } else {
-            updateStatus(queryToSend);
+			_cout(searchBox.value);
+            updateStatus(searchBox.value);
             nextPress = roll(50,250);
             window.setTimeout( clickButton, nextPress, doc); 
             window.setTimeout( sendCurrentURL, nextpress+1)
@@ -323,7 +325,7 @@ TRACKMENOT.TMNInjected = function() {
         var host = window.location.host;
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
-        _cout('Set the query UR query: ' +encodedUrl);   
+        _cout('Set the query URL: ' +encodedUrl + ", host: "+ host);   
         var logEntry = JSON.stringify({
             'type' : 'query', 
             "engine" : engine, 
@@ -332,11 +334,11 @@ TRACKMENOT.TMNInjected = function() {
             'id' : tmn_id
         });
         _log(logEntry)
-        //chrome.tabs.update(tmn_tab_id, { 'url' : encodedUrl});
-        if ( !host.match(reg) || engine!='google') { //for other engine we should fix the URL 
+        if ( !host.match(reg) || engine!='google') { //Window.location is not up to date -_-
             window.location.href = encodedUrl;
+			updateStatus(queryToSend);
             clickThroughIfUsingTab();
-			 return encodedUrl;	
+			return encodedUrl;	
         } else {
                 var docFrame =  document;
                 var searchBox = getSearchBoxMap[engine](docFrame);
@@ -381,7 +383,7 @@ TRACKMENOT.TMNInjected = function() {
     }
      
     function updateStatus(msg) {
-        console.log("Updating status: "+msg)
+        _cout("Updating status: "+msg)
         request = { updateStatus: msg } 
         self.port.emit("TMNRequest",request); 
     }     
@@ -394,6 +396,7 @@ TRACKMENOT.TMNInjected = function() {
      
      
     function clickThroughIfUsingTabRes(response) {
+		return;
          if  (response.tmnUseTab && Math.random() < 0.2 )   {
                 var timer = 1000 + Math.random()*3000;
                 setTimeout( TRACKMENOT.TMNClick.simulateClick, timer, engine, tmn_id ); 
@@ -415,7 +418,7 @@ TRACKMENOT.TMNInjected = function() {
 	
 	 function setTMNCurrentURL(url) {
             tmnCurrentURL=  url;     
-            _cout("Current TMN loc: "+ tmnCurrentURL + " Current doc loc: " + window.location.href)
+            _cout("Current TMN loc: "+ tmnCurrentURL )
             //if ( window.location.href == tmnCurrentURL )  {
 				var message = {url: tmnCurrentURL};
 				self.port.emit("TMNUpdateURL", message);
@@ -441,7 +444,8 @@ TRACKMENOT.TMNInjected = function() {
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
 				if (encodedurl != null) {
-					window.setTimeout(function() { setTMNCurrentURL(encodedurl)},200);
+					_cout("scheduling next set url");				
+					setTMNCurrentURL(encodedurl);
 				}
 
             }
