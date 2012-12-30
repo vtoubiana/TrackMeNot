@@ -3,6 +3,7 @@
     body {
         min-width:257px;
         max-width:257px;
+		max-width:157px;
         overflow-x:hidden;
     }
 
@@ -10,32 +11,31 @@
 </style>
     <body>
         <table>
-            <tr>         
-                <td >
+            <!--<tr>  
+				<td>       
+                <hbox>
                     <img  width='16' height='16' src="images/skin/tmn.png" />
-                </td>  
-                <td id="trackmenot-label">
-                </td>
-            </tr>
+                	<label valign=center id="trackmenot-label" cropt=right>
+                </hbox>
+				</td>
+            </tr>-->
             <tr>
-                <td>
+            	<td>
+                <hbox>
                     <img  width='16' height='16'  id="trackmenot-img-enabled" src="images/skin/on_icon.png" />
-                </td>
-                <td>
                     <label  id="trackmenot-enabled" > 
-                </td>
+                </hbox>
+				</td>
             </tr>
             <tr >
-                <td >
-                    <img  width='16' height='16' src="images/skin/option_icon.png" />
-                </td>
-                <td>
-                    <label  id="trackmenot-menu-win" > Options </label>
-                </td>
+            	<td>
+	                <hbox >
+	                    <img  width='16' height='16' src="images/skin/option_icon.png" />
+	                    <label  id="trackmenot-menu-win" > Options </label>
+	                </hbox>
+				</td>
             </tr>
             <tr>
-                <td>
-                </td>
                 <td>
                     <label id="trackmenot-menu-useTab" >  
                 </td>

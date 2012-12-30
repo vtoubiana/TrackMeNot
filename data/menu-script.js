@@ -33,19 +33,19 @@
 
         options = panel_inputs.options;  
         if ( panel_inputs.query && panel_inputs.engine )
-            $("#trackmenot-label").html(panel_inputs.engine + ':' + panel_inputs.query); 
+            $("#trackmenot-label").html(panel_inputs.engine + " '"+ panel_inputs.query+"'"); 
 
       
 	if ( options.enabled) {
-         $("#trackmenot-enabled").html('Disable TMN');
+         $("#trackmenot-enabled").html('Disable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/off_icon.png");
         }  else {
-         $("#trackmenot-enabled").html('Enable TMN');
+         $("#trackmenot-enabled").html('Enable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
         }
     	
-    	  if (options.useTab)  $("#trackmenot-menu-useTab").html('Switch to Frame Mode');
-    	  else $("#trackmenot-menu-useTab").html('Switch to Tab Mode')
+    	  if (options.useTab)  $("#trackmenot-menu-useTab").html('Stealth');
+    	  else $("#trackmenot-menu-useTab").html('Tab')
       
       }
 

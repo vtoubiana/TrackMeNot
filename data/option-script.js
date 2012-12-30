@@ -11,7 +11,12 @@ $("#apply-options").click( function() {
 );
 
 $("#show-log").click( function() {	
-    self.port.emit("TMNOptionsLog");
+    self.port.emit("TMNOptionsShowLog");
+    }
+);
+
+$("#clear-log").click( function() {	
+    self.port.emit("TMNOptionsClearLog");
     }
 );
 	
@@ -53,7 +58,6 @@ function setFrequencyMenu(timeout){
   
 function TMNShowLog(tmnlogs) {
 	var logs = tmnlogs.logs
-	alert(logs)
     var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';        
     htmlStr += '<th>Engine</th>';
@@ -77,13 +81,10 @@ function TMNShowLog(tmnlogs) {
         htmlStr += '</font></tr>';
     }
     htmlStr += '</table>';
-	alert(htmlStr)
     $('#tmn_logs_container').html(htmlStr);
 }
   
-function clearLog() {
-    tmn.clearLog();
-}
+
 
 function validFeed() {
     var newFeed= getElement(document,"trackmenot-seed").value;
