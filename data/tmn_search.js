@@ -45,6 +45,40 @@ TRACKMENOT.TMNInjected = function() {
     }
       	
   
+ var finalUrls = new Array();  
+    var testAdMap = {
+        google : function(anchorClass,anchorlink) {
+            return ( anchorlink
+                && anchorClass=='l' 
+                && anchorlink.indexOf("http")==0 
+                && anchorlink.indexOf('https')!=0);
+        },
+        yahoo : function(anchorClass,anchorlink) {
+            return ( anchorClass=='"yschttl spt"' || anchorClass=='yschttl spt');
+        },
+        aol : function(anchorClass,anchorlink) {
+            return (anchorClass=='"find"' || anchorClass=='find'
+                && anchorlink.indexOf('https')!=0 && anchorlink.indexOf('aol')<0 );
+        },
+        bing : function(anchorClass,anchorlink) {
+            return ( anchorlink
+                && anchorlink.indexOf('http')==0 
+                && anchorlink.indexOf('https')!=0 
+                && anchorlink.indexOf('msn')<0 
+                && anchorlink.indexOf('live')<0 
+                && anchorlink.indexOf('bing')<0 
+                && anchorlink.indexOf('microsoft')<0
+                && anchorlink.indexOf('WindowsLiveTranslator')<0 );
+        },
+        baidu : function(anchorClass,anchorlink) {
+            return ( anchorlink
+                && anchorlink.indexOf('baidu')<0 
+                && anchorlink.indexOf('https')!=0  );
+        }
+    }
+  	
+  	
+
 
     
     	
@@ -178,13 +212,54 @@ TRACKMENOT.TMNInjected = function() {
         }
         return false;
     }
+	
+	
+  
+
+      function simulateClick( engine ) {
+     
+            var clickIndex = roll(0,9);   
+            if ( !document || document == "undefined" ) return;
+            var pageLinks = document.getElementsByTagName("a");
+      
+            alert( 'There are ' + pageLinks.length + ' on the result page'  );
+      
+            var j = 0;
+            for ( var i = 0; i < pageLinks.length; i++) {
+                if (pageLinks[i].hasAttribute("orighref")) 
+                    anchorLink = pageLinks[i].getAttribute("orighref");
+                else 
+                    anchorLink = pageLinks[i].getAttribute("href");
+                anchorClass = pageLinks[i].getAttribute("class");
+                var link = _stripTags(pageLinks[i].innerHTML);
+                if (testAdMap[engine](anchorClass,anchorLink) ) {  
+                    j++
+                    if ( j == clickIndex ) {
+                        var logEntry = JSON.stringify({
+                            'type' : 'click', 
+                            "engine" : engine,  
+                            'query' : link, 
+                            'id':tmn_id
+                        });
+                        _log(logEntry)	        
+                        try {     
+                            clickElt(pageLinks[i])
+                        } catch (e) {
+                            alert("error opening click-through request for " + e);
+                        }
+                        return;
+                    }
+                } 
+            }   
+        }   
+    
 	 
  
     function clickButton(docFrame) {  
         console.log("click on button")
         var button = getButtonMap[engine](docFrame)
-        clickThroughIfUsingTab();
         clickElt(button);	
+		clickThrough();
         sendPageLoaded();
     }
   
@@ -337,7 +412,7 @@ TRACKMENOT.TMNInjected = function() {
         if ( !host.match(reg) || engine!='google') { //Window.location is not up to date -_-
             window.location.href = encodedUrl;
 			updateStatus(queryToSend);
-            clickThroughIfUsingTab();
+            clickThrough();
 			return encodedUrl;	
         } else {
                 var docFrame =  document;
@@ -356,7 +431,7 @@ TRACKMENOT.TMNInjected = function() {
                     tmnCurrentURL =  encodedUrl;
                     _cout("The searchbox can not be found " )
                     window.location.href = encodedUrl;
-                    clickThroughIfUsingTab();
+                    clickThrough();
 					return encodedUrl;	
                 }  
         }
@@ -395,18 +470,13 @@ TRACKMENOT.TMNInjected = function() {
     }
      
      
-    function clickThroughIfUsingTabRes(response) {
-		return;
-         if  (response.tmnUseTab && Math.random() < 0.2 )   {
-                var timer = 1000 + Math.random()*3000;
-                setTimeout( TRACKMENOT.TMNClick.simulateClick, timer, engine, tmn_id ); 
+    function clickThrough() {
+         if  (Math.random() < 20.2 )   {
+                var timer = 100 + Math.random()*300;
+                setTimeout( function() {simulateClick(engine)}, timer  ); 
          }
     } 
-     
-    function clickThroughIfUsingTab() {
-        request = {tmn: "useTab" } 
-        self.port.emit("TMNRequest",request); 
-    }
+
      
     function notifyUserSearch(eng, url) {
         // Here we update the regecxpfpor the queried engine
@@ -484,7 +554,7 @@ TRACKMENOT.TMNInjected = function() {
     }
 }();
 
-self.port.on("useTabRes",TRACKMENOT.TMNInjected.clickThroughIfUsingTabRes);
+
 self.port.on("isActiveRes",TRACKMENOT.TMNInjected.checkIsActiveTabRes );
 self.port.on("TMNTabRequest",  TRACKMENOT.TMNInjected.handleRequest  );
 self.port.on("TMNCurrentURLRes",TRACKMENOT.TMNInjected.getTMNCurrentURLRes);
