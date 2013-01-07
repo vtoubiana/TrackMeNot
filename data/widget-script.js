@@ -1,6 +1,7 @@
 
 function updateText(text) {
       document.getElementById("tmn-text").innerHTML = text
+      console.log("Updating text on widget with: "+ text)
 }
   
 function UpdateIcon(url) {

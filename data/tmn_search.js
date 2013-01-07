@@ -45,7 +45,7 @@ TRACKMENOT.TMNInjected = function() {
     }
       	
   
- var finalUrls = new Array();  
+    var finalUrls = new Array();  
     var testAdMap = {
         google : function(anchorClass,anchorlink) {
             return ( anchorlink
@@ -144,11 +144,11 @@ TRACKMENOT.TMNInjected = function() {
      
     function updateURLRegexp( eng, url) {
         var regex = regexMap[eng];
-        _cout("  regex: "+regex+"  ->\n                   "+url);
+        cout("  regex: "+regex+"  ->\n                   "+url);
         result = url.match(regex);
-        _cout("updateURLRegexp") 
+        cout("updateURLRegexp") 
         if (!result) {
-            _cout("Can't find a regexp matching searched url")
+            cout("Can't find a regexp matching searched url")
             return false;
         }
         
@@ -157,9 +157,9 @@ TRACKMENOT.TMNInjected = function() {
                 result.splice(2,2);
                 result.push(eng);
             }
-            _cout("REGEX_ERROR: "+url);
+            cout("REGEX_ERROR: "+url);
             for (var i in result)
-                _cout(" **** "+i+")"+result[i])
+                cout(" **** "+i+")"+result[i])
         }
 
         // -- EXTRACT DATA FROM THE URL
@@ -186,7 +186,7 @@ TRACKMENOT.TMNInjected = function() {
     function trim(s)  {
         return s.replace(/\n/g,'');
     }
-    function _cout (msg) {
+    function cout (msg) {
         console.log(msg);
     }
     function charOk(ch)  {
@@ -202,6 +202,10 @@ TRACKMENOT.TMNInjected = function() {
         var strip = reg.exec(htmlStr);
         return strip[0];
     }
+    
+    function stripTags(htmlStr) {
+        return htmlStr.replace(/(<([^>]+)>)/ig,"");
+    }
 
  
     function isSafeHost( host ) {
@@ -216,50 +220,53 @@ TRACKMENOT.TMNInjected = function() {
 	
   
 
-      function simulateClick( engine ) {
+    function simulateClick( engine ) {
      
-            var clickIndex = roll(0,9);   
-            if ( !document || document == "undefined" ) return;
-            var pageLinks = document.getElementsByTagName("a");
+        var clickIndex = roll(0,9);   
+        if ( !document || document == "undefined" ) return;
+        var pageLinks = document.getElementsByTagName("a");
       
-            alert( 'There are ' + pageLinks.length + ' on the result page'  );
+        cout( 'There are ' + pageLinks.length + ' on the result page'  );
       
-            var j = 0;
-            for ( var i = 0; i < pageLinks.length; i++) {
-                if (pageLinks[i].hasAttribute("orighref")) 
-                    anchorLink = pageLinks[i].getAttribute("orighref");
-                else 
-                    anchorLink = pageLinks[i].getAttribute("href");
-                anchorClass = pageLinks[i].getAttribute("class");
-                var link = _stripTags(pageLinks[i].innerHTML);
-                if (testAdMap[engine](anchorClass,anchorLink) ) {  
-                    j++
-                    if ( j == clickIndex ) {
-                        var logEntry = JSON.stringify({
-                            'type' : 'click', 
-                            "engine" : engine,  
-                            'query' : link, 
-                            'id':tmn_id
-                        });
-                        _log(logEntry)	        
-                        try {     
-                            clickElt(pageLinks[i])
-                        } catch (e) {
-                            alert("error opening click-through request for " + e);
-                        }
-                        return;
+        var j = 0;
+        for ( var i = 0; i < pageLinks.length; i++) {
+            if (pageLinks[i].hasAttribute("orighref")) 
+                anchorLink = pageLinks[i].getAttribute("orighref");
+            else 
+                anchorLink = pageLinks[i].getAttribute("href");
+            anchorClass = pageLinks[i].getAttribute("class");
+            var link = stripTags(pageLinks[i].innerHTML);
+            if (testAdMap[engine](anchorClass,anchorLink) ) {  
+                j++
+                if ( j == clickIndex ) {
+                    var logEntry = JSON.stringify({
+                        'type' : 'click', 
+                        "engine" : engine,  
+                        'query' : link, 
+                        'id':tmn_id
+                    });
+                    _log(logEntry)	        
+                    try {     
+                        clickElt(pageLinks[i])
+                        cout("link clicked")
+                    } catch (e) {
+                        alert("error opening click-through request for " + e);
                     }
-                } 
-            }   
+                    return;
+                }
+            } 
         }   
+    }   
     
 	 
  
     function clickButton(docFrame) {  
-        console.log("click on button")
+        cout("click on button")
         var button = getButtonMap[engine](docFrame)
         clickElt(button);	
-		clickThrough();
+        cout("button clicked")
+        clickThrough();
+        cout("send page loaded")
         sendPageLoaded();
     }
   
@@ -299,7 +306,7 @@ TRACKMENOT.TMNInjected = function() {
 
 	
     function dectevnt (evt) {
-        tmn._cout('TMN' + evt.target.name+ ':' + evt.type);
+        tmn.cout('TMN' + evt.target.name+ ':' + evt.type);
         setTimeout(dectTableEvnt,3000,engine, tmn);
     }    
 	
@@ -315,9 +322,9 @@ TRACKMENOT.TMNInjected = function() {
                 suggestElts.push(line);
         }
         var suggestions = suggestElts.map(function(x) {
-            return tmn._stripTags(x.innerHTML)
+            return stripTags(x.innerHTML)
         });
-        //_cout( 'TMN ' +suggestions)
+        //cout( 'TMN ' +suggestions)
         return suggestElts.slice();
     }
   
@@ -346,7 +353,7 @@ TRACKMENOT.TMNInjected = function() {
                 selectElt(suggestElt[index_],searchBox);
                 clickElt(suggestElt[index_]);
                 blurElt(searchBox);
-                updateStatus( engine, isIncr, tmn._stripTags(suggestElt[index_].innerHTML) );
+                updateStatus(searchBox.value);
                 return;
             } else {   
                 if (  currIndex == 0 || queryToSend[currIndex-1]==" " ) {
@@ -355,7 +362,7 @@ TRACKMENOT.TMNInjected = function() {
                         currIndex+= newWord.length;
                         searchBox.selectionEnd+= newWord.length+1;
                         searchBox.selectionStart =searchBox.selectionEnd;
-						_cout(searchBox.value);
+                        cout(searchBox.value);
                         updateStatus(searchBox.value);
                         nextPress = roll(50,250);
                         window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
@@ -363,23 +370,25 @@ TRACKMENOT.TMNInjected = function() {
                     }
                 }     
                 searchBox.value += queryToSend[currIndex++];
-				updateStatus(searchBox.value);
+                updateStatus(searchBox.value);
                 nextPress = roll(50,250);
                 window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
             }
         } else {
-			_cout(searchBox.value);
+            cout(searchBox.value);
             updateStatus(searchBox.value);
             nextPress = roll(50,250);
             window.setTimeout( clickButton, nextPress, doc); 
-            window.setTimeout( sendCurrentURL, nextpress+1)
+        // window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
     
     function sendCurrentURL() {
-         var response = {url: window.location.href }; 
-          self.port.emit("TMNUpdateURL",response); 
-        
+        console.log("The current url is: " +window.location.href)
+        var response = {
+            url: window.location.href
+        }; 
+       self.port.emit("TMNUpdateURL",response);      
     }
     
     function queryToURL ( url, query) {
@@ -395,12 +404,10 @@ TRACKMENOT.TMNInjected = function() {
 
   
     function sendQuery(queryToSend, tmn_mode, url)  {
-        
-   
-        var host = window.location.host;
+     var host = window.location.host;
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
-        _cout('Set the query URL: ' +encodedUrl + ", host: "+ host);   
+        cout('Set the query URL: ' +encodedUrl + ", host: "+ host);   
         var logEntry = JSON.stringify({
             'type' : 'query', 
             "engine" : engine, 
@@ -411,29 +418,29 @@ TRACKMENOT.TMNInjected = function() {
         _log(logEntry)
         if ( !host.match(reg) || engine!='google') { //Window.location is not up to date -_-
             window.location.href = encodedUrl;
-			updateStatus(queryToSend);
+            updateStatus(queryToSend);
             clickThrough();
-			return encodedUrl;	
+            return encodedUrl;	
         } else {
-                var docFrame =  document;
-                var searchBox = getSearchBoxMap[engine](docFrame);
-                var searchButton = getButtonMap[engine](docFrame);
-                // tmn_timer = setTimeout(function() { return tmn._rescheduleOnError();},3*tmn._timeout);
-                if ( searchBox && searchButton && engine!='aol' ) {
-                    _cout("The searchbox has been found "+searchBox )
-                    searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 
-                    searchBox.selectionStart = 0;    
-                    searchBox.selectionEnd = 0;         
-                    var chara = new Array();
-                    typeQuery( queryToSend, 0, searchBox, chara,docFrame,false );
-					return null;
-                } else {                  
-                    tmnCurrentURL =  encodedUrl;
-                    _cout("The searchbox can not be found " )
-                    window.location.href = encodedUrl;
-                    clickThrough();
-					return encodedUrl;	
-                }  
+            var docFrame =  document;
+            var searchBox = getSearchBoxMap[engine](docFrame);
+            var searchButton = getButtonMap[engine](docFrame);
+            // tmn_timer = setTimeout(function() { return tmn._rescheduleOnError();},3*tmn._timeout);
+            if ( searchBox && searchButton && engine!='aol' ) {
+                cout("The searchbox has been found "+searchBox )
+                searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 
+                searchBox.selectionStart = 0;    
+                searchBox.selectionEnd = 0;         
+                var chara = new Array();
+                typeQuery( queryToSend, 0, searchBox, chara,docFrame,false );
+                return null;
+            } else {                  
+                tmnCurrentURL =  encodedUrl;
+                cout("The searchbox can not be found " )
+                window.location.href = encodedUrl;
+                clickThrough();
+                return encodedUrl;	
+            }  
         }
        
     } 
@@ -441,60 +448,76 @@ TRACKMENOT.TMNInjected = function() {
 
     
     function getTMNCurrentURL() {
-        request = {tmn: "currentURL"}
+        request = {
+            tmn: "currentURL"
+        }
         self.port.emit("TMNRequest",request); 
  
     }     
      
     function sendPageLoaded() {
-        request = { tmn: "pageLoaded"} 
+        request = {
+            tmn: "pageLoaded"
+        } 
         self.port.emit("TMNRequest",request); 
     } 
     
      
     function _log(msg) {
-        request = { tmnLog: msg}
+        request = {
+            tmnLog: msg
+        }
         self.port.emit("TMNRequest",request); 
     }
      
     function updateStatus(msg) {
-        _cout("Updating status: "+msg)
-        request = { updateStatus: msg } 
+        cout("Updating status: "+msg)
+        request = {
+            updateStatus: msg
+        } 
         self.port.emit("TMNRequest",request); 
     }     
 
     function setCurrentURLMap( eng, url ) {
         var Eng_URL = eng + "--" + url; 
-        request = {setURLMap: Eng_URL } 
+        request = {
+            setURLMap: Eng_URL
+        } 
         self.port.emit("TMNRequest",request); 
     }
      
      
     function clickThrough() {
-         if  (Math.random() < 20.2 )   {
-                var timer = 100 + Math.random()*300;
-                setTimeout( function() {simulateClick(engine)}, timer  ); 
-         }
+        if  (Math.random() < 20.2 )   {
+            var timer = 100 + Math.random()*300;
+            setTimeout( function() {
+                simulateClick(engine)
+                }, timer  ); 
+        }
     } 
 
      
     function notifyUserSearch(eng, url) {
         // Here we update the regecxpfpor the queried engine
         updateURLRegexp(eng, url);
-        request = {userSearch: eng } 
+        request = {
+            userSearch: eng
+        } 
         self.port.emit("TMNRequest",request); 
 
     }    
 	
-	 function setTMNCurrentURL(url) {
-            tmnCurrentURL=  url;     
-            _cout("Current TMN loc: "+ tmnCurrentURL )
-            //if ( window.location.href == tmnCurrentURL )  {
-				var message = {url: tmnCurrentURL};
-				self.port.emit("TMNUpdateURL", message);
-                sendPageLoaded();
-            //}
-        }
+    function setTMNCurrentURL(url) {
+        tmnCurrentURL=  url;     
+        cout("Current TMN loc: "+ tmnCurrentURL )
+        //if ( window.location.href == tmnCurrentURL )  {
+        var message = {
+            url: tmnCurrentURL
+        };
+        self.port.emit("TMNUpdateURL", message);
+        sendPageLoaded();
+    //}
+    }
 
   	  	
     return {
@@ -504,7 +527,7 @@ TRACKMENOT.TMNInjected = function() {
         
   
         handleRequest : function(request) {
-			_cout("Received: "+ request)
+            cout("Received: "+ request)
             if (request.tmnQuery) {       
                 var tmn_query = request.tmnQuery; 
                 old_engine = engine;
@@ -513,32 +536,34 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
-				if (encodedurl != null) {
-					_cout("scheduling next set url");				
-					setTMNCurrentURL(encodedurl);
-				}
+                if (encodedurl != null) {
+                    cout("scheduling next set url");				
+                    setTMNCurrentURL(encodedurl);
+                }
 
             }
             return; // snub them.
         } ,
         
         checkIsActiveTabRes: function(response) {
-                    if (response.isActive){
-                        _cout('Message sent from active tab');
-                        TRACKMENOT.TMNInjected.hasLoaded(); 
-                    } else {
-                        var host = window.location.host; 
-                        var eng = isSafeHost(host);
-                        if ( eng ) {
-                            _cout('User search detected!!');
-                            notifyUserSearch(eng, window.location.href);
-                        }
-                    }
-          }, 
+            if (response.isActive){
+                cout('Message sent from active tab');
+                TRACKMENOT.TMNInjected.hasLoaded(); 
+            } else {
+                var host = window.location.host; 
+                var eng = isSafeHost(host);
+                if ( eng ) {
+                    cout('User search detected!!');
+                    notifyUserSearch(eng, window.location.href);
+                }
+            }
+        }, 
 
   
         checkIsActiveTab : function() { 
-            request = {tmn: "isActiveTab" } 
+            request = {
+                tmn: "isActiveTab"
+            } 
             self.port.emit("TMNRequest",request);          
         } , 
   
@@ -546,7 +571,7 @@ TRACKMENOT.TMNInjected = function() {
             var host = window.location.host; 
             if (!isSafeHost(host) ) {
                 window.stop();  
-                //history.go(-1);
+            //history.go(-1);
             }
             //  sendPageLoaded();
             getTMNCurrentURL();
