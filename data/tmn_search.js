@@ -18,7 +18,8 @@ if(!TRACKMENOT) var TRACKMENOT = {};
   
 
 TRACKMENOT.TMNInjected = function() {
-    var useTab = false;
+    var useTab = false;   
+    var debug_script = true;
     var searchScheduled = false;
     var tmnCurrentQuery = '';
     var tmn =null;
@@ -26,7 +27,7 @@ TRACKMENOT.TMNInjected = function() {
     var tmnCurrentURL = '';
     var engine = '';
     //    var allEvents = ['blur','change','click','dblclick','DOMMouseScroll','focus','keydown','keypress','keyup','load','mousedown','mousemove','mouseout','mouseover','mouseup','select'];
-    //    var tmn_timer = null; 
+
     var hostMap = {
         google : "(www\.google\.(co\.|com\.)?[a-z]{2,3})$",      
         yahoo :  "([a-z.]*?search\.yahoo\.com)$",
@@ -40,12 +41,9 @@ TRACKMENOT.TMNInjected = function() {
         yahoo :  "^(http:\/\/[a-z.]*?search\.yahoo\.com\/search.*?p=)([^&]*)(.*)$",
         bing : "^(http:\/\/www\.bing\.com\/search\?[^&]*q=)([^&]*)(.*)$",
         aol : "^(http:\/\/[a-z0-9.]*?search\.aol\.com\/aol\/search\?.*?q=)([^&]*)(.*)$",
-        baidu : "^(http:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$",
-        ask : "^(http:\/\/www\.ask\.com\/web\?.*?q=)([^&]*)(.*)$"
+        baidu : "^(http:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$"
     }
       	
-  
-    var finalUrls = new Array();  
     var testAdMap = {
         google : function(anchorClass,anchorlink) {
             return ( anchorlink
@@ -140,46 +138,6 @@ TRACKMENOT.TMNInjected = function() {
         }         
     }
     
-
-     
-    function updateURLRegexp( eng, url) {
-        var regex = regexMap[eng];
-        cout("  regex: "+regex+"  ->\n                   "+url);
-        result = url.match(regex);
-        cout("updateURLRegexp") 
-        if (!result) {
-            cout("Can't find a regexp matching searched url")
-            return false;
-        }
-        
-        if (result.length !=4 ){
-            if (result.length ==6 && eng == "google" ) {
-                result.splice(2,2);
-                result.push(eng);
-            }
-            cout("REGEX_ERROR: "+url);
-            for (var i in result)
-                cout(" **** "+i+")"+result[i])
-        }
-
-        // -- EXTRACT DATA FROM THE URL
-        var pre   = result[1];
-        var post  = result[3];
-        var asearch  = pre+'|'+post; 
- 
- 
-        if(eng=="google" && !url.match("^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z^\/]{2,3}\/(search){1}\?.*?[&\?]{1}q=)([^&]*)(.*)$") || url.indexOf("sclient=psy-ab")>0 || url.indexOf("#")>0 )
-            return true;
-        // -- NEW SEARCH URL: ADD TO USER_MAP
-        if (asearch ){
-            setCurrentURLMap(eng, asearch);
-        } 
-        
-        return true;
-    }
- 
-
-
     function roll(min,max){
         return Math.floor(Math.random()*(max+1))+min;
     }
@@ -188,13 +146,12 @@ TRACKMENOT.TMNInjected = function() {
     }
     function cout (msg) {
         console.log(msg);
+    }  
+    function debug (msg) {
+        if (debug_script)
+        console.log("Debug: "+msg);
     }
-    function charOk(ch)  {
-        var bad = new Array(9,10,13,32);
-        for (var i = 0;i < bad.length; i++)
-            if (ch==bad[i]) return false;
-        return true;
-    }
+
   
 
     function stripPhrases(htmlStr)  {
@@ -248,7 +205,7 @@ TRACKMENOT.TMNInjected = function() {
                     _log(logEntry)	        
                     try {     
                         clickElt(pageLinks[i])
-                        cout("link clicked")
+                        debug("link clicked")
                     } catch (e) {
                         alert("error opening click-through request for " + e);
                     }
@@ -263,9 +220,8 @@ TRACKMENOT.TMNInjected = function() {
     function clickButton(document) {  
         var button = getButtonMap[engine](document)
         clickElt(button);	
-        cout("button clicked")
-        window.setTimeout(clickThrough,100);
-        cout("send page loaded")
+
+        debug("send page loaded")
         sendPageLoaded();
     }
   
@@ -303,11 +259,7 @@ TRACKMENOT.TMNInjected = function() {
         return (doc.getElementById) ? doc.getElementById(aID): doc.all[aID];
     } 
 
-	
-    function dectevnt (evt) {
-        tmn.cout('TMN' + evt.target.name+ ':' + evt.type);
-        setTimeout(dectTableEvnt,3000,engine, tmn);
-    }    
+
 	
     function getQuerySuggestion() {
         var suggestFilter =  suggest_filters[engine];
@@ -323,7 +275,7 @@ TRACKMENOT.TMNInjected = function() {
         var suggestions = suggestElts.map(function(x) {
             return stripTags(x.innerHTML)
         });
-        //cout( 'TMN ' +suggestions)
+        debug( 'TMN: ' +suggestions)
         return suggestElts.slice();
     }
   
@@ -381,7 +333,7 @@ TRACKMENOT.TMNInjected = function() {
     }
     
     function sendCurrentURL() {
-        cout("The current url is: " +window.location.href)
+        debug("The current url is: " +window.location.href)
         var response = {url: window.location.href}; 
        self.port.emit("TMNUpdateURL",response);      
     }
@@ -402,7 +354,7 @@ TRACKMENOT.TMNInjected = function() {
      	var host = window.location.host;
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
-        cout('Set the query URL: ' +encodedUrl + ", host: "+ host);   
+        debug('Set the query URL: ' +encodedUrl + ", host: "+ host);   
         var logEntry = JSON.stringify({
             'type' : 'query', 
             "engine" : engine, 
@@ -411,17 +363,15 @@ TRACKMENOT.TMNInjected = function() {
             'id' : tmn_id
         });
         _log(logEntry)
-        if ( !host.match(reg) ) { //Window.location is not up to date -_-
+        if ( !host.match(reg) ) { 
             window.location.href = encodedUrl;
             updateStatus(queryToSend);
-            window.setTimeout(clickThrough,10);
             return encodedUrl;	
         } else {
             var searchBox = getSearchBoxMap[engine]();
             var searchButton = getButtonMap[engine]();
-            // tmn_timer = setTimeout(function() { return tmn._rescheduleOnError();},3*tmn._timeout);
             if ( searchBox && searchButton && engine!='aol' ) {
-                cout("The searchbox has been found "+searchBox )
+                debug("The searchbox has been found "+searchBox )
                 searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 
                 searchBox.selectionStart = 0;    
                 searchBox.selectionEnd = 0;         
@@ -430,13 +380,11 @@ TRACKMENOT.TMNInjected = function() {
                 return null;
             } else {                  
                 tmnCurrentURL =  encodedUrl;
-                cout("The searchbox can not be found " )
+                debug("The searchbox can not be found " )
                 window.location.href = encodedUrl;
-                window.setTimeout(clickThrough,10);
                 return encodedUrl;	
             }  
-        }
-       
+        }   
     } 
     
 
@@ -480,18 +428,10 @@ TRACKMENOT.TMNInjected = function() {
     }
      
      
-    function clickThrough() {
-        if  (Math.random() < 20.2 )   {
-            var timer = 100 + Math.random()*300;
-            setTimeout( function() {
-                simulateClick(engine)
-                }, timer  ); 
-        }
-    } 
 	
     function setTMNCurrentURL(url) {
         tmnCurrentURL=  url;     
-        cout("Current TMN loc: "+ tmnCurrentURL )
+        debug("Current TMN loc: "+ tmnCurrentURL )
         var message = {
             url: tmnCurrentURL
         };
@@ -503,24 +443,25 @@ TRACKMENOT.TMNInjected = function() {
     return {
   
 
-        
+        clickResult : function(request) {
+           cout("Clicking on engine : "+request.tmn_engine )
+           simulateClick(request.tmn_engine);
+        },
         
   
         handleRequest : function(request) {
-            cout("Received: "+ request.tmnQuery + " on engine: "+ request.tmnEngine + " mode: " +request.tmnMode)
+            debug("Received: "+ request.tmnQuery + " on engine: "+ request.tmnEngine + " mode: " +request.tmnMode)
             if (request.tmnQuery) {       
                 var tmn_query = request.tmnQuery; 
-                old_engine = engine;
                 engine = request.tmnEngine;
                 var tmn_mode = request.tmnMode;
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery ( tmn_query, tmn_mode, tmn_URLmap ); 
                 if (encodedurl != null) {
-                    cout("scheduling next set url");				
+                    debug("scheduling next set url");				
                     setTMNCurrentURL(encodedurl);
                 }
-
             }
             return; // snub them.
         } ,
@@ -531,5 +472,5 @@ TRACKMENOT.TMNInjected = function() {
 
 
 
-self.port.on("TMNTabRequest",  TRACKMENOT.TMNInjected.handleRequest  );
-self.port.on("TMNCurrentURLRes",TRACKMENOT.TMNInjected.getTMNCurrentURLRes);
+self.port.on("TMNTabRequest",  TRACKMENOT.TMNInjected.handleRequest  );      
+self.port.on("TMNClickResult",  TRACKMENOT.TMNInjected.clickResult  );
