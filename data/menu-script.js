@@ -7,8 +7,13 @@
   
   $("#trackmenot-menu-useTab").click(toggleTabFrame);
   $("#trackmenot-enabled").click(toggleOnOff);
+  $("#trackmenot-menu-help").click(showHelp);
   
   function  _cout (msg) { console.log(msg);  }
+  
+  function showHelp() {
+    window.open("http://www.cs.nyu.edu/trackmenot/faq.html")
+  }
 
     
   function toggleOnOff() {         

@@ -351,10 +351,12 @@ TRACKMENOT.TMNInjected = function() {
 
   
     function sendQuery(queryToSend, tmn_mode, url)  {
-     	var host = window.location.host;
+     	  var host;
+         try {
+          host = window.location.host;
+        } catch (ex) { host = "";} 
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
-        debug('Set the query URL: ' +encodedUrl + ", host: "+ host);   
         var logEntry = JSON.stringify({
             'type' : 'query', 
             "engine" : engine, 
@@ -363,7 +365,7 @@ TRACKMENOT.TMNInjected = function() {
             'id' : tmn_id
         });
         _log(logEntry)
-        if ( !host.match(reg) ) { 
+        if ( host =="" || !host.match(reg) ) { 
             window.location.href = encodedUrl;
             updateStatus(queryToSend);
             return encodedUrl;	

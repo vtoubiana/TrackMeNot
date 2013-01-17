@@ -15,6 +15,13 @@ $("#show-log").click( function() {
     }
 );
 
+$("#validate-feed").click( function() {	
+    var feeds = $("#trackmenot-seed").val();
+    var param = {"feeds": feeds}
+    self.port.emit("TMNValideFeeds",param);
+    }
+);
+
 $("#clear-log").click( function() {	
     self.port.emit("TMNOptionsClearLog");
     }
@@ -62,6 +69,7 @@ function TMNShowLog(tmnlogs) {
     htmlStr += '<thead><tr align=left>';        
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
+    htmlStr += '<th>URL</th>';
     htmlStr += '<th>Query/Message</th>';
     htmlStr += '<th>Date</th>';
     htmlStr += '</tr></thead>';
@@ -75,7 +83,7 @@ function TMNShowLog(tmnlogs) {
         htmlStr += logs[i].engine ? '<td><b>' + logs[i].engine+ '</b></td>'  : '<td></td>';
         htmlStr += logs[i].mode ? '<td>' + logs[i].mode+ '</td>'  : '<td></td>';
         htmlStr += logs[i].newUrl ? '<td>' + logs[i].newUrl.substring(0,50) + '</td>'  : '<td></td>';
-        htmlStr += logs[i].query ? '<td>' + logs[i].query+ '</td>'  : '<td>'+logs[i].message+'</td>';
+        htmlStr += logs[i].query ? '<td>' + logs[i].query+ '</td>'  : '<td></td>';
         htmlStr += logs[i].date ? '<td>' + logs[i].date+ '</td>'  : '<td></td>';
 
         htmlStr += '</font></tr>';
@@ -86,12 +94,7 @@ function TMNShowLog(tmnlogs) {
   
 
 
-function validFeed() {
-    var newFeed= getElement(document,"trackmenot-seed").value;
-    tmn.updateFeed(newFeed);
-    alert(newFeed)
-}
-  
+
 
 
 
