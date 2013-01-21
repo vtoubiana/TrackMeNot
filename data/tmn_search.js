@@ -221,7 +221,7 @@ TRACKMENOT.TMNInjected = function() {
         var button = getButtonMap[engine](document)
         clickElt(button);	
 
-        debug("send page loaded")
+        cout("send page loaded")
         sendPageLoaded();
     }
   
@@ -392,41 +392,42 @@ TRACKMENOT.TMNInjected = function() {
 
     
     function getTMNCurrentURL() {
-        request = {
+        var reqt = {
             tmn: "currentURL"
         }
-        self.port.emit("TMNRequest",request); 
+        self.port.emit("TMNRequest",req); 
  
     }     
      
     function sendPageLoaded() {
-        request = {
-            tmn: "pageLoaded"
-        } 
-        self.port.emit("TMNRequest",request); 
+        var req = {
+            tmn: "pageLoaded",
+            html: window.document.body.innerHTML
+        }
+        self.port.emit("TMNRequest",req); 
     } 
     
      
     function _log(msg) {
-        request = {
+        var req = {
             tmnLog: msg
         }
-        self.port.emit("TMNRequest",request); 
+        self.port.emit("TMNRequest",req); 
     }
      
     function updateStatus(msg) {
-        request = {
+        var req = {
             updateStatus: msg
         } 
-        self.port.emit("TMNRequest",request); 
+        self.port.emit("TMNRequest",req); 
     }     
 
     function setCurrentURLMap( eng, url ) {
         var Eng_URL = eng + "--" + url; 
-        request = {
+        var req = {
             setURLMap: Eng_URL
         } 
-        self.port.emit("TMNRequest",request); 
+        self.port.emit("TMNRequest",req); 
     }
      
      

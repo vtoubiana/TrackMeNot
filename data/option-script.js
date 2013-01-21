@@ -15,6 +15,11 @@ $("#show-log").click( function() {
     }
 );
 
+$("#trackmenot-opt-showqueries").click( function() {	
+    self.port.emit("TMNOptionsShowQueries");
+    }
+);
+
 $("#validate-feed").click( function() {	
     var feeds = $("#trackmenot-seed").val();
     var param = {"feeds": feeds}
@@ -91,6 +96,19 @@ function TMNShowLog(tmnlogs) {
     htmlStr += '</table>';
     $('#tmn_logs_container').html(htmlStr);
 }
+
+
+function TMNShowQueries(param) {
+	  var queries = param.queries.split(',');
+    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    for (var i=0; i< 3000 && i<queries.length ; i++) {
+        htmlStr += '<tr style="color:Black">';
+        htmlStr += '<td>' +queries[i]+ '<td>'
+        htmlStr += '</tr>';
+    }
+    htmlStr += '</table>';
+    $('#tmn_logs_container').html(htmlStr);
+}
   
 
 
@@ -122,6 +140,7 @@ function saveOptions() {
         
 self.port.on("TMNSetOptionsMenu",TMNSetOptionsMenu)
 self.port.on("TMNSendLogs",TMNShowLog)
+self.port.on("TMNSendQueries",TMNShowQueries)
    
   
 
