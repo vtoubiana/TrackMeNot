@@ -40,16 +40,15 @@ function TMNSetOptionsMenu( tab_inputs) {
     var kw_black_list = options.kw_black_list;
     console.log("Enabled: " +options.enabled)
 
-	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
-	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
-	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
-	$("#trackmenot-opt-burstEnabled").prop('checked',options.burstMode);
+  	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
+  	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
+  	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
+  	$("#trackmenot-opt-burstEnabled").prop('checked',options.burstMode);
 
 	
     $("#trackmenot-seed").val(feedList);
 	  $("#trackmenot-blacklist").val(kw_black_list);
-	  
-	  alert(options.kw_black_list)
+	  $("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
 	
     var engines = options.searchEngines.split(',');
     for( var i=0; i< engines.length;i++) 
@@ -138,8 +137,8 @@ function saveOptions() {
 	 
     options.searchEngines = engines;
     options.feedList = $("#trackmenot-seed").val();
+    options.use_black_list =  $("#trackmenot-use-blacklist").is(':checked');
     options.kw_black_list =  $("#trackmenot-blacklist").val();
-    alert(options.kw_black_list)
     return options;
 }
         
