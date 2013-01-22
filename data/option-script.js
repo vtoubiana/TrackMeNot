@@ -37,6 +37,7 @@ $("#clear-log").click( function() {
 function TMNSetOptionsMenu( tab_inputs) {
     var options = tab_inputs.options;
     var feedList = options.feedList;
+    var kw_black_list = options.kw_black_list;
     console.log("Enabled: " +options.enabled)
 
 	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
@@ -46,7 +47,9 @@ function TMNSetOptionsMenu( tab_inputs) {
 
 	
     $("#trackmenot-seed").val(feedList);
-	
+	  $("#trackmenot-blacklist").val(kw_black_list);
+	  
+	  alert(options.kw_black_list)
 	
     var engines = options.searchEngines.split(',');
     for( var i=0; i< engines.length;i++) 
@@ -135,6 +138,8 @@ function saveOptions() {
 	 
     options.searchEngines = engines;
     options.feedList = $("#trackmenot-seed").val();
+    options.kw_black_list =  $("#trackmenot-blacklist").val();
+    alert(options.kw_black_list)
     return options;
 }
         
