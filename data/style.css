@@ -76,9 +76,10 @@
     button, button:visited {
         display:block;
         background: #E6EAE2;
-        width: 100px;
+        width: 90px;
         padding:1px 0;
         border:1px solid #608925;
+        font-size: 11px;
         text-align:center;
         color:#00446D;
         border-radius: 5px;

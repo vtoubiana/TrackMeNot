@@ -43,9 +43,9 @@ function TMNSetOptionsMenu( tab_inputs) {
   	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
   	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
   	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
-  	$("#trackmenot-opt-burstEnabled").prop('checked',options.burstMode);
-
-	
+    $("#trackmenot-opt-save-logs").prop('checked',options.saveLogs);
+	  $("#trackmenot-opt-disable-logs").prop('checked',options.disableLogs);
+	      
     $("#trackmenot-seed").val(feedList);
 	  $("#trackmenot-blacklist").val(kw_black_list);
 	  $("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
@@ -126,6 +126,8 @@ function saveOptions() {
 	console.log("Saved Enabled: "+options.enabled )
     options.useTab = $("#trackmenot-opt-useTab").is(':checked');
     options.burstMode = $("#trackmenot-opt-burstMode").is(':checked'); 
+    options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked'); 
+    options.saveLogs = $("#trackmenot-opt-save-logs").is(':checked'); 
     options.timeout = $("#trackmenot-opt-timeout").val();
     setFrequencyMenu(options.timeout);
 
