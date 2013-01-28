@@ -17,11 +17,9 @@
 if(!TRACKMENOT) var TRACKMENOT = {};
   
 
-TRACKMENOT.TMNInjected = function() {
-    var useTab = false;   
+TRACKMENOT.TMNInjected = function() { 
     var debug_script = true;
-    var searchScheduled = false;
-    var tmnCurrentQuery = '';
+
     var tmn =null;
     var tmn_id = 0;
     var tmnCurrentURL = '';
@@ -36,13 +34,7 @@ TRACKMENOT.TMNInjected = function() {
         aol : "([a-z0-9.]*?search\.aol\.com)$"
     }
     
-    var  regexMap = {
-        google : "^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z]{2,3}\/(search){1}[\?]?.*?[&\?]{1}q=)([^&]*)(.*)$",      
-        yahoo :  "^(http:\/\/[a-z.]*?search\.yahoo\.com\/search.*?p=)([^&]*)(.*)$",
-        bing : "^(http:\/\/www\.bing\.com\/search\?[^&]*q=)([^&]*)(.*)$",
-        aol : "^(http:\/\/[a-z0-9.]*?search\.aol\.com\/aol\/search\?.*?q=)([^&]*)(.*)$",
-        baidu : "^(http:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$"
-    }
+
       	
     var testAdMap = {
         google : function(anchorClass,anchorlink) {
@@ -149,7 +141,7 @@ TRACKMENOT.TMNInjected = function() {
     }  
     function debug (msg) {
         if (debug_script)
-        console.log("Debug: "+msg);
+            console.log("Debug: "+msg);
     }
 
   
@@ -334,8 +326,10 @@ TRACKMENOT.TMNInjected = function() {
     
     function sendCurrentURL() {
         debug("The current url is: " +window.location.href)
-        var response = {url: window.location.href}; 
-       self.port.emit("TMNUpdateURL",response);      
+        var response = {
+            url: window.location.href
+            }; 
+        self.port.emit("TMNUpdateURL",response);      
     }
     
     function queryToURL ( url, query) {
@@ -351,10 +345,12 @@ TRACKMENOT.TMNInjected = function() {
 
   
     function sendQuery(queryToSend, tmn_mode, url)  {
-     	  var host;
-         try {
-          host = window.location.host;
-        } catch (ex) { host = "";} 
+        var host;
+        try {
+            host = window.location.host;
+        } catch (ex) {
+            host = "";
+        } 
         var reg = new RegExp(hostMap[engine],'g')  
         var encodedUrl = queryToURL(url, queryToSend)
         var logEntry = JSON.stringify({
@@ -391,13 +387,7 @@ TRACKMENOT.TMNInjected = function() {
     
 
     
-    function getTMNCurrentURL() {
-        var reqt = {
-            tmn: "currentURL"
-        }
-        self.port.emit("TMNRequest",req); 
- 
-    }     
+
      
     function sendPageLoaded() {
         var req = {
@@ -447,8 +437,8 @@ TRACKMENOT.TMNInjected = function() {
   
 
         clickResult : function(request) {
-           cout("Clicking on engine : "+request.tmn_engine )
-           simulateClick(request.tmn_engine);
+            cout("Clicking on engine : "+request.tmn_engine )
+            simulateClick(request.tmn_engine);
         },
         
   
