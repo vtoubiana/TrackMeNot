@@ -167,7 +167,13 @@ TRACKMENOT.TMNInjected = function() {
     }
 	
 	
-  
+   function pressEnter(elt) {
+   		cout("Document is: "+ document)
+        var evtDown = document.createEvent("KeyboardEvent");
+        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, 13 );   
+        elt.dispatchEvent(evtDown)	
+		sendPageLoaded();
+   }
 
     function simulateClick( engine ) {
      
@@ -209,7 +215,7 @@ TRACKMENOT.TMNInjected = function() {
     
 	 
  
-    function clickButton(document) {  
+    function clickButton() {  
         var button = getButtonMap[engine](document)
         clickElt(button);	
 
@@ -284,7 +290,7 @@ TRACKMENOT.TMNInjected = function() {
   
   
   
-    function typeQuery( queryToSend, currIndex, searchBox, chara,doc,isIncr ) { 
+    function typeQuery( queryToSend, currIndex, searchBox, chara,isIncr ) { 
         var nextPress ;
         tmnCurrentQuery = queryToSend;
 
@@ -307,19 +313,20 @@ TRACKMENOT.TMNInjected = function() {
                         searchBox.selectionStart =searchBox.selectionEnd;
                         updateStatus(searchBox.value);
                         nextPress = roll(50,250);
-                        window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
+                        window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )
                         return;
                     }
                 }     
                 searchBox.value += queryToSend[currIndex++];
                 updateStatus(searchBox.value);
                 nextPress = roll(50,250);
-                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),doc ,false  )
+                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )
             }
         } else {
             updateStatus(searchBox.value);
             nextPress = roll(50,250);
-            window.setTimeout( clickButton, nextPress, doc); 
+          // window.setTimeout( clickButton, nextPress); 
+		  window.setTimeout(pressEnter, nextPress, searchBox)
         // window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
@@ -361,10 +368,19 @@ TRACKMENOT.TMNInjected = function() {
             'id' : tmn_id
         });
         _log(logEntry)
-        if ( host =="" || !host.match(reg) ) { 
-            window.location.href = encodedUrl;
-            updateStatus(queryToSend);
-            return encodedUrl;	
+		updateStatus(queryToSend);
+        if ( host =="" || !host.match(reg) ) {
+				try { 
+		            window.location.href = encodedUrl;     
+		            return encodedUrl;	
+				} catch (ex) {
+					cout("Caught exception: "+ ex);
+					self.port.emit("TMNSetTabUrl", {
+						"url": encodedUrl
+					});
+					return null;
+				}
+			
         } else {
             var searchBox = getSearchBoxMap[engine]();
             var searchButton = getButtonMap[engine]();
@@ -379,8 +395,17 @@ TRACKMENOT.TMNInjected = function() {
             } else {                  
                 tmnCurrentURL =  encodedUrl;
                 debug("The searchbox can not be found " )
-                window.location.href = encodedUrl;
-                return encodedUrl;	
+				try {
+					window.location.href = encodedUrl;
+                	return encodedUrl;					
+				} catch (ex) {
+					cout("Caught exception: "+ ex);
+					self.port.emit("TMNSetTabUrl", {
+						"url": encodedUrl
+					});
+					return null;
+				}
+
             }  
         }   
     } 
