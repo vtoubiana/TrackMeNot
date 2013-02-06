@@ -167,37 +167,30 @@ TRACKMENOT.TMNInjected = function() {
     }
 	
 	
-   function pressEnter(elt) {
-   		cout("Document is: "+ document)
+    function pressEnter(elt) {
+        var timers =  getTimingArray(); 
         var evtDown = document.createEvent("KeyboardEvent");
         evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 13, 0 );  
-        elt.dispatchEvent(evtDown)	
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtDown);
+        },timers[0])  
         var evtPress= document.createEvent("KeyboardEvent"); 
         evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 13, 0 ); 
-        elt.dispatchEvent(evtPress)	
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtPress);
+        },timers[1])  
         var evtUp = document.createEvent("KeyboardEvent");  
         evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 13, 0 );        
-        elt.dispatchEvent(evtUp)
-        //elt.submit();	
-		    sendPageLoaded();
-   }
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtUp);
+        },timers[2])    
+        window.setTimeout(sendPageLoaded,timers[3])    	
+    }
    
    
-  /* function pressKey(searchBox,chara) {
-   		cout("Document is: "+ document)
-        var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) );  
-        searchBox.dispatchEvent(evtDown)	
-        var evtPress= document.createEvent("KeyboardEvent"); 
-        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) ); 
-        searchBox.dispatchEvent(evtPress)	
-        var evtUp = document.createEvent("KeyboardEvent");  
-        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) );        
-        searchBox.dispatchEvent(evtUp)	
-   }*/
+
    
-      function downKey(chara, searchBox) {
-        cout("Goig to press key: "+ chara)
+    function downKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtDown = document.createEvent("KeyboardEvent");
         evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, charCode );   
@@ -205,7 +198,6 @@ TRACKMENOT.TMNInjected = function() {
     }
     
     function pressKey(chara, searchBox) {
-        cout("Goig to press key: "+ chara)
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtPress = document.createEvent("KeyboardEvent");
         evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 0, charCode );   
@@ -216,16 +208,13 @@ TRACKMENOT.TMNInjected = function() {
         var ev = document.createEvent("Event");
         ev.initEvent("input", true, false);
         searchBox.dispatchEvent(ev);
-      }
+    }
     
-      function releaseKey(chara, searchBox) { 
-        cout("Goig to release key: "+ chara)
+    function releaseKey(chara, searchBox) { 
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtUp = document.createEvent("KeyboardEvent");
         evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 0, charCode ); 
-        cout("Event created "+ chara)  
         searchBox.dispatchEvent(evtUp)	
-          cout("Event dispateched "+ chara) 
     }
 
     function simulateClick( engine ) {
@@ -271,8 +260,7 @@ TRACKMENOT.TMNInjected = function() {
     function clickButton() {  
         var button = getButtonMap[engine](document)
         clickElt(button);	
-
-        cout("send page loaded")
+        debug("send page loaded")
         sendPageLoaded();
     }
   
@@ -281,15 +269,23 @@ TRACKMENOT.TMNInjected = function() {
     function clickElt(elt) {
         var win = window;
         if ( !elt) return;
+        var timers =  getTimingArray(); 
         var evtDown = document.createEvent("MouseEvents");
         evtDown.initMouseEvent("mousedown",true,true,win,0, 0, 0, 0, 0, false, false, false, false, 0, null);     
-        elt.dispatchEvent(evtDown); 
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtDown);
+        },timers[0]) 
         var evtUp = document.createEvent("MouseEvents");
-        evtUp.initMouseEvent("mouseup",true, true,win,0,0,0,0,0, false, false, false, false, 0, null);     
-        elt.dispatchEvent(evtUp);    
+        evtUp.initMouseEvent("mouseup",true, true,win,0,0,0,0,0, false, false, false, false, 0, null);        
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtUp);
+        },timers[1])     
         var evtCl = document.createEvent("MouseEvents");
         evtCl.initMouseEvent("click",true, true,win,0,0,0,0, 0, false, false, false, false, 0, null);     
-        elt.dispatchEvent(evtCl)                             
+        window.setTimeout(function(){
+            elt.dispatchEvent(evtCl);
+        },timers[2])        
+                              
     }
  
  
@@ -340,6 +336,14 @@ TRACKMENOT.TMNInjected = function() {
         }));
         return result;
     }
+    
+    function getTimingArray() {
+        var timers = [];
+        for (var i=0; i<5; i++) {
+            timers.push(Math.floor(Math.random()*30))
+        }
+        return timers.sort();
+    }
   
   
   
@@ -360,38 +364,50 @@ TRACKMENOT.TMNInjected = function() {
                 return;
             } else {   
                 var newWord = queryToSend.substring(currIndex).split(" ")[0];
-                if ( newWord.length>0 && ( currIndex == 0 || queryToSend[currIndex-1]==" ") ) {
-                    if( searchBox.value.indexOf(newWord, currIndex)>=0 ) {
-                        currIndex+= newWord.length;
-                        searchBox.selectionEnd+= newWord.length+1;
-                        searchBox.selectionStart =searchBox.selectionEnd;
-                        updateStatus(searchBox.value);
-                        nextPress = roll(50,250);
-                        window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )
-                        return;
+                if ( newWord.length>1 && ( currIndex == 0 || queryToSend[currIndex-1]==" ") ) {
+                    cout("Checking if "+newWord + " appears in "+searchBox.value)
+                    if (! (searchBox.value.indexOf(newWord+" ")<0) ) {
+                    cout("It\s in")
+                      if( searchBox.value.indexOf(newWord, currIndex)>=0 ) { 
+                           cout("We\re movine of "+ newWord.length+1 )                       
+                          searchBox.selectionEnd+= newWord.length+1;
+                          searchBox.selectionStart =searchBox.selectionEnd;
+                      } 
+                      currIndex+= newWord.length;
+                      updateStatus(searchBox.value);
+                      nextPress = roll(50,250);
+                      window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )  
+                      return;
                     }
                 }   
-                
-                cout ("Character to type: "+ queryToSend[currIndex])  
-                //searchBox.value += queryToSend[currIndex++];
- 
                 chara.push(queryToSend[currIndex])
-                window.setTimeout( function(){ return downKey(chara, searchBox)}, 5);
-                window.setTimeout( function(){ return pressKey(chara, searchBox)}, 10); 
-                window.setTimeout( function(){ return inputChar(chara, searchBox)}, 13);      
-                window.setTimeout( function(){ return releaseKey( chara, searchBox)}, 15);   
-                searchBox.value += queryToSend[currIndex++]
+                var timers =  getTimingArray();
+                var textvalue = queryToSend[currIndex];
+                window.setTimeout( function(){
+                    return downKey(chara, searchBox)
+                    }, timers[0]);
+                window.setTimeout( function(){
+                    return pressKey(chara, searchBox)
+                    }, timers[1]); 
+                window.setTimeout( function(){
+                    return inputChar(chara, searchBox)
+                    }, timers[2]);   
+                window.setTimeout( function(){
+                    searchBox.value += textvalue
+                    }, timers[3]);   
+                window.setTimeout( function(){
+                    return releaseKey( chara, searchBox)
+                    }, timers[4]);   
                 updateStatus(searchBox.value);
-                nextPress = roll(50,250); 
-            
-                
+                currIndex++
+                nextPress = roll(50,250);             
                 window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),false  )
             }
         } else {
             updateStatus(searchBox.value);
             nextPress = roll(10,30);
-           //window.setTimeout( clickButton, nextPress); 
-		       window.setTimeout(pressEnter, nextPress, searchBox)
+            if (Math.random() <0.5) window.setTimeout( clickButton, nextPress); 
+            else window.setTimeout(pressEnter, nextPress, searchBox)
         // window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
@@ -400,7 +416,7 @@ TRACKMENOT.TMNInjected = function() {
         debug("The current url is: " +window.location.href)
         var response = {
             url: window.location.href
-            }; 
+        }; 
         self.port.emit("TMNUpdateURL",response);      
     }
     
@@ -433,18 +449,18 @@ TRACKMENOT.TMNInjected = function() {
             'id' : tmn_id
         });
         _log(logEntry)
-		updateStatus(queryToSend);
+        updateStatus(queryToSend);
         if ( host =="" || !host.match(reg) ) {
-				try { 
-		            window.location.href = encodedUrl;     
-		            return encodedUrl;	
-				} catch (ex) {
-					cout("Caught exception: "+ ex);
-					self.port.emit("TMNSetTabUrl", {
-						"url": encodedUrl
-					});
-					return null;
-				}
+            try { 
+                window.location.href = encodedUrl;     
+                return encodedUrl;	
+            } catch (ex) {
+                cout("Caught exception: "+ ex);
+                self.port.emit("TMNSetTabUrl", {
+                    "url": encodedUrl
+                });
+                return null;
+            }
 			
         } else {
             var searchBox = getSearchBoxMap[engine]();
@@ -460,16 +476,16 @@ TRACKMENOT.TMNInjected = function() {
             } else {                  
                 tmnCurrentURL =  encodedUrl;
                 debug("The searchbox can not be found " )
-				try {
-					window.location.href = encodedUrl;
-                	return encodedUrl;					
-				} catch (ex) {
-					cout("Caught exception: "+ ex);
-					self.port.emit("TMNSetTabUrl", {
-						"url": encodedUrl
-					});
-					return null;
-				}
+                try {
+                    window.location.href = encodedUrl;
+                    return encodedUrl;					
+                } catch (ex) {
+                    cout("Caught exception: "+ ex);
+                    self.port.emit("TMNSetTabUrl", {
+                        "url": encodedUrl
+                    });
+                    return null;
+                }
 
             }  
         }   
