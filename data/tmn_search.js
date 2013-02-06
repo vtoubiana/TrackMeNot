@@ -39,7 +39,7 @@ TRACKMENOT.TMNInjected = function() {
     var testAdMap = {
         google : function(anchorClass,anchorlink) {
             return ( anchorlink
-                && anchorClass=='l' 
+                && (anchorClass=='l'  || anchorClass=='l vst')
                 && anchorlink.indexOf("http")==0 
                 && anchorlink.indexOf('https')!=0);
         },
@@ -84,7 +84,7 @@ TRACKMENOT.TMNInjected = function() {
         bing:    function(  ) {
             return document.getElementById('sb_form_go');             
         },        
-        aol:  function( doc ) {
+        aol:  function(  ) {
             return document.getElementById('csbbtn1');           
         },
         baidu:  function(  ) {      
@@ -170,10 +170,63 @@ TRACKMENOT.TMNInjected = function() {
    function pressEnter(elt) {
    		cout("Document is: "+ document)
         var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, 13 );   
+        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 13, 0 );  
         elt.dispatchEvent(evtDown)	
-		sendPageLoaded();
+        var evtPress= document.createEvent("KeyboardEvent"); 
+        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 13, 0 ); 
+        elt.dispatchEvent(evtPress)	
+        var evtUp = document.createEvent("KeyboardEvent");  
+        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 13, 0 );        
+        elt.dispatchEvent(evtUp)
+        //elt.submit();	
+		    sendPageLoaded();
    }
+   
+   
+  /* function pressKey(searchBox,chara) {
+   		cout("Document is: "+ document)
+        var evtDown = document.createEvent("KeyboardEvent");
+        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) );  
+        searchBox.dispatchEvent(evtDown)	
+        var evtPress= document.createEvent("KeyboardEvent"); 
+        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) ); 
+        searchBox.dispatchEvent(evtPress)	
+        var evtUp = document.createEvent("KeyboardEvent");  
+        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 0, chara.charCodeAt(0) );        
+        searchBox.dispatchEvent(evtUp)	
+   }*/
+   
+      function downKey(chara, searchBox) {
+        cout("Goig to press key: "+ chara)
+        var charCode = chara[chara.length-1].charCodeAt(0)
+        var evtDown = document.createEvent("KeyboardEvent");
+        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, charCode );   
+        searchBox.dispatchEvent(evtDown)	
+    }
+    
+    function pressKey(chara, searchBox) {
+        cout("Goig to press key: "+ chara)
+        var charCode = chara[chara.length-1].charCodeAt(0)
+        var evtPress = document.createEvent("KeyboardEvent");
+        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 0, charCode );   
+        searchBox.dispatchEvent(evtPress)	
+    }
+    
+    function inputChar(chara, searchBox) {
+        var ev = document.createEvent("Event");
+        ev.initEvent("input", true, false);
+        searchBox.dispatchEvent(ev);
+      }
+    
+      function releaseKey(chara, searchBox) { 
+        cout("Goig to release key: "+ chara)
+        var charCode = chara[chara.length-1].charCodeAt(0)
+        var evtUp = document.createEvent("KeyboardEvent");
+        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 0, charCode ); 
+        cout("Event created "+ chara)  
+        searchBox.dispatchEvent(evtUp)	
+          cout("Event dispateched "+ chara) 
+    }
 
     function simulateClick( engine ) {
      
@@ -203,7 +256,7 @@ TRACKMENOT.TMNInjected = function() {
                     _log(logEntry)	        
                     try {     
                         clickElt(pageLinks[i])
-                        debug("link clicked")
+                        debug("link clicked")                               
                     } catch (e) {
                         alert("error opening click-through request for " + e);
                     }
@@ -293,8 +346,9 @@ TRACKMENOT.TMNInjected = function() {
     function typeQuery( queryToSend, currIndex, searchBox, chara,isIncr ) { 
         var nextPress ;
         tmnCurrentQuery = queryToSend;
-
-        //clickElt(searchBox);
+        
+        clickElt(searchBox);
+        searchBox.focus();
         if (currIndex < queryToSend.length  ) {
             // var suggestElt = getQuerySuggestion(doc);	
             if ( false && Math.random() < 0.02 && suggestElt.length >0 ) {
@@ -305,9 +359,9 @@ TRACKMENOT.TMNInjected = function() {
                 updateStatus(searchBox.value);
                 return;
             } else {   
-                if (  currIndex == 0 || queryToSend[currIndex-1]==" " ) {
-                    var newWord = queryToSend.substring(currIndex).split(" ")[0];
-                    if( searchBox.value.indexOf(newWord)>=0 ) {
+                var newWord = queryToSend.substring(currIndex).split(" ")[0];
+                if ( newWord.length>0 && ( currIndex == 0 || queryToSend[currIndex-1]==" ") ) {
+                    if( searchBox.value.indexOf(newWord, currIndex)>=0 ) {
                         currIndex+= newWord.length;
                         searchBox.selectionEnd+= newWord.length+1;
                         searchBox.selectionStart =searchBox.selectionEnd;
@@ -316,17 +370,28 @@ TRACKMENOT.TMNInjected = function() {
                         window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )
                         return;
                     }
-                }     
-                searchBox.value += queryToSend[currIndex++];
+                }   
+                
+                cout ("Character to type: "+ queryToSend[currIndex])  
+                //searchBox.value += queryToSend[currIndex++];
+ 
+                chara.push(queryToSend[currIndex])
+                window.setTimeout( function(){ return downKey(chara, searchBox)}, 5);
+                window.setTimeout( function(){ return pressKey(chara, searchBox)}, 10); 
+                window.setTimeout( function(){ return inputChar(chara, searchBox)}, 13);      
+                window.setTimeout( function(){ return releaseKey( chara, searchBox)}, 15);   
+                searchBox.value += queryToSend[currIndex++]
                 updateStatus(searchBox.value);
-                nextPress = roll(50,250);
-                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )
+                nextPress = roll(50,250); 
+            
+                
+                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),false  )
             }
         } else {
             updateStatus(searchBox.value);
-            nextPress = roll(50,250);
-          // window.setTimeout( clickButton, nextPress); 
-		  window.setTimeout(pressEnter, nextPress, searchBox)
+            nextPress = roll(10,30);
+           //window.setTimeout( clickButton, nextPress); 
+		       window.setTimeout(pressEnter, nextPress, searchBox)
         // window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
@@ -385,7 +450,7 @@ TRACKMENOT.TMNInjected = function() {
             var searchBox = getSearchBoxMap[engine]();
             var searchButton = getButtonMap[engine]();
             if ( searchBox && searchButton && engine!='aol' ) {
-                debug("The searchbox has been found "+searchBox )
+                debug("The searchbox has been found "+searchBox ) 
                 searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 
                 searchBox.selectionStart = 0;    
                 searchBox.selectionEnd = 0;         
