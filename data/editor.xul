@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://trackmenot/locale/trackmenot.dtd">
+    <!--persist="screenX screenY width height" -->
+<window id="TRACKMENOT-editor"
+  title="TRACKMENOT"
+  onload="TRACKMENOT.editor._loadTree(false);"
+  orient="vertical"
+  autostretch="always"
+
+  height="470px" 
+  width="600px" 
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/x-javascript" src="utils.js"/>
+    <script type="application/x-javascript" src="editor.js"/>
+    
+  <hbox flex="1">
+	  <vbox width="160" height="230" flex="1">
+ 		 <tree id="tree-rss" flex="1" width="160" onmouseup="TRACKMENOT.editor._updateTextLabel()" > 
+	
+		   <treecols  >
+		      <treecol id="elt-name" label="Category" width="70%" primary="true" flex="1"  />
+		      <treecol id="elt-type" label="type" width="30%"  flex="1"  />
+		   </treecols>
+		</tree>
+	  </vbox>
+	  <vbox  width="20" align="center">
+   	 	<button id="cat-del" label="Delete" size="20" oncommand="TRACKMENOT.editor._deleteItem();TRACKMENOT.editor._loadTree(false);" />
+   	 	<button id="cat-show" label="Edit" size="20" oncommand="TRACKMENOT.editor._edit();" /> 
+ 	 </vbox>
+  </hbox>
+    <vbox align="center">   
+     <groupbox width="460" flex="1"> 
+      <caption label="Entry"/>
+      <hbox align="center">
+      		<label value="Category" id='entry-label' control="text-entry" width="50" />
+            <textbox id="text-entry" size="30"  width="250" flex="1"  onmouseup="TRACKMENOT.editor._updateTextLabel();"/> 
+            <vbox align="end" flex="1">
+            <button id="add-entry" label="Add Category" size="10" width="90" oncommand="TRACKMENOT.editor._addEntry();" />
+            </vbox>
+          </hbox>
+            </groupbox>
+                             <vbox align="end" flex="1">
+                             <button id="edit-close" label="OK" size="10" oncommand="TRACKMENOT.editor._saveRSS();window.close();" />
+            </vbox>
+
+    </vbox>
+ 
+    <!--<groupbox width="160" flex="1" >
+      <caption label="Properties"/>
+      <vbox align="left">
+        <hbox align="center">
+    			<label value="Count" control="cat-count" />
+    			<scale id="cat-count" min="1" max="500" width="300" onchange="TRACKMENOT.editor._modifyScale(event);" onmouseup="TRACKMENOT.editor._edite();TRACKMENOT.editor._loadTree();"/>
+    			<label id="cat-count-value"  />
+    		</hbox>
+       <hbox align="center" hidden="true">	
+          <label value="Time" control="cat-time" />
+    			<scale id="cat-time" min="1" max="500"  width="300" onchange="TRACKMENOT.editor._modifyScale(event);"/>
+    			<label id="cat-time-value" />
+        </hbox>	
+        <hbox align="center" hidden="true">	
+          <label value="Click" control="cat-click" />
+    			<scale id="cat-click" min="1" max="500"  width="300" onchange="TRACKMENOT.editor._modifyScale(event);"/>
+    			<label id="cat-click-value" />
+        </hbox>		  
+      </vbox>
+      <vbox align="center">
+	        <button label="Update" oncommand="TRACKMENOT.editor.edite();TRACKMENOT.editor._loadTree();" />
+      </vbox>   
+    </groupbox>   -->
+</window>
