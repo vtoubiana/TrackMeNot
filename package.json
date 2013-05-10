@@ -7,6 +7,6 @@
     "homepage": "http://www.cs.nyu.edu/trackmenot/",
     "icon":"data/images/skin/tmn.png",  
     "main": "trackmenot", 
-    "id": "jid1-BbI8N70DA5zQpQ", 
-    "description": "TrackMeNot rebuild with Jetpack"
+    "id": "trackmenot@mrl.nyu.edu", 
+    "description": "Protect against data profiling by search engines"
 }
