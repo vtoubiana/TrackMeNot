@@ -463,8 +463,8 @@ TRACKMENOT.TMNInjected = function() {
             }
 			
         } else {
-            var searchBox = getSearchBoxMap[engine]();
-            var searchButton = getButtonMap[engine]();
+            var searchBox = getSearchBoxMap[engine] ? getSearchBoxMap[engine]() : null;
+            var searchButton = getButtonMap[engine] ? getButtonMap[engine]() : null;
             if ( searchBox && searchButton && engine!='aol' ) {
                 debug("The searchbox has been found "+searchBox ) 
                 searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 

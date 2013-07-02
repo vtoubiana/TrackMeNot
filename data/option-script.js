@@ -32,6 +32,17 @@ $("#clear-log").click( function() {
     }
 );
 	
+$("#add-engine").click( function() {	
+		var engine = {}
+    	engine.name = $("#newengine-name").val();
+		engine.urlmap = $("#newengine-map").val();
+		if(engine.urlmap.indexOf('trackmenot') <0 ) {
+			alert("Did not find 'trackmenot' in the URL")
+			return
+		}
+		self.port.emit("TMNAddEngine",engine);
+    }
+);
 
 
 function TMNSetOptionsMenu( tab_inputs) {
@@ -101,6 +112,15 @@ function TMNShowLog(tmnlogs) {
 }
 
 
+function TMNShowEngines(engines) {
+	var htmlStr = "";
+    for (var i=0;  i<engines.length ; i++) {
+		var engine = engines[i];
+        htmlStr += '<input type="checkbox"  id="'+ engine.id +'" value="'+engine.id +'">'+ engine.name +' Search<br>';
+    }
+    $('#search-engine-list').html(htmlStr);
+}
+
 function TMNShowQueries(param) {
 	  var queries = param.queries.split(',');
     var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
@@ -113,12 +133,6 @@ function TMNShowQueries(param) {
     $('#tmn_logs_container').html(htmlStr);
 }
   
-
-
-
-
-
-
 
 function saveOptions() {
     var options = {};
@@ -149,6 +163,7 @@ function saveOptions() {
 self.port.on("TMNSetOptionsMenu",TMNSetOptionsMenu)
 self.port.on("TMNSendLogs",TMNShowLog)
 self.port.on("TMNSendQueries",TMNShowQueries)
+self.port.on("TMNSendEngines",TMNShowEngines)
    
   
 
