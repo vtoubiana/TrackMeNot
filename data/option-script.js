@@ -1,7 +1,6 @@
 
 var tmn_options ={};
 
-
 $("#apply-options").click( function() {	
     tmn_options = {"options":saveOptions()};	 	  			 
     TMNSetOptionsMenu(tmn_options);
@@ -10,6 +9,10 @@ $("#apply-options").click( function() {
     }
 );
 
+$("#show-add").click( function() {
+		$("#add-engine-table").show();
+	}
+);
 $("#show-log").click( function() {	
     self.port.emit("TMNOptionsShowLog");
     }
@@ -31,7 +34,15 @@ $("#clear-log").click( function() {
     self.port.emit("TMNOptionsClearLog");
     }
 );
-	
+
+
+$("#search-engine-list").on('click', 'button.smallbutton', function(event) {
+	var del_engine = event.target.id.split("_").pop();
+	self.port.emit("TMNDelEngine",{'engine':del_engine});
+});
+
+
+
 $("#add-engine").click( function() {	
 		var engine = {}
     	engine.name = $("#newengine-name").val();
@@ -50,16 +61,16 @@ function TMNSetOptionsMenu( tab_inputs) {
     var feedList = options.feedList;
     var kw_black_list = options.kw_black_list;
     console.log("Enabled: " +options.enabled)
-
+	$("#add-engine-table").hide();
   	$("#trackmenot-opt-enabled").prop('checked', options.enabled);
   	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
   	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
     $("#trackmenot-opt-save-logs").prop('checked',options.saveLogs);
-	  $("#trackmenot-opt-disable-logs").prop('checked',options.disableLogs);
+	$("#trackmenot-opt-disable-logs").prop('checked',options.disableLogs);
 	      
     $("#trackmenot-seed").val(feedList);
-	  $("#trackmenot-blacklist").val(kw_black_list);
-	  $("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
+	$("#trackmenot-blacklist").val(kw_black_list);
+	$("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
     $("#trackmenot-use-dhslist").prop('checked', options.use_dhs_list);
 	
     var engines = options.searchEngines.split(',');
@@ -113,11 +124,14 @@ function TMNShowLog(tmnlogs) {
 
 
 function TMNShowEngines(engines) {
-	var htmlStr = "";
+	var htmlStr = "<table>";
     for (var i=0;  i<engines.length ; i++) {
 		var engine = engines[i];
-        htmlStr += '<input type="checkbox"  id="'+ engine.id +'" value="'+engine.id +'">'+ engine.name +' Search<br>';
+		htmlStr += '<tr >';
+        htmlStr += '<td><input type="checkbox"  id="'+ engine.id +'" value="'+engine.id +'">'+ engine.name +'</td><td><button class="smallbutton" id="del_engine_'+engine.id+'" > - </button> </td>';
+		htmlStr += '</tr>';
     }
+	htmlStr += '</table>';
     $('#search-engine-list').html(htmlStr);
 }
 
@@ -159,6 +173,8 @@ function saveOptions() {
     options.kw_black_list =  $("#trackmenot-blacklist").val();
     return options;
 }
+
+
         
 self.port.on("TMNSetOptionsMenu",TMNSetOptionsMenu)
 self.port.on("TMNSendLogs",TMNShowLog)

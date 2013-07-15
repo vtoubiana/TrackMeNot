@@ -26,110 +26,6 @@ TRACKMENOT.TMNInjected = function() {
     var engine = '';
     //    var allEvents = ['blur','change','click','dblclick','DOMMouseScroll','focus','keydown','keypress','keyup','load','mousedown','mousemove','mouseout','mouseover','mouseup','select'];
 
-    var hostMap = {
-        google : "(www\.google\.(co\.|com\.)?[a-z]{2,3})$",      
-        yahoo :  "([a-z.]*?search\.yahoo\.com)$",
-        bing : "(www\.bing\.com)$",
-        baidu : "(www\.baidu\.com)$",
-        aol : "([a-z0-9.]*?search\.aol\.com)$"
-    }
-    
-
-      	
-    var testAdMap = {
-        google : function(anchorClass,anchorlink) {
-            return ( anchorlink
-                && (anchorClass=='l'  || anchorClass=='l vst')
-                && anchorlink.indexOf("http")==0 
-                && anchorlink.indexOf('https')!=0);
-        },
-        yahoo : function(anchorClass,anchorlink) {
-            return ( anchorClass=='"yschttl spt"' || anchorClass=='yschttl spt');
-        },
-        aol : function(anchorClass,anchorlink) {
-            return (anchorClass=='"find"' || anchorClass=='find'
-                && anchorlink.indexOf('https')!=0 && anchorlink.indexOf('aol')<0 );
-        },
-        bing : function(anchorClass,anchorlink) {
-            return ( anchorlink
-                && anchorlink.indexOf('http')==0 
-                && anchorlink.indexOf('https')!=0 
-                && anchorlink.indexOf('msn')<0 
-                && anchorlink.indexOf('live')<0 
-                && anchorlink.indexOf('bing')<0 
-                && anchorlink.indexOf('microsoft')<0
-                && anchorlink.indexOf('WindowsLiveTranslator')<0 );
-        },
-        baidu : function(anchorClass,anchorlink) {
-            return ( anchorlink
-                && anchorlink.indexOf('baidu')<0 
-                && anchorlink.indexOf('https')!=0  );
-        }
-    }
-  	
-  	
-
-
-    
-    	
-    var getButtonMap = {
-        google : function(  ) { 
-            var button = getElementsByAttrValue(document,'button', 'name', "btnG" );
-            if ( !button ) button = getElementsByAttrValue(document,'button', 'name', "btnK" );
-            return button;
-        },         
-        yahoo:   function(  ) {   
-            return getElementsByAttrValue(document,'input', 'class', "sbb" );        
-        },          
-        bing:    function(  ) {
-            return document.getElementById('sb_form_go');             
-        },        
-        aol:  function(  ) {
-            return document.getElementById('csbbtn1');           
-        },
-        baidu:  function(  ) {      
-            return getElementsByAttrValue(document,'input', 'value', "????" );           
-        }           
-    }
-  
-  
-    var suggest_filters = {
-        google :  ['gsr' , 'td', function ( elt ) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'gac_c' )
-        }],
-        yahoo : ['atgl' , 'a', function ( elt ) {
-            return elt.hasAttribute('gossiptext')
-        }],
-        bing : ['sa_drw' , 'li', function ( elt ) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'sa_sg' )
-        }],
-        baidu : ['st' , 'tr', function ( elt ) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'ml' )
-        }],
-        aol : ['ACC' , 'a', function ( elt ) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'acs')
-        }]
-    }
-  	        
-    var  getSearchBoxMap = {
-        google : function( ) { 
-            //alert(doc.body.innerHTML)
-            return getElementsByAttrValue(document,'input', 'name', "q" );        
-        },         
-        yahoo:   function(  ) {   
-            return document.getElementById('yschsp');       
-        },          
-        bing:    function(  ) {
-            return document.getElementById('sb_form_q');       
-        },        
-        aol:  function(  ) {
-            return document.getElementById('csbquery1');            
-        },
-        baidu:  function(  ) {
-            return document.getElementById('kw');            
-        }         
-    }
-    
     function roll(min,max){
         return Math.floor(Math.random()*(max+1))+min;
     }
@@ -144,7 +40,9 @@ TRACKMENOT.TMNInjected = function() {
             console.log("Debug: "+msg);
     }
 
-  
+  	function getEngineById( id) {
+		return engines.filter(function(a) {return a.id ==id})[0] 
+	}
 
     function stripPhrases(htmlStr)  {
         var reg = /(<b>(.+)<\/b>)/mig;
@@ -156,31 +54,23 @@ TRACKMENOT.TMNInjected = function() {
         return htmlStr.replace(/(<([^>]+)>)/ig,"");
     }
 
- 
-    function isSafeHost( host ) {
-        for  (var eng in hostMap) {
-            var reg = new RegExp(hostMap[eng],'g')
-            if ( host.match(reg) ) 
-                return eng;
-        }
-        return false;
-    }
+
 	
 	
     function pressEnter(elt) {
         var timers =  getTimingArray(); 
         var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 13, 0 );  
+        evtDown.initKeyEvent( "keydown", true, true, unsafeWindow, false, false, false, false, 13, 0 );  
         window.setTimeout(function(){
             elt.dispatchEvent(evtDown);
         },timers[0])  
         var evtPress= document.createEvent("KeyboardEvent"); 
-        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 13, 0 ); 
+        evtPress.initKeyEvent( "keypress", true, true, unsafeWindow, false, false, false, false, 13, 0 ); 
         window.setTimeout(function(){
             elt.dispatchEvent(evtPress);
         },timers[1])  
         var evtUp = document.createEvent("KeyboardEvent");  
-        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 13, 0 );        
+        evtUp.initKeyEvent( "keyup", true, true, unsafeWindow, false, false, false, false, 13, 0 );        
         window.setTimeout(function(){
             elt.dispatchEvent(evtUp);
         },timers[2])    
@@ -193,14 +83,14 @@ TRACKMENOT.TMNInjected = function() {
     function downKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, window, false, false, false, false, 0, charCode );   
+        evtDown.initKeyEvent( "keydown", true, true, unsafeWindow, false, false, false, false, 0, charCode );   
         searchBox.dispatchEvent(evtDown)	
     }
     
     function pressKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtPress = document.createEvent("KeyboardEvent");
-        evtPress.initKeyEvent( "keypress", true, true, window, false, false, false, false, 0, charCode );   
+        evtPress.initKeyEvent( "keypress", true, true, unsafeWindow, false, false, false, false, 0, charCode );   
         searchBox.dispatchEvent(evtPress)	
     }
     
@@ -213,7 +103,7 @@ TRACKMENOT.TMNInjected = function() {
     function releaseKey(chara, searchBox) { 
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtUp = document.createEvent("KeyboardEvent");
-        evtUp.initKeyEvent( "keyup", true, true, window, false, false, false, false, 0, charCode ); 
+        evtUp.initKeyEvent( "keyup", true, true, unsafeWindow, false, false, false, false, 0, charCode ); 
         searchBox.dispatchEvent(evtUp)	
     }
 
@@ -233,7 +123,8 @@ TRACKMENOT.TMNInjected = function() {
                 anchorLink = pageLinks[i].getAttribute("href");
             anchorClass = pageLinks[i].getAttribute("class");
             var link = stripTags(pageLinks[i].innerHTML);
-            if (testAdMap[engine](anchorClass,anchorLink) ) {  
+			eval (engine.testad)
+            if ( testad && testad(anchorClass,anchorLink) ) {  
                 j++
                 if ( j == clickIndex ) {
                     var logEntry = JSON.stringify({
@@ -258,7 +149,8 @@ TRACKMENOT.TMNInjected = function() {
 	 
  
     function clickButton() {  
-        var button = getButtonMap[engine](document)
+		eval(engine.button) 
+        var button = getButton(document)
         clickElt(button);	
         debug("send page loaded")
         sendPageLoaded();
@@ -267,7 +159,7 @@ TRACKMENOT.TMNInjected = function() {
 
   
     function clickElt(elt) {
-        var win = window;
+        var win = unsafeWindow;
         if ( !elt) return;
         var timers =  getTimingArray(); 
         var evtDown = document.createEvent("MouseEvents");
@@ -439,11 +331,11 @@ TRACKMENOT.TMNInjected = function() {
         } catch (ex) {
             host = "";
         } 
-        var reg = new RegExp(hostMap[engine],'g')  
+        var reg = new RegExp(engine.host,'g')  
         var encodedUrl = queryToURL(url, queryToSend)
         var logEntry = JSON.stringify({
             'type' : 'query', 
-            "engine" : engine, 
+            "engine" : engine.id, 
             'mode' : tmn_mode, 
             'query' : queryToSend, 
             'id' : tmn_id
@@ -463,8 +355,10 @@ TRACKMENOT.TMNInjected = function() {
             }
 			
         } else {
-            var searchBox = getSearchBoxMap[engine] ? getSearchBoxMap[engine]() : null;
-            var searchButton = getButtonMap[engine] ? getButtonMap[engine]() : null;
+			if (engine.button) eval(engine.button) 
+			if (engine.box) eval(engine.box) 
+            var searchBox = engine.box ? searchbox() : null;
+            var searchButton = engine.button ? getButton() : null;
             if ( searchBox && searchButton && engine!='aol' ) {
                 debug("The searchbox has been found "+searchBox ) 
                 searchBox.value = getCommonWords(searchBox.value,queryToSend).join(' '); 
@@ -498,7 +392,7 @@ TRACKMENOT.TMNInjected = function() {
     function sendPageLoaded() {
         var req = {
             tmn: "pageLoaded",
-            html: window.document.body.innerHTML
+            html: unsafeWindow.document.body.innerHTML
         }
         self.port.emit("TMNRequest",req); 
     } 
@@ -553,6 +447,7 @@ TRACKMENOT.TMNInjected = function() {
             if (request.tmnQuery) {       
                 var tmn_query = request.tmnQuery; 
                 engine = request.tmnEngine;
+				all_engines = request.allEngines;
                 var tmn_mode = request.tmnMode;
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;

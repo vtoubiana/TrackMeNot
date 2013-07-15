@@ -50,6 +50,20 @@
         font-size: 13px;
         font-weight: bold;
     }
+	
+	.smallbutton {
+        background: #E6EAE2;
+        width: 15px;
+        padding:1px 0;
+        border:1px solid #608925;
+        font-size: 11px;
+        text-align:center;
+        color:#00446D;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        opacity:.85;
+    }
     
     
     A:hover {
