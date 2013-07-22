@@ -124,12 +124,12 @@ TRACKMENOT.TMNInjected = function() {
             anchorClass = pageLinks[i].getAttribute("class");
             var link = stripTags(pageLinks[i].innerHTML);
 			eval (engine.testad)
-            if ( testad && testad(anchorClass,anchorLink) ) {  
+            if ( testad!="undefined" && testad(anchorClass,anchorLink) ) {  
                 j++
                 if ( j == clickIndex ) {
                     var logEntry = JSON.stringify({
                         'type' : 'click', 
-                        "engine" : engine,  
+                        "engine" : engine.id,  
                         'query' : link, 
                         'id':tmn_id
                     });
