@@ -9,6 +9,12 @@ $("#apply-options").click( function() {
     }
 );
 
+$("#reset-options").click( function() {		 	  			 
+    alert("Settings reset");
+    self.port.emit("TMNResetOptions","");
+    }
+);
+
 $("#show-add").click( function() {
 		$("#add-engine-table").show();
 	}
