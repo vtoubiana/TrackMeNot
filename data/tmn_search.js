@@ -60,21 +60,21 @@ TRACKMENOT.TMNInjected = function() {
     function pressEnter(elt) {
         var timers =  getTimingArray(); 
         var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, unsafeWindow, false, false, false, false, 13, 0 );  
+        evtDown.initKeyEvent( "keydown", true, true, null, false, false, false, false, 13, 0 );  
         window.setTimeout(function(){
             elt.dispatchEvent(evtDown);
         },timers[0])  
         var evtPress= document.createEvent("KeyboardEvent"); 
-        evtPress.initKeyEvent( "keypress", true, true, unsafeWindow, false, false, false, false, 13, 0 ); 
+        evtPress.initKeyEvent( "keypress", true, true, null, false, false, false, false, 13, 0 ); 
         window.setTimeout(function(){
             elt.dispatchEvent(evtPress);
         },timers[1])  
         var evtUp = document.createEvent("KeyboardEvent");  
-        evtUp.initKeyEvent( "keyup", true, true, unsafeWindow, false, false, false, false, 13, 0 );        
+        evtUp.initKeyEvent( "keyup", true, true, null, false, false, false, false, 13, 0 );        
         window.setTimeout(function(){
             elt.dispatchEvent(evtUp);
         },timers[2])    
-        window.setTimeout(sendPageLoaded,timers[3])    	
+        window.setTimeout(function() {sendPageLoaded()},timers[3])    	
     }
    
    
@@ -83,14 +83,14 @@ TRACKMENOT.TMNInjected = function() {
     function downKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyEvent( "keydown", true, true, unsafeWindow, false, false, false, false, 0, charCode );   
+        evtDown.initKeyEvent( "keydown", true, true, null, false, false, false, false, 0, charCode );   
         searchBox.dispatchEvent(evtDown)	
     }
     
     function pressKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtPress = document.createEvent("KeyboardEvent");
-        evtPress.initKeyEvent( "keypress", true, true, unsafeWindow, false, false, false, false, 0, charCode );   
+        evtPress.initKeyEvent( "keypress", true, true, null, false, false, false, false, 0, charCode );   
         searchBox.dispatchEvent(evtPress)	
     }
     
@@ -103,7 +103,7 @@ TRACKMENOT.TMNInjected = function() {
     function releaseKey(chara, searchBox) { 
         var charCode = chara[chara.length-1].charCodeAt(0)
         var evtUp = document.createEvent("KeyboardEvent");
-        evtUp.initKeyEvent( "keyup", true, true, unsafeWindow, false, false, false, false, 0, charCode ); 
+        evtUp.initKeyEvent( "keyup", true, true, null, false, false, false, false, 0, charCode ); 
         searchBox.dispatchEvent(evtUp)	
     }
 
@@ -159,7 +159,7 @@ TRACKMENOT.TMNInjected = function() {
 
   
     function clickElt(elt) {
-        var win = unsafeWindow;
+        var win = null;
         if ( !elt) return;
         var timers =  getTimingArray(); 
         var evtDown = document.createEvent("MouseEvents");
@@ -242,7 +242,7 @@ TRACKMENOT.TMNInjected = function() {
     function typeQuery( queryToSend, currIndex, searchBox, chara,isIncr ) { 
         var nextPress ;
         tmnCurrentQuery = queryToSend;
-        
+        cout("typing query")
         clickElt(searchBox);
         searchBox.focus();
         if (currIndex < queryToSend.length  ) {
@@ -268,7 +268,7 @@ TRACKMENOT.TMNInjected = function() {
                       currIndex+= newWord.length;
                       updateStatus(searchBox.value);
                       nextPress = roll(50,250);
-                      window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice() ,false  )  
+                      window.setTimeout(function(){typeQuery(queryToSend,currIndex,searchBox,chara.slice() ,false);}, nextPress  )  
                       return;
                     }
                 }   
@@ -293,13 +293,13 @@ TRACKMENOT.TMNInjected = function() {
                 updateStatus(searchBox.value);
                 currIndex++
                 nextPress = roll(50,250);             
-                window.setTimeout(typeQuery, nextPress, queryToSend,currIndex,searchBox,chara.slice(),false  )
+                window.setTimeout(function() {typeQuery(queryToSend,currIndex,searchBox,chara.slice(),false);}, nextPress  )
             }
         } else {
             updateStatus(searchBox.value);
             nextPress = roll(10,30);
-            if (Math.random() <0.5) window.setTimeout( clickButton, nextPress); 
-            else window.setTimeout(pressEnter, nextPress, searchBox)
+            if (Math.random() <0.5) window.setTimeout( function() {clickButton();}, nextPress); 
+            else window.setTimeout( function() {pressEnter(searchBox)}, nextPress )
         // window.setTimeout( sendCurrentURL, nextpress+1)
         }
     }
@@ -392,7 +392,7 @@ TRACKMENOT.TMNInjected = function() {
     function sendPageLoaded() {
         var req = {
             tmn: "pageLoaded",
-            html: unsafeWindow.document.body.innerHTML
+            html: window.document.body.innerHTML
         }
         self.port.emit("TMNRequest",req); 
     } 
