@@ -1,5 +1,6 @@
 
 var tmn_options ={};
+var log_shown= false;
 
 $("#apply-options").click( function() {	
     tmn_options = {"options":saveOptions()};	 	  			 
@@ -20,8 +21,16 @@ $("#show-add").click( function() {
 	}
 );
 $("#show-log").click( function() {	
-    self.port.emit("TMNOptionsShowLog");
-    }
+	if (!log_shown) {
+		self.port.emit("TMNOptionsShowLog");
+		$("#show-log").text('Close Log');
+		log_shown = true;
+    } else {
+		$('#tmn_logs_container').html("");
+		$("#show-log").text('Show Log');
+		log_shown = false;
+	}
+ }
 );
 
 $("#trackmenot-opt-showqueries").click( function() {	
@@ -72,8 +81,7 @@ function TMNSetOptionsMenu( tab_inputs) {
   	$("#trackmenot-opt-useTab").prop('checked',options.useTab);
   	$("#trackmenot-opt-burstMode").prop('checked',options.burstMode);
     $("#trackmenot-opt-save-logs").prop('checked',options.saveLogs);
-	$("#trackmenot-opt-disable-logs").prop('checked',options.disableLogs);
-	      
+	$("#trackmenot-opt-disable-logs").prop('checked',options.disableLogs);      
     $("#trackmenot-seed").val(feedList);
 	$("#trackmenot-blacklist").val(kw_black_list);
 	$("#trackmenot-use-blacklist").prop('checked', options.use_black_list);

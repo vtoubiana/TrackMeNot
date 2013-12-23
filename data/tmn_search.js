@@ -18,7 +18,7 @@ if(!TRACKMENOT) var TRACKMENOT = {};
   
 
 TRACKMENOT.TMNInjected = function() { 
-    var debug_script = true;
+    var debug_script = false;
 
     var tmn =null;
     var tmn_id = 0;
@@ -242,7 +242,7 @@ TRACKMENOT.TMNInjected = function() {
     function typeQuery( queryToSend, currIndex, searchBox, chara,isIncr ) { 
         var nextPress ;
         tmnCurrentQuery = queryToSend;
-        cout("typing query")
+        debug("typing query")
         clickElt(searchBox);
         searchBox.focus();
         if (currIndex < queryToSend.length  ) {
@@ -257,11 +257,11 @@ TRACKMENOT.TMNInjected = function() {
             } else {   
                 var newWord = queryToSend.substring(currIndex).split(" ")[0];
                 if ( newWord.length>1 && ( currIndex == 0 || queryToSend[currIndex-1]==" ") ) {
-                    cout("Checking if "+newWord + " appears in "+searchBox.value)
+                    debug("Checking if "+newWord + " appears in "+searchBox.value)
                     if (! (searchBox.value.indexOf(newWord+" ")<0) ) {
-                    cout("It\s in")
+                    debug("It\s in")
                       if( searchBox.value.indexOf(newWord, currIndex)>=0 ) { 
-                           cout("We\re movine of "+ newWord.length+1 )                       
+                           debug("We\re movine of "+ newWord.length+1 )                       
                           searchBox.selectionEnd+= newWord.length+1;
                           searchBox.selectionStart =searchBox.selectionEnd;
                       } 
