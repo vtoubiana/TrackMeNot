@@ -49,8 +49,13 @@
          $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
         }
     	
-    	  if (options.useTab)  $("#trackmenot-menu-useTab").html('Stealth');
-    	  else $("#trackmenot-menu-useTab").html('Tab')
+    	  if (options.useTab) {
+			$("#trackmenot-menu-useTab").html('Stealth');
+			$("#trackmenot-img-tab").attr("src", "images/skin/close_tab.png");
+		  }   else {		  
+			$("#trackmenot-menu-useTab").html('Tab');
+			$("#trackmenot-img-tab").attr("src", "images/skin/open_tab.png");
+		  }
       
       }
 
