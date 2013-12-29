@@ -42,19 +42,19 @@
 
       
 	if ( options.enabled) {
-         $("#trackmenot-enabled").html('Disable');
+         $("#trackmenot-enabled").html(' Disable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/off_icon.png");
         }  else {
-         $("#trackmenot-enabled").html('Enable');
+         $("#trackmenot-enabled").html(' Enable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
         }
     	
     	  if (options.useTab) {
-			$("#trackmenot-menu-useTab").html('Stealth');
-			$("#trackmenot-img-tab").attr("src", "images/skin/close_tab.png");
+			$("#trackmenot-menu-useTab").html(' Stealth');
+			$("#trackmenot-img-tab").attr("src", "images/skin/stealth_icon.png");
 		  }   else {		  
-			$("#trackmenot-menu-useTab").html('Tab');
-			$("#trackmenot-img-tab").attr("src", "images/skin/open_tab.png");
+			$("#trackmenot-menu-useTab").html(' Tab');
+			$("#trackmenot-img-tab").attr("src", "images/skin/tab_icon.png");
 		  }
       
       }
