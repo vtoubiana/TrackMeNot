@@ -12,27 +12,27 @@
   function  _cout (msg) { console.log(msg);  }
   
   function showHelp() {
-    window.open("http://www.cs.nyu.edu/trackmenot/faq.html")
+    window.open("http://www.cs.nyu.edu/trackmenot/faq.html");
   }
 
     
   function toggleOnOff() {         
-        options.enabled = !options.enabled
+        options.enabled = !options.enabled;
         tmn_options = {"options":options};	 	  			 
         self.port.emit("TMNSaveOptions",tmn_options.options); 
-        loadMenu(tmn_options)   
+        loadMenu(tmn_options)  ;
    }
       
      function toggleTabFrame() {
-        options.useTab = !options.useTab
+        options.useTab = !options.useTab;
         tmn_options = {"options":options};	 	  			 
         self.port.emit("TMNSaveOptions",tmn_options.options); 
-        loadMenu(tmn_options)
+        loadMenu(tmn_options);
       }
       
       $("#trackmenot-menu-win").click(function() {
-          self.port.emit("TMNOpenOption")
-      })
+          self.port.emit("TMNOpenOption");
+      });
     
       function loadMenu( panel_inputs) {
 
@@ -59,4 +59,4 @@
       
       }
 
-self.port.on("TMNSendOption",loadMenu )
+self.port.on("TMNSendOption",loadMenu );
