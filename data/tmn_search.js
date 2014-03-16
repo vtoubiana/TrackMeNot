@@ -128,9 +128,9 @@ TRACKMENOT.TMNInjected = function() {
                     _log(logEntry);
                     try {
                         clickElt(pageLinks[i]);
-                        debug("link clicked");
+                        cout("link clicked");
                     } catch (e) {
-                        alert("error opening click-through request for " + e);
+                        cout("error opening click-through request for " + e);
                     }
                     return;
                 }
@@ -432,7 +432,7 @@ TRACKMENOT.TMNInjected = function() {
 
     return {
         clickResult: function(request) {
-            cout("Clicking on engine : " + request.tmn_engine);
+            cout("Clicking on engine : " + request.tmn_engine.id);
             simulateClick(request.tmn_engine); },
         handleRequest: function(request) {
             debug("Received: " + request.tmnQuery + " on engine: " + request.tmnEngine + " mode: " + request.tmnMode);

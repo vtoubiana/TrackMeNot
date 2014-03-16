@@ -1,1 +1,1 @@
-self.port.on("TMNStopLoading",  function() { window.back()}  )
+self.port.on("TMNStopLoading",  function() { console.log('stoping');window.back()}  )
