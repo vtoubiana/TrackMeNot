@@ -19,7 +19,7 @@ if (!TRACKMENOT)
 
 
 TRACKMENOT.TMNInjected = function() {
-    var debug_script = false;
+    var debug_script = true;
 
     var tmn = null;
     var tmn_id = 0;
@@ -114,10 +114,17 @@ TRACKMENOT.TMNInjected = function() {
             else
                 anchorLink = pageLinks[i].getAttribute("href");
             anchorClass = pageLinks[i].getAttribute("class");
+			anchorScript = pageLinks[i].getAttribute("onmousedown");
+			debug("Script:"+ anchorScript)  
+			anchorParentClass = pageLinks[i].parentNode.getAttribute("class");
+			debug("Parent Class:"+ anchorParentClass)  
             var link = stripTags(pageLinks[i].innerHTML);
+			debug("Loading testad "+ engine.testad + " for engine "+ engine.id );
             eval(engine.testad)
-            if (testad !== "undefined" && testad(anchorClass, anchorLink)) {
+			if (testad !== "undefined")	debug("Test ad function loaded");
+            if (testad !== "undefined" && testad(anchorClass, anchorLink, anchorParentClass,anchorScript)) {
                 j++;
+				debug("Number of link founded so far :"+j);
                 if (j === clickIndex) {
                     var logEntry = JSON.stringify({
                         'type': 'click',
