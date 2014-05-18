@@ -14,7 +14,8 @@
     "author": "Daniel Howe, Helen Nissenbaum, Vincent Toubiana", 
     "version": "0.8.7a", 
     "homepage": "http://www.cs.nyu.edu/trackmenot/",
-    "icon":"data/images/skin/tmn.png",  
+    "icon":"data/images/skin/tmn_icon_16.png",  
+	"icon64":"data/images/skin/tmn_icon_64.png",  
     "main": "trackmenot", 
     "id": "trackmenot@mrl.nyu.edu", 
     "description": "Protect against data profiling by search engines"
