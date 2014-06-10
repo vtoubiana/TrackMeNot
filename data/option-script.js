@@ -109,7 +109,7 @@ function setFrequencyMenu(timeout) {
 
 function TMNShowLog(tmnlogs) {
     var logs = tmnlogs.logs
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table width=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
@@ -156,7 +156,7 @@ function TMNShowEngines(engines) {
 
 function TMNShowQueries(param) {
     var queries = param.queries.split(',');
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table width=500 cellspacing=3 bgcolor=white  frame=border>';
     for (var i = 0; i < 3000 && i < queries.length; i++) {
         htmlStr += '<tr style="color:Black">';
         htmlStr += '<td>' + queries[i] + '<td>'
