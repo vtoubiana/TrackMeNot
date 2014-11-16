@@ -1,6 +1,8 @@
+function escapeHTML(str) str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
+escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
 
 function updateText(text) {
-      document.getElementById("tmn-text").innerHTML = text;
+      document.getElementById("tmn-text").innerHTML = escapeHTML(text);
       console.log("Updating text on widget with: "+ text);
 }
   

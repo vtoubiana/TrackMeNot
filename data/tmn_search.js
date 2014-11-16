@@ -25,7 +25,52 @@ TRACKMENOT.TMNInjected = function() {
     var tmn_id = 0;
     var tmnCurrentURL = '';
     var engine = '';
-    //    var allEvents = ['blur','change','click','dblclick','DOMMouseScroll','focus','keydown','keypress','keyup','load','mousedown','mousemove','mouseout','mouseover','mouseup','select'];
+    
+	
+	var getButton_google = function(  ) {var button = getElementsByAttrValue(document,'button', 'name', 'btnG' );		if ( !button ) button = getElementsByAttrValue(document,'button', 'name', 'btnK' );return button;}       
+	var getButton_yahoo=  function(  ) {return getElementsByAttrValue(document,'input', 'class', 'sbb' ); }         
+	var  getButton_bing=  function(  ) {return document.getElementById('sb_form_go');}     
+	var getButton_aol = function (  ) {return document.getElementById('csbbtn1');   }
+	var getButton_baidu = function (  ){ return getElementsByAttrValue(document,'input', 'value', '????' ); }
+
+
+
+    var SearchBox_google = function( ) { return getElementsByAttrValue(document,'input', 'name', 'q' ); } ;
+    var SearchBox_yahoo =  function(  ) { return document.getElementById('yschsp');};
+    var SearchBox_bing =  function(  ) {return document.getElementById('sb_form_q'); };
+    var SearchBox_aol = function(  ) {return document.getElementById('csbquery1');};
+    var SearchBox_baidu =  function(  ) {return document.getElementById('kw');};
+
+
+    var suggest_google = ['gsr', 'td', function(elt) {
+            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'gac_c')
+        }]
+
+    var suggest_yahoo = ['atgl', 'a', function(elt) {
+            return elt.hasAttribute('gossiptext')
+        }]
+
+    var suggest_bing = ['sa_drw', 'li', function(elt) {
+            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'sa_sg')
+        }]
+
+    var suggest_baidu = ['st', 'tr', function(elt) {
+            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'ml')
+        }]
+
+    var suggest_aol = ['ACC', 'a', function(elt) {
+            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'acs')
+        }]
+
+	
+	var js_from_engines = {
+        'google':{ "testad": function(ac,al,apc,as) {return ( apc && as && al && (ac=='l'  || ac=='l vst' || apc== 'r' ) && as.indexOf('return rwt') ==0 && al.indexOf('http')==0 && al.indexOf('https')!=0);}, 'box': SearchBox_google, 'button': getButton_google},
+        'yahoo':{ "testad":  function(ac,al) {return ( ac=='\"yschttl spt\"' || ac=='yschttl spt');}, 'box': SearchBox_yahoo, 'button': getButton_yahoo},
+        'bing':{ "testad":  function(ac,al) {return ( al&& al.indexOf('http')==0&& al.indexOf('https')!=0 && al.indexOf('msn')<0 && al.indexOf('live')<0  && al.indexOf('bing')<0&& al.indexOf('microsoft')<0 && al.indexOf('WindowsLiveTranslator')<0 )    }, 'box': SearchBox_bing, 'button': getButton_bing},
+        'baidu':{ "testad":  function(ac,al) {return ( al&& al.indexOf('baidu')<0 && al.indexOf('https')!=0  );}, 'box': SearchBox_baidu, 'button': getButton_baidu},
+        'aol':{ "testad":  function(ac,al){return(ac=='\"find\"'||ac=='find'&& al.indexOf('https')!=0 && al.indexOf('aol')<0 );}, 'box': SearchBox_aol, 'button': getButton_aol}
+    }
+
 
     function roll(min, max) {
         return Math.floor(Math.random() * (max + 1)) + min;
@@ -119,8 +164,9 @@ TRACKMENOT.TMNInjected = function() {
 			anchorParentClass = pageLinks[i].parentNode.getAttribute("class");
 			debug("Parent Class:"+ anchorParentClass)  
             var link = stripTags(pageLinks[i].innerHTML);
-			debug("Loading testad "+ engine.testad + " for engine "+ engine.id );
-            eval(engine.testad)
+			debug("Loading testad "+ js_from_engines[engine.id].testad + " for engine "+ engine.id );
+			if(js_from_engines[engine.id] && js_from_engines[engine.id].testad)
+            var testad = js_from_engines[engine.id].testad
 			if (testad !== "undefined")	debug("Test ad function loaded");
             if (testad !== "undefined" && testad(anchorClass, anchorLink, anchorParentClass,anchorScript)) {
                 j++;
@@ -148,8 +194,8 @@ TRACKMENOT.TMNInjected = function() {
 
 
     function clickButton() {
-        eval(engine.button);
-        var button = getButton(document);
+        if(js_from_engines[engine.id] && js_from_engines[engine.id].button)
+        var button = js_from_engines[engine.id].button(document);
         clickElt(button);
         debug("send page loaded");
         sendPageLoaded();
@@ -366,13 +412,13 @@ TRACKMENOT.TMNInjected = function() {
             }
 
         } else {
-            if (engine.button)
-                eval(engine.button);
-            if (engine.box)
-                eval(engine.box);
-            var searchBox = engine.box ? searchbox() : null;
-            var searchButton = engine.button ? getButton() : null;
-            if (searchBox && searchButton && engine !== 'aol') {
+			var searchButton= null;
+			var searchBox = null; 
+			if ( js_from_engines[engine.id] && js_from_engines[engine.id].button)
+             searchButton = js_from_engines[engine.id].button();
+            if (js_from_engines[engine.id] && js_from_engines[engine.id].box)
+             searchBox =js_from_engines[engine.id].box();
+            if (searchBox && searchButton && engine.id !== 'aol') {
                 debug("The searchbox has been found " + searchBox);
                 searchBox.value = getCommonWords(searchBox.value, queryToSend).join(' ');
                 searchBox.selectionStart = 0;

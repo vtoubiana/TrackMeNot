@@ -38,22 +38,22 @@
 
         options = panel_inputs.options;  
         if ( panel_inputs.query && panel_inputs.engine )
-            $("#trackmenot-label").html(panel_inputs.engine + " '"+ panel_inputs.query+"'"); 
+            $("#trackmenot-label").text(panel_inputs.engine + " '"+ panel_inputs.query+"'"); 
 
       
 	if ( options.enabled) {
-         $("#trackmenot-enabled").html(' Disable');
+         $("#trackmenot-enabled").text(' Disable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/off_icon.png");
         }  else {
-         $("#trackmenot-enabled").html(' Enable');
+         $("#trackmenot-enabled").text(' Enable');
          $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
         }
     	
     	  if (options.useTab) {
-			$("#trackmenot-menu-useTab").html(' Stealth');
+			$("#trackmenot-menu-useTab").text(' Stealth');
 			$("#trackmenot-img-tab").attr("src", "images/skin/stealth_icon.png");
 		  }   else {		  
-			$("#trackmenot-menu-useTab").html(' Tab');
+			$("#trackmenot-menu-useTab").text(' Tab');
 			$("#trackmenot-img-tab").attr("src", "images/skin/tab_icon.png");
 		  }
       

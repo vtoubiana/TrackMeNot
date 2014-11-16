@@ -2,6 +2,9 @@
 var tmn_options = {};
 var log_shown = false;
 
+function escapeHTML(str) str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
+escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+
 $("#apply-options").click(function() {
     tmn_options = {"options": saveOptions()};
     TMNSetOptionsMenu(tmn_options);
@@ -109,7 +112,7 @@ function setFrequencyMenu(timeout) {
 
 function TMNShowLog(tmnlogs) {
     var logs = tmnlogs.logs
-    var htmlStr = '<table width=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
@@ -129,11 +132,11 @@ function TMNShowLog(tmnlogs) {
             htmlStr += 'style="color:Blue">';
         if (logs[i].type == 'info')
             htmlStr += 'style="color:Green">';
-        htmlStr += logs[i].engine ? '<td><b>' + logs[i].engine + '</b></td>' : '<td></td>';
-        htmlStr += logs[i].mode ? '<td>' + logs[i].mode + '</td>' : '<td></td>';
-        htmlStr += logs[i].newUrl ? '<td>' + logs[i].newUrl.substring(0, 50) + '</td>' : '<td></td>';
-        htmlStr += logs[i].query ? '<td>' + logs[i].query + '</td>' : '<td></td>';
-        htmlStr += logs[i].date ? '<td>' + logs[i].date + '</td>' : '<td></td>';
+        htmlStr += logs[i].engine ? '<td>' + escapeHTML(logs[i].engine) + '</td>' : '<td></td>';
+        htmlStr += logs[i].mode ? '<td>' + escapeHTML(logs[i].mode) + '</td>' : '<td></td>';
+        htmlStr += logs[i].newUrl ? '<td>' + escapeHTML(logs[i].newUrl.substring(0, 50)) + '</td>' : '<td></td>';
+        htmlStr += logs[i].query ? '<td>' + escapeHTML(logs[i].query) + '</td>' : '<td></td>';
+        htmlStr += logs[i].date ? '<td>' + escapeHTML(logs[i].date) + '</td>' : '<td></td>';
 
         htmlStr += '</font></tr>';
     }
@@ -147,7 +150,7 @@ function TMNShowEngines(engines) {
     for (var i = 0; i < engines.length; i++) {
         var engine = engines[i];
         htmlStr += '<tr >';
-        htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
+        htmlStr += '<td><input type="checkbox"  id="' + escapeHTML(engine.id) + '" value="' + escapeHTML(engine.id) + '">' + escapeHTML(engine.name) + '</td><td><button class="smallbutton" id="del_engine_' + escapeHTML(engine.id) + '" > - </button> </td>';
         htmlStr += '</tr>';
     }
     htmlStr += '</table>';
@@ -156,10 +159,10 @@ function TMNShowEngines(engines) {
 
 function TMNShowQueries(param) {
     var queries = param.queries.split(',');
-    var htmlStr = '<table width=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     for (var i = 0; i < 3000 && i < queries.length; i++) {
         htmlStr += '<tr style="color:Black">';
-        htmlStr += '<td>' + queries[i] + '<td>'
+        htmlStr += '<td>' + escapeHTML(queries[i]) + '<td>'
         htmlStr += '</tr>';
     }
     htmlStr += '</table>';
