@@ -8,11 +8,12 @@
             "label": "TrackMeNot Options"
         }
     ],
+	"permissions": {"private-browsing": true},
     "name": "trackmenot",
     "fullName" : "TrackMeNot", 
     "license": "GPL 2.0", 
     "author": "Daniel Howe, Helen Nissenbaum, Vincent Toubiana", 
-    "version": "0.8.13", 
+    "version": "0.8.14", 
     "homepage": "http://www.cs.nyu.edu/trackmenot/",
     "icon":"data/images/skin/tmn_icon_16.png",  
 	"icon64":"data/images/skin/tmn_icon_64.png",  
