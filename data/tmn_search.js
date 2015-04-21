@@ -19,7 +19,7 @@ if (!TRACKMENOT)
 
 
 TRACKMENOT.TMNInjected = function() {
-    var debug_script = true;
+    var debug_script = false;
 
     var tmn = null;
     var tmn_id = 0;
@@ -27,11 +27,11 @@ TRACKMENOT.TMNInjected = function() {
     var engine = '';
     
 	
-	var getButton_google = function(  ) {var button = getElementsByAttrValue(document,'button', 'name', 'btnG' );		if ( !button ) button = getElementsByAttrValue(document,'button', 'name', 'btnK' );return button;}       
-	var getButton_yahoo=  function(  ) {return getElementsByAttrValue(document,'input', 'class', 'sbb' ); }         
-	var  getButton_bing=  function(  ) {return document.getElementById('sb_form_go');}     
-	var getButton_aol = function (  ) {return document.getElementById('csbbtn1');   }
-	var getButton_baidu = function (  ){ return getElementsByAttrValue(document,'input', 'value', '????' ); }
+	var getButton_google = function(  ) {var button = getElementsByAttrValue(document,'button', 'name', 'btnG' );	if ( !button ) button = getElementsByAttrValue(document,'button', 'name', 'btnK' );return button;}  ;     
+	var getButton_yahoo=  function(  ) {return getElementsByAttrValue(document,'input', 'class', 'sbb' ); }  ;       
+	var  getButton_bing=  function(  ) {return document.getElementById('sb_form_go');} ;    
+	var getButton_aol = function (  ) {return document.getElementById('csbbtn1');   };
+	var getButton_baidu = function (  ){ return getElementsByAttrValue(document,'input', 'value', '????' ); };
 
 
 
@@ -43,24 +43,24 @@ TRACKMENOT.TMNInjected = function() {
 
 
     var suggest_google = ['gsr', 'td', function(elt) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'gac_c')
-        }]
+            return (elt.hasAttribute('class') && elt.getAttribute('class') === 'gac_c');
+        }];
 
     var suggest_yahoo = ['atgl', 'a', function(elt) {
-            return elt.hasAttribute('gossiptext')
-        }]
+            return elt.hasAttribute('gossiptext');
+        }];
 
     var suggest_bing = ['sa_drw', 'li', function(elt) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'sa_sg')
-        }]
+            return (elt.hasAttribute('class') && elt.getAttribute('class') === 'sa_sg');
+        }];
 
     var suggest_baidu = ['st', 'tr', function(elt) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'ml')
-        }]
+            return (elt.hasAttribute('class') && elt.getAttribute('class') === 'ml');
+        }];
 
     var suggest_aol = ['ACC', 'a', function(elt) {
-            return (elt.hasAttribute('class') && elt.getAttribute('class') == 'acs')
-        }]
+            return (elt.hasAttribute('class') && elt.getAttribute('class') === 'acs');
+        }];
 
 	
 	var js_from_engines = {
@@ -77,7 +77,8 @@ TRACKMENOT.TMNInjected = function() {
     }
 
     function cout(msg) {
-        console.log(msg);
+		if (debug_script)
+			console.log(msg);
     }
     function debug(msg) {
         if (debug_script)
@@ -166,7 +167,7 @@ TRACKMENOT.TMNInjected = function() {
             var link = stripTags(pageLinks[i].innerHTML);
 			debug("Loading testad "+ js_from_engines[engine.id].testad + " for engine "+ engine.id );
 			if(js_from_engines[engine.id] && js_from_engines[engine.id].testad)
-            var testad = js_from_engines[engine.id].testad
+            var testad = js_from_engines[engine.id].testad;
 			if (testad !== "undefined")	debug("Test ad function loaded");
             if (testad !== "undefined" && testad(anchorClass, anchorLink, anchorParentClass,anchorScript)) {
                 j++;

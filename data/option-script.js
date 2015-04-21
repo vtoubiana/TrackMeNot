@@ -1,9 +1,15 @@
 
 var tmn_options = {};
 var log_shown = false;
+var debug_script = false;
 
 function escapeHTML(str) str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
 escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+
+function cout(msg) {
+	if (debug_script)
+		console.log(msg);
+}
 
 $("#apply-options").click(function() {
     tmn_options = {"options": saveOptions()};
@@ -44,6 +50,7 @@ $("#trackmenot-opt-showqueries").click(function() {
 $("#validate-feed").click(function() {
     var feeds = $("#trackmenot-seed").val();
     var param = {"feeds": feeds};
+	alert("Validating Feeds")
     self.port.emit("TMNValideFeeds", param);
 }
 );
@@ -78,7 +85,7 @@ function TMNSetOptionsMenu(tab_inputs) {
     var options = tab_inputs.options;
     var feedList = options.feedList;
     var kw_black_list = options.kw_black_list;
-    console.log("Enabled: " + options.enabled);
+    cout("Enabled: " + options.enabled);
     $("#add-engine-table").hide();
     $("#trackmenot-opt-enabled").prop('checked', options.enabled);
     $("#trackmenot-opt-useTab").prop('checked', options.useTab);
@@ -108,11 +115,13 @@ function setFrequencyMenu(timeout) {
 
 
 
-
+function TMNShowValidatedFeeds(feedObject) {
+	alert("Added query for feed '" + feedObject.name + "' : " +  feedObject.words); 
+}
 
 function TMNShowLog(tmnlogs) {
     var logs = tmnlogs.logs
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<div style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     htmlStr += '<thead><tr align=left>';
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
@@ -140,7 +149,7 @@ function TMNShowLog(tmnlogs) {
 
         htmlStr += '</font></tr>';
     }
-    htmlStr += '</table>';
+    htmlStr += '</table></div>';
     $('#tmn_logs_container').html(htmlStr);
 }
 
@@ -159,13 +168,64 @@ function TMNShowEngines(engines) {
 
 function TMNShowQueries(param) {
     var queries = param.queries.split(',');
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
-    for (var i = 0; i < 3000 && i < queries.length; i++) {
-        htmlStr += '<tr style="color:Black">';
-        htmlStr += '<td>' + escapeHTML(queries[i]) + '<td>'
-        htmlStr += '</tr>';
+	var sources = param.sources;
+	var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#popular"> Popular </a>|<a href="#extracted"> Extracted</a>'
+	htmlStr += '<div style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    if ( sources.dhs ) {
+		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
+		htmlStr += '<td > DHS Monitored <td>';
+		htmlStr += '<a name="dhs"></a>';
+		htmlStr += '</tr>';
+		for (var i=0;  i<sources.dhs.length ; i++) {
+			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
+			htmlStr += '<td>' +sources.dhs[i].category_name+ '<td>'
+			htmlStr += '</tr>';
+			for (var j=0;  j< sources.dhs[i].words.length ; j++) {
+				htmlStr += '<tr style="color:Black">';
+				htmlStr += '<td>' +sources.dhs[i].words[j]+ '<td>'
+				htmlStr += '</tr>';
+			}
+		}
     }
-    htmlStr += '</table>';
+	if ( sources.rss ) {
+		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
+		htmlStr += '<td > RSS <td>';
+		htmlStr += '<a name="rss"></a>';
+		htmlStr += '</tr>';
+		for (var i=0;  i<sources.rss.length ; i++) {
+			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
+			htmlStr += '<td>' +sources.rss[i].name+ '<td>'
+			htmlStr += '</tr>';
+			for (var j=0;  j< sources.rss[i].words.length ; j++) {
+				htmlStr += '<tr style="color:Black">';
+				htmlStr += '<td>' +sources.rss[i].words[j]+ '<td>'
+				htmlStr += '</tr>';
+			}
+		}
+    }
+	if ( sources.zeitgeist ) {
+		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
+		htmlStr += '<td > Popular <td>'
+		htmlStr += '<a name="popular"></a>';
+		htmlStr += '</tr>';
+		for (var i=0;  i< sources.zeitgeist.length ; i++) {
+			htmlStr += '<tr style="color:Black">';
+			htmlStr += '<td>' +sources.zeitgeist[i]+ '<td>'
+			htmlStr += '</tr>';
+		}
+    }
+	if ( sources.extracted ) {	
+		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
+		htmlStr += '<td > Extracted <td>';
+		htmlStr += '<a name="extracted"></a>';
+		htmlStr += '</tr>';
+		for (var i=0; i<sources.extracted.length ; i++) {
+			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
+			htmlStr += '<td>' +sources.extracted[i]+ '<td>'
+			htmlStr += '</tr>';
+		}
+	}
+    htmlStr += '</table></div>';
     $('#tmn_logs_container').html(htmlStr);
 }
 
@@ -174,7 +234,7 @@ function saveOptions() {
     var options = {};
     options.enabled = $("#trackmenot-opt-enabled").is(':checked');
 
-    console.log("Saved Enabled: " + options.enabled)
+    cout("Saved Enabled: " + options.enabled)
     options.useTab = $("#trackmenot-opt-useTab").is(':checked');
     options.burstMode = $("#trackmenot-opt-burstMode").is(':checked');
     options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked');
@@ -199,7 +259,7 @@ function saveOptions() {
 }
 
 
-
+self.port.on("TMNShowValidatedFeed",  TMNShowValidatedFeeds) ;
 self.port.on("TMNSetOptionsMenu", TMNSetOptionsMenu)
 self.port.on("TMNSendLogs", TMNShowLog)
 self.port.on("TMNSendQueries", TMNShowQueries)
