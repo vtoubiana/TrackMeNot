@@ -1,5 +1,4 @@
 {
-
 "preferences": [
         {
             "title": "TrackMeNot Options",
@@ -10,14 +9,13 @@
     ],
 	"permissions": {"private-browsing": true},
     "name": "trackmenot",
-    "fullName" : "TrackMeNot", 
+    "title" : "TrackMeNot", 
     "license": "GPL 2.0", 
     "author": "Daniel Howe, Helen Nissenbaum, Vincent Toubiana", 
-    "version": "0.8.14", 
+    "version": "0.9.1", 
     "homepage": "http://www.cs.nyu.edu/trackmenot/",
-    "icon":"data/images/skin/tmn_icon_16.png",  
-	"icon64":"data/images/skin/tmn_icon_64.png",  
-    "main": "trackmenot", 
+    "icon":"resource://trackmenot-at-mrl-dot-nyu-dot-edu/data/images/skin/tmn_icon_32.png",  
+    "main": "trackmenot.js", 
     "id": "trackmenot@mrl.nyu.edu", 
     "description": "Protect against data profiling by search engines"
 }

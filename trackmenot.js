@@ -224,6 +224,8 @@ if (usingAustralis) {
       "32": data.url("images/skin/tmn_icon_32.png"),
       "64": data.url("images/skin/tmn_icon_64.png")
     },
+	badge: "TMN",
+	badgeColor: "#9966CC",
     onChange: function(state) {
       if (state.checked) {
         tmn_panel.show({ position: widget }, nodeFor( widget));
@@ -571,7 +573,7 @@ if (usingAustralis) {
                 title: 'tmn_tab',
                 inBackground: true,
                // onOpen: iniTab,
-		onReady : iniTab,
+                onReady : iniTab,
                 onPageShow: updateTab,
                 onClose: preserveTMNTab
             });
@@ -864,16 +866,16 @@ if (usingAustralis) {
 
 
     function updateOnErr() {
-        widget.label = 'Error';
-        widget.tooltip = 'TMN Error';
+        widget.badge = 'Error';
+        widget.label = 'TMN Error';
 		if (!usingAustralis)
 			widget.port.emit("UpdateText", 'TMN Error');
     }
 
     function updateOnSend(queryToSend) {
         tmn_query = queryToSend;
-        widget.label = queryToSend;
-        widget.tooltip = engine + " '" + queryToSend + "'";
+        widget.badge = engine;
+        widget.label = engine + " '" + queryToSend + "'";
 		if (!usingAustralis) {
 			if (!burstEnabled || burstCount === 0)
 				widget.port.emit("UpdateText", " TMN: '" + queryToSend + "'");
@@ -1191,8 +1193,8 @@ if (usingAustralis) {
     function restartTMN() {
         createTab();
         enabled = true;
+        widget.badge = 'On';
         widget.label = 'On';
-        widget.tooltip = 'On';
 		if (!usingAustralis)
 			widget.port.emit("UpdateText", 'TMN: On');
         scheduleNextSearch(4000);
@@ -1203,22 +1205,25 @@ if (usingAustralis) {
         enabled = false;
         if (useTab)
             deleteTab();
+        widget.badge = 'Off';
         widget.label = 'Off';
-        widget.tooltip = 'Off';
 		if (!usingAustralis)
 			widget.port.emit("UpdateText", 'TMN: Off');
         timer.clearTimeout(tmn_searchTimer);
         timer.clearTimeout(tmn_errTimeout);
     }
 
-    function preserveTMNTab() {
-        if (useTab && enabled) {
+    function preserveTMNTab( ) {
+		var all_windows_closed = (typeof (windows.activeWindow) == 'undefined'); 
+		console.log ("Are all windows closed? " + all_windows_closed); 
+        if (useTab && enabled && !all_windows_closed) {
             tmn_tab = null;
             cout('TMN tab has been deleted by the user, reload it');
             createTab();
             return;
         }
     }
+	
     function formatNum(val) {
         if (val < 10)
             return '0' + val;
@@ -1360,15 +1365,15 @@ if (usingAustralis) {
 
 
             if (enabled) {
+                widget.badge = 'On';
                 widget.label = 'On';
-                widget.tooltip = 'On';
 				if (!usingAustralis)
 					widget.port.emit("UpdateText", 'TMN: On');
                 createTab();
                 scheduleNextSearch(4000);
             } else {
+                widget.badge = 'Off';
                 widget.label = 'Off';
-                widget.tooltip = 'Off';
 				if (!usingAustralis)
 					widget.port.emit("UpdateText", 'TMN: Off');
             }
