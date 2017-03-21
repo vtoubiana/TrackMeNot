@@ -1,2 +1,4 @@
-#TrackMeNot
-A basic add-on
+TrackMeNot-Chrome
+=================
+
+TrackMeNot portage on Chrome

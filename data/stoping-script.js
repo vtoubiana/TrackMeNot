@@ -1,1 +1,0 @@
-self.port.on("TMNStopLoading",  function() { window.stop();window.history.back()}  )
