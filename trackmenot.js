@@ -214,9 +214,10 @@ var engines = [
 	
     function sendQueriesToOption() {
         var allqueries = "";
-        for ( i=0; i<TMNQueries.length; i++) {
-			arr = TMNQueries[i];
+        for ( var key in TMNQueries) {
+			arr = TMNQueries[key];
             if (arr && arr.length) {
+				cout("TMN Queries: "+ arr)
                 for  (var elt of arr)
                 if ( elt&&  elt.words && elt.words.length) allqueries+= elt.words.join(',');
                 else allqueries+= elt+",";   
@@ -335,7 +336,7 @@ var engines = [
         if(debug) cout('Creating tab for TrackMeNot')
         try {
             browser.tabs.create({
-                'selected': false, 
+                'active': false, 
                 'url': 'https://www.google.com'
             },iniTab);
             return 1;

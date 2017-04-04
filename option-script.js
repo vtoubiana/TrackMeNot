@@ -201,7 +201,7 @@ function handleRequest(request, sender, sendResponse) {
                     sendResponse({})
                 break;
                 case "TMNSendQueries":
-					TMNShowQueries(request.param.queries);
+					TMNShowQueries(request.param);
                     sendResponse({})
                 break;
                 case "TMNSendEngines":
