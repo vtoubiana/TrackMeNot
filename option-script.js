@@ -1,24 +1,29 @@
-
+var api;
+if (chrome == undefined) {
+		api = browser;
+	} else {
+		api = chrome;
+	}
+	
 var tmn_options ={};
-var tmn = chrome.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
+var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = null;
 	
 function loadHandlers() {
 	$("#apply-options").click( function() {	
-		tmn_options = {"options":saveOptions()};	 	  			 
-		TMNSetOptionsMenu(tmn_options);
-		alert("Configuration saved");
-		browser.runtime.sendMessage({'tmn':"TMNSaveOptions",'option':tmn_options.options});
+		tmn_options = {"options":saveOptions()};
+		api.runtime.sendMessage({'tmn':"TMNSaveOptions",'options':tmn_options.options});		
+		//TMNSetOptionsMenu(tmn_options);	
 		}
 	);
 
 	$("#trackmenot-opt-help").click( function() {
-			browser.runtime.sendMessage({'tmn':"TMNOptionsOpenHelp"});
+			api.runtime.sendMessage({'tmn':"TMNOptionsOpenHelp"});
 		}
 	);
 	
 	$("#trackmenot-opt-site").click( function() {
-			browser.runtime.sendMessage({'tmn':"TMNOptionsOpenSite"});
+			api.runtime.sendMessage({'tmn':"TMNOptionsOpenSite"});
 
 		}
 	);
@@ -28,31 +33,36 @@ function loadHandlers() {
 		}
 	);
 	$("#show-log").click( function() {	
-		browser.runtime.sendMessage({'tmn':"TMNOptionsShowLog"});
+		api.runtime.sendMessage({'tmn':"TMNOptionsShowLog"});
 		}
 	);
 
 	$("#trackmenot-opt-showqueries").click( function() {	
-		browser.runtime.sendMessage({'tmn':"TMNOptionsShowQueries"});
+		api.runtime.sendMessage({'tmn':"TMNOptionsShowQueries"});
 		}
 	);
 
 	$("#validate-feed").click( function() {	
 		var feeds = $("#trackmenot-seed").val();
 		var param = {"feeds": feeds}
-		browser.runtime.sendMessage({'tmn':"TMNValideFeeds",'param':param});
+		api.runtime.sendMessage({'tmn':"TMNValideFeeds",'param':param});
 		}
 	);
 
 	$("#clear-log").click( function() {	
-		browser.runtime.sendMessage({'tmn':"TMNOptionsClearLog"});
+		api.runtime.sendMessage({'tmn':"TMNOptionsClearLog"});
 		}
 	);
 
 
 	$("#search-engine-list").on('click', 'button.smallbutton', function(event) {
 		var del_engine = event.target.id.split("_").pop();
-		browser.runtime.sendMessage({'tmn':"TMNDelEngine",'engine':del_engine});
+		api.runtime.sendMessage({'tmn':"TMNDelEngine",'engine':del_engine});
+	});
+
+	$("#trackmenot-opt-timeout").change(function() {
+		timeout = $("#trackmenot-opt-timeout").val();
+		setFrequencyMenu(timeout);
 	});
 
 
@@ -65,7 +75,7 @@ function loadHandlers() {
 				alert("Did not find 'trackmenot' in the URL")
 				return
 			}
-			browser.runtime.sendMessage({'tmn':"TMNAddEngine",'engine': engine});
+			api.runtime.sendMessage({'tmn':"TMNAddEngine",'engine': engine});
 		}
 	);
 }
@@ -173,7 +183,7 @@ function saveOptions() {
     options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked'); 
     options.saveLogs = $("#trackmenot-opt-save-logs").is(':checked'); 
     options.timeout = $("#trackmenot-opt-timeout").val();
-    setFrequencyMenu(options.timeout);
+    //setFrequencyMenu(options.timeout);
 
     var engines = '';
     var list = $("#search-engine-list:checked");
@@ -217,14 +227,14 @@ function handleRequest(request, sender, sendResponse) {
 
 document.addEventListener('DOMContentLoaded', function () {
   TMNShowEngines(tmn._getTargetEngines());
-  TMNSetOptionsMenu();
   loadHandlers();
+  TMNSetOptionsMenu();
 });
 
 
 
 
-browser.runtime.onMessage.addListener(handleRequest);
+api.runtime.onMessage.addListener(handleRequest);
  /*       
 self.port.on("TMNSetOptionsMenu",TMNSetOptionsMenu)
 self.port.on("TMNSendLogs",TMNShowLog)

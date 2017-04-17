@@ -1,3 +1,10 @@
+var api;
+if (chrome == undefined) {
+		api = browser;
+	} else {
+		api = chrome;
+	}
+
 if(!TRACKMENOT) var TRACKMENOT = {};
 
 TRACKMENOT.Menus = function() {
@@ -38,7 +45,7 @@ TRACKMENOT.Menus = function() {
       
 
      onLoadMenu: function( ) {
-        tmn = browser.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
+        tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
         options = tmn._getOptions(); ;  
         tmn_option_query = tmn._getQuery();
         tmn_option_engine =  tmn._getEngine();
@@ -63,7 +70,7 @@ TRACKMENOT.Menus = function() {
 document.addEventListener('DOMContentLoaded', function () {
   $("#trackmenot-menu-useTab").click(TRACKMENOT.Menus.toggleTabFrame);
   $("#trackmenot-enabled").click(TRACKMENOT.Menus.toggleOnOff);
-  $("#trackmenot-menu-win").click(function() { window.open(chrome.extension.getURL('options.html'));});
+  $("#trackmenot-menu-win").click(function() { window.open(api.extension.getURL('options.html'));});
   $("#trackmenot-menu-help").click(TRACKMENOT.Menus.showHelp)
   TRACKMENOT.Menus.onLoadMenu()
 });

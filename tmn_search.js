@@ -14,6 +14,13 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************************/
 
+var api;
+if (chrome == undefined) {
+		api = browser;
+	} else {
+		api = chrome;
+	}
+
 if(!TRACKMENOT) var TRACKMENOT = {};
   
 
@@ -132,11 +139,11 @@ TRACKMENOT.TMNInjected = function() {
         return s.replace(/\n/g,'');
     }
     function cout (msg) {
-        //console.log(msg);
+        console.log(msg);
     }  
     function debug (msg) {
-        //if (debug_script)
-          //  console.log("Debug: "+msg);
+        if (debug_script)
+           console.log("Debug: "+msg);
     }
 
   	function getEngineById( id) {
@@ -158,18 +165,15 @@ TRACKMENOT.TMNInjected = function() {
 	
     function pressEnter(elt) {
         var timers =  getTimingArray(); 
-        var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyboardEvent( "keydown", true, true, document.defaultView, false, false, false, false, 13, 0 );  
+        var evtDown = new KeyboardEvent( "keydown",  {"keyCode":13});  
         window.setTimeout(function(){
             elt.dispatchEvent(evtDown);
         },timers[0])  
-        var evtPress= document.createEvent("KeyboardEvent"); 
-        evtPress.initKeyboardEvent( "keypress", true, true, document.defaultView, false, false, false, false, 13, 0 ); 
+        var evtPress= new KeyboardEvent( "keypress",  {"keyCode":13}); 
         window.setTimeout(function(){
             elt.dispatchEvent(evtPress);
         },timers[1])  
-        var evtUp = document.createEvent("KeyboardEvent");  
-        evtUp.initKeyboardEvent( "keyup", true, true, document.defaultView, false, false, false, false, 13, 0 );        
+        var evtUp = new KeyboardEvent( "keyup", {"keyCode":13});        
         window.setTimeout(function(){
             elt.dispatchEvent(evtUp);
         },timers[2])    
@@ -181,15 +185,13 @@ TRACKMENOT.TMNInjected = function() {
    
     function downKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
-        var evtDown = document.createEvent("KeyboardEvent");
-        evtDown.initKeyboardEvent( "keydown", true, true, document.defaultView, false, false, false, false, 0, charCode );   
+        var evtDown = new KeyboardEvent("keydown", {"charCode":charCode} );   
         searchBox.dispatchEvent(evtDown)	
     }
     
     function pressKey(chara, searchBox) {
         var charCode = chara[chara.length-1].charCodeAt(0)
-        var evtPress = document.createEvent("KeyboardEvent");
-        evtPress.initKeyboardEvent( "keypress", true, true, document.defaultView, false, false, false, false, 0, charCode );   
+        var evtPress = new KeyboardEvent("keypress", {"charCode":charCode});   
         searchBox.dispatchEvent(evtPress)	
     }
     
@@ -201,13 +203,12 @@ TRACKMENOT.TMNInjected = function() {
     
     function releaseKey(chara, searchBox) { 
         var charCode = chara[chara.length-1].charCodeAt(0)
-        var evtUp = document.createEvent("KeyboardEvent");
-        evtUp.initKeyboardEvent( "keyup", true, true, document.defaultView, false, false, false, false, 0, charCode ); 
+        var evtUp = new KeyboardEvent( "keyup", {"charCode":charCode}); 
         searchBox.dispatchEvent(evtUp)	
     }
 
     function simulateClick( engine ) {
-     
+		cout("Simulate Click")
         var clickIndex = roll(0,9);   
         if ( !document || document == "undefined" ) return;
         var pageLinks = document.getElementsByTagName("a");
@@ -223,7 +224,7 @@ TRACKMENOT.TMNInjected = function() {
             anchorClass = pageLinks[i].getAttribute("class");
             var link = stripTags(pageLinks[i].innerHTML);
 			eval (engine.testad)
-            if ( testad!="undefined" && testad(anchorClass,anchorLink) ) {  
+            if ( testad!= undefined && testad(anchorClass,anchorLink) ) {  
                 j++
                 if ( j == clickIndex ) {
                     var logEntry = JSON.stringify({
@@ -261,18 +262,15 @@ TRACKMENOT.TMNInjected = function() {
         var win = document.defaultView;
         if ( !elt) return;
         var timers =  getTimingArray(); 
-        var evtDown = document.createEvent("MouseEvents");
-        evtDown.initMouseEvent("mousedown",true,true,win,0, 0, 0, 0, 0, false, false, false, false, 0, null);     
+        var evtDown = new MouseEvent ("mousedown");     
         window.setTimeout(function(){
             elt.dispatchEvent(evtDown);
         },timers[0]) 
-        var evtUp = document.createEvent("MouseEvents");
-        evtUp.initMouseEvent("mouseup",true, true,win,0,0,0,0,0, false, false, false, false, 0, null);        
+        var evtUp = new MouseEvent ("mouseup");        
         window.setTimeout(function(){
             elt.dispatchEvent(evtUp);
         },timers[1])     
-        var evtCl = document.createEvent("MouseEvents");
-        evtCl.initMouseEvent("click",true, true,win,0,0,0,0, 0, false, false, false, false, 0, null);     
+        var evtCl = new MouseEvent ("click");     
         window.setTimeout(function(){
             elt.dispatchEvent(evtCl);
         },timers[2])        
@@ -408,7 +406,7 @@ TRACKMENOT.TMNInjected = function() {
         var response = {
             url: window.location.href
         }; 
-        browser.runtime.sendMessage(response);      
+        api.runtime.sendMessage(response);      
     }
     
     function queryToURL ( url, query) {
@@ -447,7 +445,7 @@ TRACKMENOT.TMNInjected = function() {
                 return encodedUrl;	
             } catch (ex) {
                 cout("Caught exception: "+ ex);
-                browser.runtime.sendMessage({
+                api.runtime.sendMessage({
                     "url": encodedUrl
                 });
                 return null;
@@ -474,7 +472,7 @@ TRACKMENOT.TMNInjected = function() {
                     return encodedUrl;					
                 } catch (ex) {
                     cout("Caught exception: "+ ex);
-                    browser.runtime.sendMessage( {
+                    api.runtime.sendMessage( {
                         "url": encodedUrl
                     });
                     return null;
@@ -493,24 +491,7 @@ TRACKMENOT.TMNInjected = function() {
             cout("Can't find a regexp matching searched url")
             return false;
         }
-		/*var pre   = result[1];
-		var query = result[2];
-		var post  = result[3];
-		var eng   = result[4];
-		var asearch  = pre+'|'+post;
-		if (!tmn_tab || worker.tab.index != tmn_tab.index ) {
-			debug("Worker find a match for url: "+ url + " on engine "+ eng +"!")
-			if (burstEnabled)  enterBurst ( eng )
-			var engine = getEngineById(eng)
-			if ( engine && engine.urlmap != asearch ) {
-				engine.urlmap = asearch;          
-				browser.storage.locale.set({engines :JSON.stringify(engines)}) ;
-				var logEntry = createLog('URLmap', eng, null,null,null, asearch)
-				log(logEntry);
-				debug("Updated url fr search engine "+ eng + ", new url is "+asearch);
-			}
-		} */
-                
+
         
         cout("updateURLRegexp") 
  
@@ -590,19 +571,19 @@ TRACKMENOT.TMNInjected = function() {
             "tmn": "pageLoaded",
             "html": document.defaultView.document.body.innerHTML
         }
-       browser.runtime.sendMessage(req); 
+       api.runtime.sendMessage(req); 
     } 
     
      
     function log(msg) {
-        browser.runtime.sendMessage({tmnLog:msg} )
+        api.runtime.sendMessage({tmnLog:msg} )
     }
      
     function updateStatus(msg) {
         var req = {
             "updateStatus": msg
         } 
-        browser.runtime.sendMessage(req); 
+        api.runtime.sendMessage(req); 
     }     
 
     function setCurrentURLMap( eng, url ) {
@@ -610,19 +591,19 @@ TRACKMENOT.TMNInjected = function() {
         var req = {
             setURLMap: Eng_URL
         } 
-        browser.runtime.sendMessage(req); 
+        api.runtime.sendMessage(req); 
     }
      
     function notifyUserSearch(eng, url) {
         // Here we update the regecxpfpor the queried engine
         updateURLRegexp(eng, url);
-        browser.runtime.sendMessage({
+        api.runtime.sendMessage({
             "userSearch": eng
         } );
     }
     
     function getTMNCurrentURL() {
-        browser.runtime.sendMessage({
+        api.runtime.sendMessage({
             tmn: "currentURL"
         }, 
         function(response) { 
@@ -636,23 +617,23 @@ TRACKMENOT.TMNInjected = function() {
         var message = {
             "url": tmnCurrentURL
         };
-        browser.runtime.sendMessage( message);
+        api.runtime.sendMessage( message);
         sendPageLoaded();
     }
 
   	  	
     return {
   
-
-        clickResult : function(request) {
-            cout("Clicking on engine : "+request.tmn_engine )
-            simulateClick(request.tmn_engine);
-        },
         
   
         handleRequest : function(request, sender, sendResponse) {
-            debug("Received: "+ request.tmnQuery + " on engine: "+ request.tmnEngine + " mode: " +request.tmnMode)
-            if (request.tmnQuery) {       
+            
+            if (request.tmnQuery) { 
+				if (tmn_id >= request.tmnID) {
+					debug("Duplicate queries ignored");
+					return;
+				}				
+				debug("Received: "+ request.tmnQuery + " on engine: "+ request.tmnEngine.id + " mode: " +request.tmnMode + " tmn id "+request.tmnID)			
                 var tmn_query = request.tmnQuery; 
                 engine = request.tmnEngine;
 				all_engines = request.allEngines;
@@ -665,12 +646,16 @@ TRACKMENOT.TMNInjected = function() {
                     setTMNCurrentURL(encodedurl);
                 }
             }
+			if (request.click_eng) {
+				cout("Clicking on engine : "+request.click_eng )
+				simulateClick(request.click_eng);
+			}
             return; // snub them.
         } ,
         
         
         checkIsActiveTab : function() {     
-            browser.runtime.sendMessage({
+            api.runtime.sendMessage({
                 tmn: "isActiveTab"
             }, function(response) {
                 if (response.isActive){
@@ -701,7 +686,7 @@ TRACKMENOT.TMNInjected = function() {
     }
 }();
 TRACKMENOT.TMNInjected.checkIsActiveTab();
-browser.runtime.onMessage.addListener( TRACKMENOT.TMNInjected.handleRequest  );
+api.runtime.onMessage.addListener( TRACKMENOT.TMNInjected.handleRequest  );
 
 /*self.port.on("TMNTabRequest",  TRACKMENOT.TMNInjected.handleRequest  );      
 self.port.on("TMNClickResult",  TRACKMENOT.TMNInjected.clickResult  );*/
