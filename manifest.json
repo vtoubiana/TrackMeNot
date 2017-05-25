@@ -13,6 +13,10 @@
     "scripts": ["trackmenot.js"]
   },
   "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+	"browser_style": true
+  },
   "content_scripts": [
     {
       "matches": ["http://*/*","https://*/*"],
