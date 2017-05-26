@@ -653,5 +653,4 @@ TRACKMENOT.TMNInjected = function() {
 TRACKMENOT.TMNInjected.checkIsActiveTab();
 api.runtime.onMessage.addListener(TRACKMENOT.TMNInjected.handleRequest);
 
-/*self.port.on("TMNTabRequest",  TRACKMENOT.TMNInjected.handleRequest  );      
- self.port.on("TMNClickResult",  TRACKMENOT.TMNInjected.clickResult  );*/
+
