@@ -1,0 +1,621 @@
+<html>
+<head>
+<title>TrackMeNot</title>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<meta name="description" content="TrackMeNot Home">
+<meta name="revisit-after" content="1 days">
+<meta name="language" content="en">
+<meta name="author" content="Daniel C. Howe">
+<meta name="page-topic" content="TrackMeNot">
+<meta name="page-type" content="TrackMeNot">
+<meta name="audience" content="All">
+<meta name="robots" content="INDEX,FOLLOW">
+<meta name="keywords" content="Trackmenot, download, firefox, extensions, values in design, extension, privacy, surveillance, security, search, daniel, daniel howe, daniel c. howe, daniel c howe, howe, canazon, helen, nissenbaum, helen nissenbaum, hfn1, mrl, nyu, values, design, applet, media research lab">
+<!--script src="install.js" type="text/javascript"></script-->
+<style type="text/css">
+.linkList {
+  color: #006ec4;
+  text-decoration: none;
+  font-family: Verdana;
+  font-weight: bold;
+  font-size: 11.5px;
+  line-height: 22px;
+}
+#sharing {
+  margin-left: 0.8em;
+}
+.link {
+  color: #006ec4;
+  text-decoration: none;
+  font-family: Verdana;
+  font-weight: bold;
+  font-size: 12px;
+}
+a#dlbutton, a#dlbutton:visited {  
+    display:block;  
+    background-color: #BEE6A0;  
+    width: 300px;  
+    padding:10px 0;  
+    text-align:center;  
+	  font-family: Verdana;
+	  font-size: 11.5px; 
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4); 
+    border-radius: 5px;  
+    -moz-border-radius: 5px;  
+    -webkit-border-radius: 5px;  
+    color:#4E47E6;  
+    text-decoration: none;  
+    opacity:.85;  
+}  
+a#chromebutton, a#chromebutton:visited {  
+    display:block;  
+    background-color: #656AD3;  
+    width: 300px;  
+    padding:10px 0;  
+    text-align:center;  
+	  font-family: Verdana;
+  	font-size: 11.5px; 
+  	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4); 
+    border-radius: 5px;  
+    -moz-border-radius: 5px;  
+    -webkit-border-radius: 5px;  
+    color:#EF9C65;  
+    text-decoration: none;  
+    opacity:.85;  
+}  
+.smLink {
+  color: #006ec4;
+  text-decoration: none;
+  font-family: Verdana;
+  font-size: 10px;
+  font-weight: bold;
+}
+.lgLink {
+  color: #006ec4;
+  text-decoration: none;
+  font-family: Verdana;
+  font-size: 13px;
+  font-weight: bold;
+}
+a:hover {
+  color: #ff5500;
+  text-decoration: none;
+}
+div.block {text-align:justify}
+.private-sharing-button__link,
+.private-sharing-button__icon {
+  display: inline-block
+}
+
+.private-sharing-button__link {
+  text-decoration: none;
+  color: #fff;
+  margin-left: 0.3em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.private-sharing-button {
+  border-radius: 5px;
+  transition: 25ms ease-out;
+  padding: 0.25em 0.25em;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif
+}
+
+.private-sharing-button__icon svg {
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.4em;
+  vertical-align: top
+}
+
+.private-sharing-button--small svg {
+  margin: 0;
+  vertical-align: middle
+}
+
+.private-sharing-button__icon {
+  stroke: #fff;
+  fill: none
+}
+
+.private-sharing-button__icon--solid,
+.private-sharing-button__icon--solidcircle {
+  fill: #fff;
+  stroke: none
+}
+
+.private-sharing-button--twitter {
+  background-color: #55acee
+}
+
+.private-sharing-button--twitter:hover {
+  background-color: #2795e9
+}
+
+.private-sharing-button--facebook {
+  background-color: #3b5998
+}
+
+.private-sharing-button--facebook:hover {
+  background-color: #2d4373
+}
+
+.private-sharing-button--hackernews {
+background-color: #FF6600
+}
+.private-sharing-button--hackernews:hover, .private-sharing-button--hackernews:focus
+{   background-color: #FB6200 }
+
+.private-sharing-button--twitter {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.private-sharing-button--twitter:hover,
+.private-sharing-button--twitter:active {
+  background-color: #2795e9;
+  border-color: #2795e9;
+}
+</style>
+
+<link rel="icon" type="image/png" href="tmn_icon.png" />
+<script type="text/javascript">
+function callback() { 
+    var userLang = navigator.language || navigator.userLanguage;
+    if (userLang == "fr") {
+        window.location.href = "http://cs.nyu.edu/trackmenot/fr"
+    }
+  	else if (userLang.indexOf("zh") == 0) {
+        window.location.href = "http://cs.nyu.edu/trackmenot/ch"
+    }
+   }
+if (document.readyState === "complete" ||
+    (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  callback();
+} else {
+  document.addEventListener("DOMContentLoaded", callback);
+}
+</script>
+</head>
+
+<body BGCOLOR=#FFFFFF LEFTMARGIN=0 TOPMARGIN=0 MARGINWIDTH=0 MARGINHEIGHT=0>
+<center>
+  <table WIDTH=553 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+    <tr>
+        <td COLSPAN=2 ROWSPAN=4 bgcolor=#E6EAE2>
+            <IMG SRC="images/TMN_logo.gif" WIDTH=234 HEIGHT=206 ALT=""></td>
+        <td COLSPAN=2 bgcolor=#E6EAE2>
+            <IMG SRC="images/TMN_header.gif" WIDTH=362 HEIGHT=52 ALT=""></td>
+        <td ROWSPAN=12 bgcolor=#E6EAE2><!-- right margin -->
+            <IMG SRC="images/spacer.gif" WIDTH=57 HEIGHT=928 ALT=""></td>
+    </tr>
+    <tr>
+        <td COLSPAN=2 bgcolor=#E6EAE2>
+            <table>
+                <tr>
+                    <td><font face=verdana size=2 color=#00446D><b>Created by:</b></font></td>
+                    <td><font face=verdana size=2 color=#413F3F>&nbsp;Daniel
+C. Howe, Helen Nissenbaum</font></td>
+                </tr>
+                <tr>
+                    <td><font face=verdana size=2 color=#00446D><b>Developed by:</b></font></td>
+                    <td><font face=verdana size=2 color=#413F3F>&nbsp;Vincent Toubiana</font></td>
+                </tr>
+            </table>
+       </td>
+    </tr>
+	<tr>
+        <td ROWSPAN=3 width=10 bgcolor=#E6EAE2><IMG SRC="images/spacer.gif" WIDTH=17 HEIGHT=270 ALT=""></td>
+        <td bgcolor=#E6EAE2 valign=bottom></td>
+    </tr>
+    <tr>
+       <td COLSPAN=1 bgcolor=#E6EAE2 >
+	 	<table border=0>
+	 		<tr>
+		 		<td align="left">
+				<a id="dlbutton"
+href="http://cs.nyu.edu/trackmenot/xpi/trackmenot-0.10.0a-fx.xpi" title="Install for Firefix"> TrackMeNot for Firefox  [0.10.0]</a> 
+				</td>
+			</tr>
+				<tr >
+			</tr>
+	 		<tr>
+	 			<td>
+				<!--table>
+					<tr>	
+					<td align="top"-->
+						<a  id="chromebutton" href="https://chrome.google.com/webstore/detail/trackmenot/cgllkjmdafllcidaehjejjhpfkmanmka" title="Install for Chrome">TrackMeNot for Chrome  [0.10.0]</a>
+					<!--/td>
+		            </tr>
+	      </table-->
+				</td>	
+			</tr>
+		</table>
+		</td>
+	</tr>
+    <tr>
+        <td ROWSPAN=8 background="images/left_frame.gif">
+            <IMG SRC="images/spacer.gif" WIDTH=71 HEIGHT=522 ALT="">
+        </td>
+        <td bgcolor=#D6E0E0 width=220><!--144 adjuster -->
+          <b><br><a href="#how" class=linkList>&nbsp;&nbsp;&diams; How It
+Works</a><br><a href="#why" class=linkList>&nbsp;&nbsp;&diams; Why We Created
+TMN</a><!--br><a href="#bg" class=linkList>&nbsp;&nbsp;&diams;
+Background</a--><br><a href="faq.html" class=linkList>&nbsp;&nbsp;&diams;
+Installation / Help</a>
+<br><!--a href="#version" class=linkList>&nbsp;&nbsp;&diams; New 0.8
+Features!</a><br-->
+<a href="TMN-Howe-Niss08-ch23.pdf" class=linkList>&nbsp;&nbsp;&diams; Read the Paper</a><br>
+<a href="https://github.com/vtoubiana/TrackMeNot" class=linkList>&nbsp;&nbsp;&diams; Source on GitHub</a><br>
+<a href="videos.html" class=linkList>&nbsp;&nbsp;&diams; Tutorials</a><br>
+<a href="faq.html" class=linkList>&nbsp;&nbsp;&diams; FAQ</a><br>
+<a href="" onmouseover="this.href='mai' + 'lto:' + 'trackmenot.help' + '@' + 'gmail.com?subject=Re: TrackMeNot'" class=linkList>&nbsp;&nbsp;&diams;
+Contact Us</a><br></b>
+
+<div id="sharing">
+
+<!-- Sharingbutton Facebook -->
+<a class="private-sharing-button__link"
+href="https://facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcs.nyu.edu%2Ftrackmenot"
+target="_blank" aria-label="">
+  <div class="private-sharing-button private-sharing-button--facebook
+private-sharing-button--small"><div aria-hidden="true"
+class="private-sharing-button__icon private-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path
+d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5
+5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Twitter -->
+<a class="private-sharing-button__link"
+href="https://twitter.com/intent/tweet/?text=Protect%20your%20search%20history%20from%20trackers%20with%20TrackMeNot!&amp;url=https%3A%2F%2Fcs.nyu.edu%2Ftrackmenot"
+target="_blank" aria-label="">
+  <div class="private-sharing-button private-sharing-button--twitter
+private-sharing-button--small"><div aria-hidden="true"
+class="private-sharing-button__icon private-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path
+d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9
+1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1
+1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2
+3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64
+4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1
+18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2
+0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Hacker News -->
+<a class="private-sharing-button__link"
+href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fcs.nyu.edu%2Ftrackmenot&amp;t=Protect%20your%20search%20history%20from%20trackers%20with%20TrackMeNot!"
+target="_blank" aria-label="">
+  <div class="private-sharing-button private-sharing-button--hackernews
+private-sharing-button--small"><div aria-hidden="true"
+class="private-sharing-button__icon private-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path
+fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888
+1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596
+1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42
+1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27
+3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+</div>
+
+        </td>
+        <td bgcolor=#E6EAE2 width=362><div class=block>
+            <font face=verdana size=2 color=#00446D><b><i>TrackMeNot</i></b></font><font face=verdana size=2 color=#413F3F> is a lightweight browser
+extension that helps protect web searchers from surveillance and data-profiling
+by search engines.  It does so not by means of concealment or encryption (i.e.
+covering one's tracks), but instead, paradoxically, by the opposite strategy:
+noise and obfuscation. With TrackMeNot, actual web searches, lost in a cloud
+of false leads, are essentially hidden in plain view. User-installed
+TrackMeNot works with <!--a href="http://www.mozilla.com/firefox/" targer=_blank class=link-->Firefox <!--/a--> and Chrome browsers and popular search engines (AOL, Yahoo!,
+Google, and Bing) and requires no 3rd-party servers or services.</div>
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN=3 bgcolor=#E6EAE2><div class=block><a name="how"></a>
+            <br><font face=verdana size=2 color=#00446D><b>How It Works</b><br>
+TrackMeNot</font><font face=verdana size=2 color=#413F3F> runs
+in Firefox and Chrome as a low-priority background process that periodically issues
+randomized search-queries to popular search engines, e.g., AOL, Yahoo!,
+Google, and Bing. It hides users' actual search trails in a cloud of 'ghost'
+queries, significantly increasing the difficulty of aggregating such data into
+accurate or identifying user profiles. TrackMeNot serves as a means of amplifying users'
+ discontent with advertising networks that not only disregard privacy, but also facilitate 
+ the bulk surveillance agendas of corporate and government agencies, as documented recently
+ in disclosures by Edward Snowden and others. To better simulate user behavior TrackMeNot 
+ uses a dynamic query mechanism to 'evolve' each client (uniquely) over time, parsing the results of its searches for 'logical'
+future query terms with which to replace those already used.</p> <br>
+        </div>
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN=3 bgcolor=#D6E0E0>
+            <blockquote><p><font face=verdana size=2
+color=#413F3F><br> TrackMeNot is user-installed and user-managed, 
+residing wholly on users' system and functions without the need for 3rd-party servers or services. 
+Placing users in full control is an essential feature of TrackMeNot, whose purpose is to protect against the unilateral policies set by search companies in their handling of our personal information.</p></blockquote>
+        </td>
+    </tr>
+    <tr>
+            <td COLSPAN=3 bgcolor=#E6EAE2><a name="why"></a><div class=block>
+                <br>&nbsp;<br><font face=verdana size=2 color=#00446D><b>Why
+We Created TMN</b><br>
+<font face=verdana size=2 color=#413F3F>The practice of logging user search
+activities and creating individual search profiles - sometimes identifiable -
+has received attention in mainstream press, e.g. the recent front-page <a
+href="http://www.nytimes.com/2006/08/09/technology/09aol.html"
+target="_blank" class=link>New York Times article on AOL</a>'s release of collected data on individual searchers; also this front-page New York Times Business Section article describing the <a
+href="http://www.nytimes.com/2006/08/15/technology/15search.html" target="_blank" class=link>User-Profiling Practices of Yahoo!, AOL,  Bing & Google.</a></p><p>
+
+We are disturbed by the idea that search inquiries are systematically monitored and stored by corporations like AOL, Yahoo!, Google, etc. and may even be available to third parties. Because the Web has grown into such a crucial repository of information and our search behaviors profoundly reflect who we are, what we care about, and how we live our lives, there is reason to feel they should be off-limits to arbitrary surveillance. But what can be done?</p><p>
+
+Legal approaches -- urging legislators to support limits on access, or courts to extend Fourth Amendment protection -- might be effective, but would require orchestrated efforts by many parties. Appeals to search companies themselves seem even less hopeful as their interests, at least on the surface, are in direct conflict with such limits. Both, at best, are long term prospects.</p><p>
+
+We have developed TrackMeNot as an immediate solution, implemented and
+controlled by users themselves. It fits within the class of strategies,
+described by Gary T. Marx, whereby individuals resist surveillance by taking
+advantage of blind spots inherent in large-scale systems<sup><small><a
+href=#marx class=smLink>1</a></small></sup>. TrackMeNot may not radically alter the privacy landscape but helps to place a particularly sensitive arena of contemporary life back in the hands of individuals, where it belongs in any free society.</font></p>
+            </div>
+            </td>
+    </tr>
+    <tr>
+            <td COLSPAN=3 bgcolor=#E6EAE2><div class=block><a name="bg"></a>
+                <br><font face=verdana size=2
+color=#00446D><b>Background</b></font><br>
+   <font face=verdana size=2 color=#413F3F>Public awareness of the vulnerability of searches to systematic surveillance and logging by search engine companies, was initially raised in the wake of a case, initiated August 2005, in which the United States Department of Justice (DOJ) issued a subpoena to Google for one week's worth of search query records (absent identifying information) and a random list of one million URLs from its Web index. This was cited as part of its defense of the constitutionality of the Child Online Protection Act (COPA). When Google refused, the DOJ filed a motion in a Federal District Court to force compliance. Google argued that the request imposed a burden, would compromise trade secrets, undermine customers' trust in Google, and have a chilling effect on search activities. In March 2006, the Court granted a reduced version of the first motion, ordering Google to provide a random listing of 50,000 URLs, but denied the second motion, namely, the request for search queries.</p><p>
+
+While viewed from the perspective of user privacy this seems a good outcome, yet it does bring to light several disquieting points. First, from court documents we learn that AOL, Yahoo!, and Microsoft have complied with the government's request, though details are not given. Second, we must face the reality that logs of our online searches are in the hands of search companies and can be quite easily linked to our identities. Thirdly, it is clear we have little idea of, or say in, what can be done with these logs. While, in this instance, Google withheld such records from the Government, it would be foolish to count on this outcome in the future. </font></div>
+
+<center><br><font face=verdana size=2 color=#00446D><b><i>TrackMeNot
+</i></b></font><font face=verdana size=2 color=#413F3F>is a work in progress -- we welcome feedback from the community!!</center>
+            </td>
+    </tr>
+        <tr>
+             <td COLSPAN=3 bgcolor=#E6EAE2>
+
+             <table border=0 width=100%>
+               <tr>
+
+ 						<td width=10>&nbsp;</td>
+            <td><br><font face=verdana size=2><a href="http://rednoise.org/daniel" target=_blank class=link>Daniel C. Howe</a><br>
+							School of Creative Media, HK<br>
+              https://rednoise.org/daniel<br>
+              email: daniel&lt;at&gt;rednoise.org</font>
+             </td>
+
+             <td width=10>&nbsp;</td>
+             <td><br><font face=verdana size=2><a href="http://www.nyu.edu/projects/nissenbaum" target=_blank class=link>Helen Nissenbaum</a><br>
+             Media, Culture &#38; Communication / CS<br>
+             http://www.nyu.edu/projects/nissenbaum<br>
+             email: hfn1&lt;at&gt;nyu.edu</font>
+             </td>
+
+               </tr>
+
+               <tr>
+
+             <td >&nbsp;</td>
+			 <td><br><font face=verdana size=2><a href="http://www.unsearcher.org" target=_blank class=link>Vincent Toubiana</a><br><br>
+             http://unsearcher.org<br>
+			 email: v.toubiana&lt;at&gt;free.fr</font>
+             </td>
+
+								<td width=10>&nbsp;</td><td>
+             <!--br><font face=verdana size=2 color=#006ec4><b>Niranjan
+Sivakumar</b></font>
+             <br><font face=verdana size=2>email:
+niranjan&lt;at&gt;cims.nyu.edu</font><p-->
+             </td>
+
+               </tr>
+						</table>
+
+
+             </td>
+    </tr>
+                <!--tr>
+                    <td><font face=verdana size=1 color=#00648D><b>Developers:</b></font><font face=verdana size=1 color=#514F4F>&nbsp;Vincent
+Toubiana, Niranjan Sivakumar</font><td>
+                </tr-->
+    <tr>
+        <td COLSPAN=3 bgcolor=#E6EAE2>
+<table><tr><td width=10></td><td><font face=verdana size=1>
+<br>&nbsp;<br>Special thanks to the <a href="http://cs.nyu.edu" target=_blank 
+class=smLink>NYU Dept of Computer Science</a>, <a href="http://mrl.nyu.edu"
+target=_blank class=smLink>the Media Research Lab</a>, <a href="http://www.mozilla.org/foundation/" target=_blank class=smLink>the Mozilla
+Foundation</a>, <a href="http://missingpixel.net/" target=_blank
+class=smLink>Missing Pixel</a><SUP><SMALL>TM</SMALL></SUP>, <a
+href="http://crypto.stanford.edu/portia/" target=_blank class=smLink>the
+Portia Project</a>, <a href="http://www.babelzilla.org/" target=_blank class=smLink>Babelzilla</a>, <a href="http://cs.nyu.edu/faculty/davise" target=_blank class=smLink>Ernest Davis</a>, <a href="http://michaelzimmer.org/"
+target=_blank class=smLink>Michael Zimmer</a>, <div class=smLink>John
+Fanning, and <a target=_blank
+class=smLink href="http://mrl.nyu.edu/~robb/">Robb Bifano</a></div></font>
+         </td></tr></table>
+        <center><!--IMG SRC="images/hr_rule.gif" ALT=""--></center><p>
+        <!-- Creative Commons License  -->
+        <div align=center><font face=verdana size=1>
+        licensed under</font><br><a rel="license"
+        href="https://creativecommons.org/licenses/by-nc-sa/1.0/" target=_blank><img
+        alt="Creative Commons License" border="0"
+        src="https://creativecommons.org/images/public/somerights.gif"/></a>
+        </div>
+        <p>&nbsp;<p>&nbsp;<p>&nbsp;<p>
+        </td>
+    </tr>
+     <tr>
+        <td COLSPAN=3 bgcolor=#E6EAE2><br><center>
+
+
+<!--table WIDTH=553 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+
+<tr><td width=20>
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>
+</td><td bgcolor=#E6EAE2>
+<a name="version"></a>
+<IMG SRC="images/hr_rule.gif" ALT=""><p>
+<font face=verdana size=2 color=#00446D> 
+<font face=verdana size=3 color=#00446D><b>New in version 0.8.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li> Possibility to add/delete search engines
+<li> A list of keywords monitored by DHS (default: off)
+<li> New HTML interface with more options
+<li> Option to run TMN in a dedicated tab
+<li> Restart no longer required
+<li> Minor bug fixes
+</ul>
+</font>
+
+
+<font face=verdana size=3 color=#00446D><b>New in version 0.7.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li> Keystrokes simulation and query suggestion support 
+<li> Improved RSS seed editor and integration in Firefox
+<li> Fixed Selective click-through (for non-ad links)
+<li> Full search result page rendering
+<li> Option to show the searching iFrame 
+<li> Minor bug fixes
+</ul>
+</font>
+<font face=verdana size=2 color=#00446D> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>See <a href="videos.html"
+class=link><u>Videos</u></a> for info on these features.</b><br>&nbsp;<p>
+</font>
+
+<font face=verdana size=3 color=#00446D><b>New in version 0.6.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li> RSS support for seed-generation and substitution
+<li> Burst-mode (default: on) with query permutation
+<li> French language version 
+<li> Improved support for non-latin characters
+<li> Minor bug fixes
+</ul>
+</font>
+<font face=verdana size=2 color=#00446D> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>See <a href="faq.html#features"
+class=link><u>Help/FAQ</u></a> for info on these features.</b><br>&nbsp;<p>
+</font>
+
+<font face=verdana size=3 color=#00446D><b>New in version 0.5.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li> Firefox 3.x compatibility
+<li> Realtime search-tracking
+<li> Dynamic URL/header matching
+<li> Burst-mode (default: off)
+<li> Cookie-anonymization (default: off)
+<li> Improved timing mechanism 
+<li> Improved logging (cookie-actions, etc.)
+<li> Minor bug fixes
+</ul>
+</font>
+
+
+<!--
+-----------------------------------
+Realtime Search-tracking
+    -- TMN now recognizes when a 'real' search is being performed by a user and can
+act on this information in a variety of ways (see below).  
+
+Dynamic URLs/Header Matching:
+    -- TMN now keeps track of where (for each search engine) you've last
+searched and uses that URL to send its queries (i.e., if you start using the
+Google toolbar rather than the webpage, TMN will update itself to do the
+same). Similarly, TMN now stores the header information your browser is
+sending out (browser type, version, OS, etc.) and mimics these in its own queries.
+
+Burst-Mode (enable/disable in options):
+    -- Rather than sending queries only at randomized intervals, TMN (in burst-mode)
+recognizes when the user performs a search, then sends a 'burst' of queries 
+over the next few moments to simulate actual user behavior.
+
+Cookie-Anonymization (enable/disable in options):
+  -- For user searches, TMN 'hides' the search-engine's cookies to further
+obfuscate search logs. For TMN-generated searches, however, this 'real' cookie
+is used, so that only 'fake' queries are associated with a user's profile.
+TMN then blocks all incoming cookies for its own searches. For non-searches
+(i.e., general browsing and/or mail services, etc.), the cookie is sent as
+usual. To see this behavior, one can use the google or AOL search-history
+feature. With 'cookie-anonymization' disabled, both TMN and user searches will appear in
+these histories; when this feature is disabled, only TMN searches will appear.
+--
+
+
+<font face=verdana size=3 color=#00446D><b>New in version 0.4.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li> Dynamic query sets 
+<li> Option to select search-engines
+<li> Added statusbar context-menu
+<li> New windows for log/query display
+<li> Option for cross-session logging
+<li> New tools/context menu icons
+<li> Minor bug fixes
+</ul>
+</font>
+
+<font face=verdana size=3 color=#00446D><b>New in version 0.3.x</b></font>
+<font face=verdana size=2>
+<ul>
+<li>User-configurable query lists (see Options)
+<li>Randomized query-lengths (1-6 words per query)
+<li>Larger word list with 'actual' search terms
+<li>Better randomization of query scheduling
+<li>Now compatible with Firefox 1.5 - 2.0
+<li>Interface improvements
+</ul>
+
+<p>
+<a href="" class=link>Back to Main Page</a>
+</font><br>
+</td></tr>
+
+<tr><td width=20>
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>
+</td><td>
+<br><IMG SRC="images/hr_rule.gif" ALT=""></center>
+</td></tr>
+
+</table-->
+
+</center><p>&nbsp;<p>
+<a name="marx"></a>
+<font face=verdana size=1><br></font>
+<font face=verdana size=2>
+<sup><small>1</small></sup> Footnote: See Gary T.  Marx "A Tack in the Shoe: Neutralizing and Resisting
+the New Surveillance," Journal of Social Issues, Vol 59, No. 2, 2003,
+369-390). <p>
+<a href="" class=link>Back to Main Page</a>
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;
+<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>
+</a>
+</font><br>
+
+
+</td>
+</tr>
+</table>
+
+</center>
+</body>
+</html>
