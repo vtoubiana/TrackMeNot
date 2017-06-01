@@ -101,6 +101,7 @@ TRACKMENOT.TMNSearch = function() {
         id: 'google',
         name: 'Google Search',
         urlmap: "https://www.google.com/search?hl=en&q=|",
+		regexmap: "^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z]{2,3}\/(search){1}[\?]?.*?[&\?]{1}q=)([^&]*)(.*)$",
         testad: function(ac, al) {
             return (al && (ac == 'l' || ac == 'l vst') && al.indexOf('http') == 0 && al.indexOf('https') != 0);
         },
@@ -435,7 +436,8 @@ TRACKMENOT.TMNSearch = function() {
     }
 
     function cout(msg) {
-        console.log(msg);
+	     if (debug_)
+			console.log(msg);
     }
 
     function debug(msg) {
@@ -493,8 +495,9 @@ TRACKMENOT.TMNSearch = function() {
 
     function checkForSearchUrl(url) {
         var result = null;
+		var eng;
         for (var i = 0; i < engines.length; i++) {
-            var eng = engines[i]
+            eng = engines[i]
             var regex = eng.regexmap;
             debug("  regex: " + regex + "  ->\n                   " + url);
             result = url.match(regex);
@@ -1216,12 +1219,6 @@ TRACKMENOT.TMNSearch = function() {
         }
         if (request.updateStatus) {
             updateOnSend(request.updateStatus);
-            sendResponse({});
-            return;
-        }
-        if (request.userSearch) {
-            cout("Detected User search")
-            enterBurst(request.userSearch);
             sendResponse({});
             return;
         }

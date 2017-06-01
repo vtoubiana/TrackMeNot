@@ -26,7 +26,7 @@ if (!TRACKMENOT)
 
 
 TRACKMENOT.TMNInjected = function() {
-    var debug_script = true;
+    var debug_script = false;
 
     var tmn = null;
     var tmn_id = 0;
@@ -626,16 +626,10 @@ TRACKMENOT.TMNInjected = function() {
             api.runtime.sendMessage({
                 tmn: "isActiveTab"
             }, function(response) {
-                if (response.isActive) {
+                if ( response && response.isActive) {
                     cout('Message sent from active tab');
                     TRACKMENOT.TMNInjected.hasLoaded();
-                }/* else {
-                 var host = window.location.host; 
-                 var eng = isSafeHost(host);
-                 if ( eng ) {
-                 notifyUserSearch(eng, window.location.href);
-                 }
-                 }*/
+                }
             });
        },
         hasLoaded: function() {
