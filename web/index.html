@@ -31,37 +31,28 @@
   font-weight: bold;
   font-size: 12px;
 }
-a#dlbutton, a#dlbutton:visited {  
-    display:block;  
-    background-color: #BEE6A0;  
-    width: 300px;  
-    padding:10px 0;  
-    text-align:center;  
-	  font-family: Verdana;
-	  font-size: 11.5px; 
-	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4); 
-    border-radius: 5px;  
-    -moz-border-radius: 5px;  
-    -webkit-border-radius: 5px;  
-    color:#4E47E6;  
-    text-decoration: none;  
-    opacity:.85;  
+a#firefoxbutton, a#firefoxbutton:visited {  
+    background-color: #BEE6A0;    
+    color:#4E47E6;     
 }  
+.dlbutton {
+   display:block; 
+   width: 300px;  
+   padding:10px 0;
+   text-align:center;  
+   font-family: Verdana;
+   font-size: 11.5px; 
+   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4); 
+   border-radius: 5px;  
+   -moz-border-radius: 5px;  
+   -webkit-border-radius: 5px; 
+   text-decoration: none;  
+   opacity:.85;   
+}
+
 a#chromebutton, a#chromebutton:visited {  
-    display:block;  
     background-color: #656AD3;  
-    width: 300px;  
-    padding:10px 0;  
-    text-align:center;  
-	  font-family: Verdana;
-  	font-size: 11.5px; 
-  	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4); 
-    border-radius: 5px;  
-    -moz-border-radius: 5px;  
-    -webkit-border-radius: 5px;  
-    color:#EF9C65;  
-    text-decoration: none;  
-    opacity:.85;  
+    color:#EF9C65;     
 }  
 .smLink {
   color: #006ec4;
@@ -176,6 +167,7 @@ if (document.readyState === "complete" ||
 } else {
   document.addEventListener("DOMContentLoaded", callback);
 }
+
 </script>
 </head>
 
@@ -214,23 +206,33 @@ C. Howe, Helen Nissenbaum</font></td>
 	 	<table border=0>
 	 		<tr>
 		 		<td align="left">
-				<a id="dlbutton"
+				<a id="firefoxbutton" class='dlbutton'
 href="http://cs.nyu.edu/trackmenot/xpi/trackmenot-0.10.0a-fx.xpi" title="Install for Firefix"> TrackMeNot for Firefox  [0.10.0]</a> 
 				</td>
 			</tr>
 				<tr >
 			</tr>
+
 	 		<tr>
 	 			<td>
 				<!--table>
 					<tr>	
 					<td align="top"-->
-						<a  id="chromebutton" href="https://chrome.google.com/webstore/detail/trackmenot/cgllkjmdafllcidaehjejjhpfkmanmka" title="Install for Chrome">TrackMeNot for Chrome  [0.10.0]</a>
+						<a  id="chromebutton" class='dlbutton' href="https://chrome.google.com/webstore/detail/trackmenot/cgllkjmdafllcidaehjejjhpfkmanmka" title="Install for Chrome">TrackMeNot for Chrome  [0.10.0]</a>
 					<!--/td>
 		            </tr>
 	      </table-->
-				</td>	
+				</td>      
 			</tr>
+
+      <tr>
+        <td>
+          <a id="firefoxlink" class="link" href="http://cs.nyu.edu/trackmenot/xpi/trackmenot-0.10.0a-fx.xpi" title="Install for Firefix"> Download for Firefox  [0.10.0]</a> 
+          <a id="chromelink" class="link" href="https://chrome.google.com/webstore/detail/trackmenot/cgllkjmdafllcidaehjejjhpfkmanmka" title="Install for Firefix"> Download for Chrome  [0.10.0]</a> 
+        </td>      
+      </tr>
+
+
 		</table>
 		</td>
 	</tr>
@@ -617,5 +619,19 @@ the New Surveillance," Journal of Social Issues, Vol 59, No. 2, 2003,
 </table>
 
 </center>
+<script>
+  // show download button according to the browser
+  // default : Firefox
+  var isChrome = !!window.chrome && !!window.chrome.webstore;
+  if (isChrome) { 
+    document.getElementById("firefoxbutton").style.display = 'none';
+    document.getElementById("chromelink").style.display = 'none'; 
+  } else {
+    document.getElementById("chromebutton").style.display = 'none';
+    document.getElementById("firefoxlink").style.display = 'none'; 
+    
+  }
+
+</script>
 </body>
 </html>
