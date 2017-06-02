@@ -24,6 +24,14 @@
         overflow:hidden;
     }
 
+    #whiteSpace {
+        position:absolute;
+        top:15%;
+        left:0;
+        width:30px;
+        height:85%;
+        background-color: white;
+    }
 
     a:link, a:visited {
         color: #006ec4;
@@ -98,7 +106,7 @@
       }
 
     #tmn_logs_container {
-        width:560px; 
+        width:760px; 
         overflow-y: scroll;
         overflow-x: hidden; 
         height: 100%;
@@ -111,11 +119,11 @@
         -webkit-border-radius: 5px;
     }
     #tmn_logs_container table {
-        width:600px;
-        margin:0;
+        width:740px;
+        margin:0;  
         padding: 20px 0;
     }
-     #tmn_logs_container table td {
+     #tmn_logs_container table#queries td {
         padding-left:20px;
         width:500px;
      }
