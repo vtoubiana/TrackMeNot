@@ -13,6 +13,16 @@
         font-size: 11px;
     }
     
+    table td{
+        padding:0;
+    }
+    table {
+        table-layout: fixed;
+        /*word-break: break-all;*/
+    }
+    table,tr,td{
+        overflow:hidden;
+    }
 
 
     a:link, a:visited {
@@ -71,7 +81,7 @@
         text-decoration: none;
     }
     
-    table {
+    table.optiontable {
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
