@@ -13,7 +13,25 @@
         font-size: 11px;
     }
     
+    table td{
+        padding:0;
+    }
+    table {
+        table-layout: fixed;
+        /*word-break: break-all;*/
+    }
+    table, tr, td{
+        overflow:hidden;
+    }
 
+    #whiteSpace {
+        position:absolute;
+        top:15%;
+        left:0;
+        width:30px;
+        height:85%;
+        background-color: white;
+    }
 
     a:link, a:visited {
         color: #006ec4;
@@ -71,7 +89,7 @@
         text-decoration: none;
     }
     
-    table {
+    table.optiontable {
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -86,7 +104,35 @@
         -webkit-border-radius:2px;
         text-decoration: none;
       }
-    
+
+    #tmn_logs_container {
+        width:760px; 
+        overflow-y: scroll;
+        overflow-x: hidden; 
+        height: 100%;
+        margin:20px;
+        visibility:hidden;
+        background-color: #F0F0F0;
+        border:1px solid #608925;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
+    #tmn_logs_container table {
+        width:740px;
+        margin:0;  
+        padding: 20px 0;
+    }
+     #tmn_logs_container table#queries td {
+        padding-left:20px;
+        width:500px;
+     }
+
+    #wrapper, #wrapper > table{
+        height:100vh;
+        float:left;
+    }
+
     button, button:visited {
         display:block;
         background: #E6EAE2;

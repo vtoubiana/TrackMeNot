@@ -135,7 +135,7 @@ function setFrequencyMenu(timeout) {
 
 function TMNShowLog(tmnlogs) {
     var logs = tmnlogs.logs;
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table cellspacing=3>';
     htmlStr += '<thead><tr align=left>';
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
@@ -160,6 +160,7 @@ function TMNShowLog(tmnlogs) {
     }
     htmlStr += '</table>';
     $('#tmn_logs_container').html(htmlStr);
+    $('#tmn_logs_container').css("visibility","visible");
 }
 
 
@@ -177,7 +178,7 @@ function TMNShowEngines(engines) {
 
 function TMNShowQueries(param) {
     var queries = param.queries.split(',');
-    var htmlStr = '<table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+    var htmlStr = '<table id="queries" cellspacing=3>';
     for (var i = 0; i < 3000 && i < queries.length; i++) {
         htmlStr += '<tr style="color:Black">';
         htmlStr += '<td>' + queries[i] + '<td>';
@@ -185,6 +186,7 @@ function TMNShowQueries(param) {
     }
     htmlStr += '</table>';
     $('#tmn_logs_container').html(htmlStr);
+    $('#tmn_logs_container').css("visibility","visible");
 }
 
 
