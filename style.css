@@ -122,6 +122,8 @@
         width:740px;
         margin:0;  
         padding: 20px 0;
+        font-size:11px;
+        line-height: 1.2em;
     }
      #tmn_logs_container table#queries td {
         padding-left:20px;
