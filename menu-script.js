@@ -61,8 +61,8 @@ TRACKMENOT.Menus = function() {
 			 $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
 		}
 			
-		if (options.useTab)  $("#trackmenot-menu-useTab").html('Stealth');
-		else $("#trackmenot-menu-useTab").html('Tab')
+		if (options.useTab)  $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/stealth_icon.png" /> Stealth');
+		else $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/tab_icon.png" /> Tab')
       }
   }
 }(); 
