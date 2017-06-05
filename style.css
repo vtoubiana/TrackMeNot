@@ -7,7 +7,7 @@
         line-height: 22px;
     }
 
-    .optiontable, .optiontable TD 
+    .optiontable, .optiontable TD, #tmn_logs_container table
     {
         font-family:verdana;
         font-size: 11px;
@@ -122,7 +122,6 @@
         width:740px;
         margin:0;  
         padding: 20px 0;
-        font-size:11px;
         line-height: 1.2em;
     }
      #tmn_logs_container table#queries td {
