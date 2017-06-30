@@ -87,7 +87,7 @@ function loadHandlers() {
         engine.name = $("#newengine-name").val();
         engine.urlmap = $("#newengine-map").val();
         if (engine.urlmap.indexOf('trackmenot') < 0) {
-            alert("Did not find 'trackmenot' in the URL");
+            alert("To add the engine url, search 'trackmenot' (without the quotes) on the engine you want to add, and copy/paste the search url in the URL text box bellow.");
             return;
         }
         api.runtime.sendMessage({
