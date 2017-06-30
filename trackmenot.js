@@ -525,6 +525,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function isBursting() {
+        console.log(burstEnabled, burstCount);
         return burstEnabled && burstCount > 0;
     }
 

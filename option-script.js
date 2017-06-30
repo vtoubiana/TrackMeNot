@@ -103,7 +103,7 @@ function TMNSetOptionsMenu() {
     var feedList = options.feedList;
     var kw_black_list = options.kw_black_list;
     //console.log("Enabled: " +options.enabled)
-    $("#add-engine-table").hide();
+    // $("#add-engine-table").hide();
     $("#trackmenot-opt-enabled").prop('checked', options.enabled);
     $("#trackmenot-opt-useTab").prop('checked', options.useTab);
     $("#trackmenot-opt-burstMode").prop('checked', options.burstMode);

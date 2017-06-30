@@ -1,3 +1,16 @@
+    h4 {
+        font-family: verdana;
+        color: #00446D;
+        font-size: 13px !important;
+        margin: 4px 10px;
+        display: inline-block;
+    }
+    
+    h5 {
+        font-size: 12px !important;
+        font-weight: normal;
+        margin:2px 5px  2px 20px;
+    }
     .linkList {
         color: #006ec4;
         text-decoration: none;
@@ -6,13 +19,22 @@
         font-size: 11.5px;
         line-height: 22px;
     }
+    #versionNumber{
+        float:right;
+        vertical-align: bottom;
+        position: relative;
+        top: 86px;
+        right: 10px;
+    }
 
     .optiontable, .optiontable TD, #tmn_logs_container table
     {
         font-family:verdana;
         font-size: 11px;
     }
-    
+    input[type="checkbox"] {
+        margin:2px 5px  2px 20px;
+    }
     table td{
         padding:0;
     }
@@ -22,6 +44,11 @@
     }
     table, tr, td{
         overflow:hidden;
+        padding: 1px;
+    }
+    td label + button {
+        float:right;
+        margin: 4px 360px 4px 10px;
     }
 
     #whiteSpace {
@@ -81,8 +108,8 @@
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
         opacity:.85;
+        margin:0 5px;
     }
-    
     
     A:hover {
         color: #ff5500;
@@ -148,6 +175,8 @@
         -webkit-border-radius: 5px;
         text-decoration: none;
         opacity:.85;
+        display: inline-block;
+        margin:0 10px;
       }
       
       button:hover {
