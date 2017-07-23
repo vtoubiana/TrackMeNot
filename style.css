@@ -26,6 +26,27 @@
         top: 86px;
         right: 10px;
     }
+    .helpmark {
+        font-size: 11px;
+        width: 13px;
+        border-radius: 10px;
+        background-color: rgb(194, 204, 204);
+        padding: 2px 1px 0px;
+        display: inline-block;
+        height: 13px;
+        line-height: 1em;
+        color: #00446D;
+        opacity: .7;
+        text-shadow: none;
+        text-decoration: none;
+        text-align: center;
+        font-weight: 700;
+        margin-left: 2px;
+    }
+    .helpmark:hover{
+        color: rgb(194, 204, 204);
+        background-color: #00446D;
+    }
 
     .optiontable, .optiontable TD, #tmn_logs_container table
     {
