@@ -10,15 +10,25 @@ var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = null;
 
 function loadHandlers() {
-    $("#apply-options").click(function() {
-        tmn_options = {
-            "options": saveOptions()
-        };
-        api.runtime.sendMessage({
-            'tmn': "TMNSaveOptions",
-            'options': tmn_options.options
-        });
-        //TMNSetOptionsMenu(tmn_options);
+    // $("#apply-options").click(function() {
+    //     tmn_options = {
+    //         "options": saveOptions()
+    //     };
+    //     api.runtime.sendMessage({
+    //         'tmn': "TMNSaveOptions",
+    //         'options': tmn_options.options
+    //     });
+    //     //TMNSetOptionsMenu(tmn_options);
+    // });
+
+    $(".optionChoice").change(function() {
+      tmn_options = {
+        options: saveOptions()
+      };
+      api.runtime.sendMessage({
+        'tmn': 'TMNSaveOptions',
+        'options': tmn_options.options
+      });
     });
 
     $("#trackmenot-opt-help").click(function() {
@@ -169,7 +179,7 @@ function TMNShowEngines(engines) {
     for (var i = 0; i < engines.length; i++) {
         var engine = engines[i];
         htmlStr += '<tr >';
-        htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
+        htmlStr += '<td><input type="checkbox" class="optionChoice" id="' + engine.id + '" value="' + engine.id + '">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
         htmlStr += '</tr>';
     }
     htmlStr += '</table>';
