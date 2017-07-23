@@ -18,7 +18,7 @@ function loadHandlers() {
             'tmn': "TMNSaveOptions",
             'options': tmn_options.options
         });
-        //TMNSetOptionsMenu(tmn_options);	
+        //TMNSetOptionsMenu(tmn_options);
     });
 
     $("#trackmenot-opt-help").click(function() {
@@ -87,7 +87,7 @@ function loadHandlers() {
         engine.name = $("#newengine-name").val();
         engine.urlmap = $("#newengine-map").val();
         if (engine.urlmap.indexOf('trackmenot') < 0) {
-            alert("To add the engine url, search 'trackmenot' (without the quotes) on the engine you want to add, and copy/paste the search url in the URL text box bellow.");
+            alert("To add a new search engine url, search 'trackmenot' (without the quotes) on your desired search engine. Then, copy and paste the search url in the URL text box below.");
             return;
         }
         api.runtime.sendMessage({
