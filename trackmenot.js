@@ -298,6 +298,7 @@ TRACKMENOT.TMNSearch = function() {
         }
         debug("useTab: " + options.useTab)
         tmn_timeout = options.timeout;
+        persistentLogging = options.persistentLogging;
         searchEngines = options.searchEngines;
         burstEnabled = options.burstMode;
         disableLogs = options.disableLogs;
@@ -561,7 +562,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function extractQueries(html) {
-        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'’{}:?%|\^~`=]", "g");
+        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'ï¿½{}:?%|\^~`=]", "g");
         var splitRegExp = new RegExp('^[\\[\\]\\(\\)\\"\']', "g");
 
         if (!html) {
@@ -645,7 +646,7 @@ TRACKMENOT.TMNSearch = function() {
     // returns # of keywords added
     function filterKeyWords(rssTitles, feedUrl) {
         var addStr = ""; //tmp-debugging
-        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'Õ{}:?%|\^~`=]+", "g");
+        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'ï¿½{}:?%|\^~`=]+", "g");
         var splitRegExp = new RegExp('[\\[\\]\\(\\)\\"\']+', "g");
         var wordArray = rssTitles.split(forbiddenChar);
 
@@ -657,7 +658,7 @@ TRACKMENOT.TMNSearch = function() {
                             wordArray[i + 1].match(splitRegExp))) {
                         var nextWord = wordArray[i + 1]; // added new check here -dch
                         if (nextWord != nextWord.toLowerCase()) {
-                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'Õ&]/g, ''));
+                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'ï¿½&]/g, ''));
                             if (nextWord.length > 1) {
                                 word += ' ' + nextWord;
                             }
@@ -1058,6 +1059,7 @@ TRACKMENOT.TMNSearch = function() {
     function getOptions() {
         var options = {};
         options.enabled = enabled;
+        options.persistentLogging = persistentLogging;
         options.timeout = tmn_timeout;
         options.searchEngines = searchEngines;
         options.useTab = useTab;
@@ -1074,6 +1076,7 @@ TRACKMENOT.TMNSearch = function() {
 
     function initOptions() {
         enabled = true;
+        persistentLogging = true;
         timeout = 6000;
         burstMode = true;
         searchEngines = "google,yahoo,bing";
@@ -1096,6 +1099,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
         var options = JSON.parse(localStorage["options_tmn"]);
+        persistentLogging = options.persistentLogging;
         enabled = options.enabled;
         debug("Restore: " + enabled)
         useBlackList = options.use_black_list;
