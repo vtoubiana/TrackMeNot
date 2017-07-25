@@ -119,6 +119,9 @@ function TMNSetOptionsMenu() {
     $("#trackmenot-opt-burstMode").prop('checked', options.burstMode);
     $("#trackmenot-opt-save-logs").prop('checked', options.saveLogs);
     $("#trackmenot-opt-disable-logs").prop('checked', options.disableLogs);
+    $("#trackmenot-logging-persistent").prop('checked', options.persistentLogging)
+    $("#trackmenot-logging-normal").prop('checked', !options.persistentLogging)
+
 
     $("#trackmenot-seed").val(feedList);
     $("#trackmenot-blacklist").val(kw_black_list);
@@ -211,6 +214,13 @@ function saveOptions() {
     options.saveLogs = $("#trackmenot-opt-save-logs").is(':checked');
     options.timeout = $("#trackmenot-opt-timeout").val();
     //setFrequencyMenu(options.timeout);
+    var persistentLogging = null;
+
+    if ($("input[type='radio']:checked").val() === "Persistent") {
+      persistentLogging = true;
+    } else {
+      persistentLogging = false;
+    }
 
     var engines = '';
     $("#search-engine-list :checked").each(function() {
@@ -218,7 +228,7 @@ function saveOptions() {
     });
     if (engines.length > 0)
         engines = engines.substring(0, engines.length - 1);
-
+    options.persistentLogging = persistentLogging;
     options.searchEngines = engines;
     options.feedList = $("#trackmenot-seed").val();
     options.use_black_list = $("#trackmenot-use-blacklist").is(':checked');
