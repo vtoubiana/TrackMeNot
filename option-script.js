@@ -31,6 +31,16 @@ function loadHandlers() {
       });
     });
 
+    $("#update-black-list").click(function() {
+      tmn_options = {
+        options: saveOptions()
+      };
+      api.runtime.sendMessage({
+        'tmn': 'TMNSaveOptions',
+        'options': tmn_options.options
+      });
+    });
+
     $("#trackmenot-opt-help").click(function() {
         api.runtime.sendMessage({
             'tmn': "TMNOptionsOpenHelp"
