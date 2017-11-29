@@ -29,7 +29,7 @@ TRACKMENOT.TMNSearch = function() {
     var tmn_tab = null;
     var useTab = false;
     var enabled = true;
-    var debug_ = false;
+    var debug_ = true;
     var load_full_pages = false;
     var stop_when = "start"
     var useIncrementals = true;
@@ -895,25 +895,25 @@ TRACKMENOT.TMNSearch = function() {
             if (getTMNTab() == -1) createTab();
             var TMNReq = {
                 tmnQuery: queryToSend,
-                tmnEngine: getEngineById(engine),
-                allEngines: engines,
+                tmnEngine: JSON.stringify(getEngineById(engine)),
+                allEngines: JSON.stringify(engines),
                 tmnUrlMap: url,
                 tmnMode: tmn_mode,
                 tmnID: tmn_id++
             }
 
-            console.log(JSON.stringify(TMNReq.tmnEngine))
-            try {
+            console.log(JSON.stringify(TMNReq))
+           // try {
                 api.tabs.sendMessage(tmn_tab_id, TMNReq);
                 cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + TMNReq.tmnID);
-            } catch (ex) {
+           /* } catch (ex) {
                 cout("Error : " + ex)
                 cout("Creating a new tab")
                 deleteTab();
                 window.setTimeout(function() {
                     api.tabs.sendMessage(tmn_tab_id, TMNReq)
                 }, 1000);
-            }
+            }*/
 
         } else {
             var queryURL = queryToURL(url, queryToSend);

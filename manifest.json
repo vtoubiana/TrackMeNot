@@ -1,7 +1,7 @@
 {
 "manifest_version": 2,
   "name": "TrackMeNot",
-  "version": "0.10.2",
+  "version": "0.10.3a",
   "icons": { "16": "icon16.png",
            "48": "icon32.png"},
   "description": "Protect against data profiling by search engines",
@@ -12,7 +12,6 @@
   "background": {
     "scripts": ["trackmenot.js"]
   },
-  "options_page": "options.html",
   "options_ui": {
     "page": "options.html"
   },

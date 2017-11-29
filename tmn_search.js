@@ -494,6 +494,7 @@ TRACKMENOT.TMNInjected = function() {
     }
 
     function updateURLRegexp(eng, url) {
+	return;
         var regex = regexMap[eng];
         cout("  regex: " + regex + "  ->\n                   " + url);
         result = url.match(regex);
@@ -597,7 +598,6 @@ TRACKMENOT.TMNInjected = function() {
 
     return {
         handleRequest: function(request, sender, sendResponse) {
-
             if (request.tmnQuery) {
                 if (tmn_id >= request.tmnID) {
                     debug("Duplicate queries ignored");
@@ -605,8 +605,8 @@ TRACKMENOT.TMNInjected = function() {
                 }
                 debug("Received: " + request.tmnQuery + " on engine: " + request.tmnEngine.id + " mode: " + request.tmnMode + " tmn id " + request.tmnID);
                 var tmn_query = request.tmnQuery;
-                var engine = request.tmnEngine;
-                all_engines = request.allEngines;
+                var engine = JSON.parse(request.tmnEngine);
+                all_engines = JSON.parse(request.allEngines);
                 var tmn_mode = request.tmnMode;
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
