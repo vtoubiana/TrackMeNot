@@ -8,9 +8,6 @@ if (chrome == undefined) {
 if(!TRACKMENOT) var TRACKMENOT = {};
 
 TRACKMENOT.Menus = function() {
- var tmn = null;  
-  var tmn_option_query = '';
-  var tmn_option_engine = '';
   var options = null;
   
 
@@ -28,30 +25,21 @@ TRACKMENOT.Menus = function() {
   },
   
    toggleOnOff: function() {   
-	      options.enabled = !options.enabled      
-          if( !options.enabled) tmn._stopTMN();
-          else  tmn._restartTMN();
-          
-          tmn._saveOptions();
+	options.enabled = !options.enabled      
+
+         api.storage.local.set({"options_tmn":options});
           TRACKMENOT.Menus.onLoadMenu();
    },
       
    toggleTabFrame: function() {
         options.useTab = !options.useTab
-        tmn._changeTabStatus(options.useTab);
-        tmn._saveOptions();
+        api.storage.local.set({"options_tmn":options});
         TRACKMENOT.Menus.onLoadMenu();  
       },
       
 
-     onLoadMenu: function( ) {
-        tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
-        options = tmn._getOptions(); ;  
-        tmn_option_query = tmn._getQuery();
-        tmn_option_engine =  tmn._getEngine();
-
-         $("#trackmenot-label").html(tmn_option_engine + " '"+ tmn_option_query+"'"); 
-
+     onLoadMenu: function( items ) {
+         options = items["options_tmn"];
       
 		if ( options.enabled) {
 			 $("#trackmenot-enabled").html('Disable');
@@ -72,5 +60,5 @@ document.addEventListener('DOMContentLoaded', function () {
   $("#trackmenot-enabled").click(TRACKMENOT.Menus.toggleOnOff);
   $("#trackmenot-menu-win").click(function() { window.open(api.extension.getURL('options.html'));});
   $("#trackmenot-menu-help").click(TRACKMENOT.Menus.showHelp)
-  TRACKMENOT.Menus.onLoadMenu()
+  api.storage.local.get(["options_tmn"],TRACKMENOT.Menus.onLoadMenu)
 });

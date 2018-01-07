@@ -1,7 +1,7 @@
 {
 "manifest_version": 2,
   "name": "TrackMeNot",
-  "version": "0.10.3a",
+  "version": "0.10.3",
   "icons": { "16": "icon16.png",
            "48": "icon32.png"},
   "description": "Protect against data profiling by search engines",
