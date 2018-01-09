@@ -28,13 +28,13 @@ TRACKMENOT.Menus = function() {
 	options.enabled = !options.enabled      
 
          api.storage.local.set({"options_tmn":options});
-          TRACKMENOT.Menus.onLoadMenu();
+          TRACKMENOT.Menus.onLoadMenu({"options_tmn":options});
    },
       
    toggleTabFrame: function() {
         options.useTab = !options.useTab
         api.storage.local.set({"options_tmn":options});
-        TRACKMENOT.Menus.onLoadMenu();  
+        TRACKMENOT.Menus.onLoadMenu({"options_tmn":options});  
       },
       
 

@@ -9,14 +9,11 @@ var tmn_options = {};
 var tmn_engines;
 var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = {};
-var queried_engines;
-var engines;
 
 function loadHandlers() {
     $("#apply-options").click(function() {
-        tmn_options = {
-            "options": saveOptions()
-        };
+         saveOptions();
+         updateEngineList();
     });
 
     $("#trackmenot-opt-help").click(function() {
@@ -85,18 +82,25 @@ function loadHandlers() {
     });
 }
 
+    function getEngIndexById(id) {
+        for (var i = 0; i < tmn_engines.length; i++) {
+            if (tmn_engines[i].id == id) return i
+        }
+        return -1
+    }
+
      function updateEngineList() {
+        tmn_engines.forEach(function (x) {return x.enabled = false;});
+        $("#search-engine-list :checked").each(function() {
+            console.log(($(this).val()));
+            tmn_engines[getEngIndexById($(this).val())].enabled = true ;
+        });
         api.storage.local.set({'engines':tmn_engines});
         TMNShowEngines({'engines':tmn_engines});
     }
     
     
-     function getEngIndexById(id) {
-        for (var i = 0; i < queried_engines.length; i++) {
-            if (queried_engines[i].id == id) return i
-        }
-        return -1
-    }
+
       function addEngine(param) {
         var new_engine = {};
         new_engine.name = param.name;
@@ -105,6 +109,7 @@ function loadHandlers() {
         var query_params = new_engine.urlmap.split('|');
         var kw_param = query_params[0].split('?')[1].split('&').pop();
         new_engine.regexmap = '^(' + new_engine.urlmap.replace(/\//g, "\\/").replace(/\./g, "\\.").split('?')[0] + "\\?.*?[&\\?]{1}" + kw_param + ")([^&]*)(.*)$";
+        new_engine.enabled = true;
         tmn_engines.push(new_engine);
         //cout("Added engine : " + new_engine.name + " url map is " + new_engine.urlmap);
         updateEngineList();
@@ -113,14 +118,7 @@ function loadHandlers() {
 
 
     function delEngine(del_engine) {
-        var index = getEngIndexById(del_engine);
-        queried_engines= queried_engines.filter(function(a) {
-            return a !== del_engine;
-        }).join(',');
-        tmn_engines.splice(index, 1);
-        options.searchEngines = queried_engines;
-
-        api.storage.local.set({"options_tmn":options});
+        tmn_engines = tmn_engines.filter(function(x) {return x.id !== del_engine;});
         updateEngineList();
     }
     
@@ -143,9 +141,7 @@ function TMNSetOptionsMenu(items) {
     $("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
     $("#trackmenot-use-dhslist").prop('checked', options.use_dhs_list);
 
-    queried_engines = options.searchEngines;
-    for (var i = 0; i < queried_engines.length; i++)
-        $("#" + queried_engines[i]).prop('checked', true);
+
 
     setFrequencyMenu(options.timeout);
 }
@@ -196,15 +192,15 @@ function TMNShowEngines(items) {
     var htmlStr = "<table>";
     for (var i = 0; i < tmn_engines.length; i++) {
         var engine = tmn_engines[i];
+        let is_checked = engine.enabled? " checked " : "";
         htmlStr += '<tr >';
-        htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
+        htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '" ' + is_checked +'">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
         htmlStr += '</tr>';
     }
     htmlStr += '</table>';
     $('#search-engine-list').html(htmlStr);
     
     loadHandlers();
-    api.storage.local.get(["options_tmn"],TMNSetOptionsMenu);
 }
 
 function TMNShowQueries(tmn_queries) {
@@ -282,14 +278,6 @@ function saveOptions() {
     options.timeout = $("#trackmenot-opt-timeout").val();
     //setFrequencyMenu(options.timeout);
 
-    var list_engines = '';
-    $("#search-engine-list :checked").each(function() {
-        list_engines += ($(this).val()) + ",";
-    });
-    if (list_engines.length > 0)
-        list_engines = list_engines.substring(0, list_engines.length - 1);
-
-    options.searchEngines = list_engines.split(',');
     options.feedList = $("#trackmenot-seed").val().split('|');
     options.use_black_list = $("#trackmenot-use-blacklist").is(':checked');
     options.use_dhs_list = $("#trackmenot-use-dhslist").is(':checked');
@@ -321,7 +309,7 @@ function getStorage(keys,callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    //api.storage.local.get(["options_tmn"],TMNSetOptionsMenu);
+    api.storage.local.get(["options_tmn"],TMNSetOptionsMenu)
     api.storage.local.get(["engines"],TMNShowEngines);
 });
 

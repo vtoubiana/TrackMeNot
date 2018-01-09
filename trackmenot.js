@@ -127,6 +127,7 @@ TRACKMENOT.TMNSearch = function() {
         id: 'google',
         name: 'Google Search',
         urlmap: "https://www.google.com/search?hl=en&q=|",
+        enabled: true,
 		regexmap: "^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z]{2,3}\/(search){1}[\?]?.*?[&\?]{1}q=)([^&]*)(.*)$",
         testad: function(ac, al) {
             return (al && (ac == 'l' || ac == 'l vst') && al.indexOf('http') == 0 && al.indexOf('https') != 0);
@@ -142,52 +143,56 @@ TRACKMENOT.TMNSearch = function() {
             return button;
         }},
         {
-            'id': 'yahoo',
-            'name': 'Yahoo! Search',
-            'urlmap': "http://search.yahoo.com/search;_ylt=" + getYahooId() + "?ei=UTF-8&fr=sfp&fr2=sfp&p=|&fspl=1",
-            'regexmap': "^(https?:\/\/[a-z.]*?search\.yahoo\.com\/search.*?p=)([^&]*)(.*)$",
-            "host": "([a-z.]*?search\.yahoo\.com)$",
-            "testad": function(ac, al) {
+            id: 'yahoo',
+            name: 'Yahoo! Search',
+            urlmap: "http://search.yahoo.com/search;_ylt=" + getYahooId() + "?ei=UTF-8&fr=sfp&fr2=sfp&p=|&fspl=1",
+            enabled: true,
+            regexmap: "^(https?:\/\/[a-z.]*?search\.yahoo\.com\/search.*?p=)([^&]*)(.*)$",
+            host: "([a-z.]*?search\.yahoo\.com)$",
+            testad: function(ac, al) {
                 return (ac == '\"yschttl spt\"' || ac == 'yschttl spt');
             },
-            'box': function() {
+            box: function() {
                 return document.getElementById('yschsp');
             },
-            'button': function() {
+            button: function() {
                 return getElementsByAttrValue(document, 'input', 'class', 'sbb');
             }
         },
         {
-            'id': 'bing',
-            'name': 'Bing Search',
-            'urlmap': "http://www.bing.com/search?q=|",
-            'regexmap': "^(https?:\/\/www\.bing\.com\/search\?[^&]*q=)([^&]*)(.*)$",
-            "host": "(www\.bing\.com)$",
-            "testad": function(ac, al) {
+            id: 'bing',
+            name: 'Bing Search',
+            urlmap: "http://www.bing.com/search?q=|",
+            enabled: true,
+            regexmap: "^(https?:\/\/www\.bing\.com\/search\?[^&]*q=)([^&]*)(.*)$",
+            host: "(www\.bing\.com)$",
+            testad: function(ac, al) {
                 return (al && al.indexOf('http') == 0 && al.indexOf('https') != 0 && al.indexOf('msn') < 0 && al.indexOf('live') < 0 && al.indexOf('bing') < 0 && al.indexOf('microsoft') < 0 && al.indexOf('WindowsLiveTranslator') < 0)
             },
             //'box':SearchBox_bing,
             //'button':getButton_bing
         },
         {
-            'id': 'baidu',
-            'name': 'Baidu Search',
-            'urlmap': "http://www.baidu.com/s?wd=|",
-            'regexmap': "^(https?:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$",
-            "host": "(www\.baidu\.com)$",
-            "testad": function(ac, al) {
+            id: 'baidu',
+            name: 'Baidu Search',
+            urlmap: "http://www.baidu.com/s?wd=|",
+            enabled: false,
+            regexmap: "^(https?:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$",
+            host: "(www\.baidu\.com)$",
+            testad: function(ac, al) {
                 return (al && al.indexOf('baidu') < 0 && al.indexOf('https') != 0);
             },
             //'box':SearchBox_baidu,
             //'button':getButton_baidu
         },
         {
-            'id': 'aol',
-            'name': 'Aol Search',
-            'urlmap': "http://search.aol.com/aol/search?q=|",
-            'regexmap': "^(https?:\/\/[a-z0-9.]*?search\.aol\.com\/aol\/search\?.*?q=)([^&]*)(.*)$",
-            "host": "([a-z0-9.]*?search\.aol\.com)$",
-            "testad": function(ac, al) {
+            id: 'aol',
+            name: 'Aol Search',
+            urlmap: "http://search.aol.com/aol/search?q=|",
+            enabled: false,
+            regexmap: "^(https?:\/\/[a-z0-9.]*?search\.aol\.com\/aol\/search\?.*?q=)([^&]*)(.*)$",
+            host: "([a-z0-9.]*?search\.aol\.com)$",
+            testad: function(ac, al) {
                 return (ac == '\"find\"' || ac == 'find' && al.indexOf('https') != 0 && al.indexOf('aol') < 0);
             },
             //'box':SearchBox_aol,
@@ -787,7 +792,7 @@ TRACKMENOT.TMNSearch = function() {
         }
         prev_engine = engine;
         if (isBursting()) engine = burstEngine;
-        else engine = chooseElt(tmn_options.searchEngines);
+        else engine = chooseElt(tmn_engines.filter(function (x) {return x.enabled})).id;
         debug('NextSearchScheduled on: ' + engine);
         window.clearTimeout(tmn_errTimeout);
         tmn_errTimeout = window.setTimeout(rescheduleOnError, delay * 3);
@@ -953,7 +958,6 @@ TRACKMENOT.TMNSearch = function() {
         tmn_options.enabled= true;
         tmn_options.timeout = 6000;
         tmn_options.burstMode = true;
-        tmn_options.searchEngines= ["google","yahoo","bing"];
         tmn_options.useTab= false;
         tmn_options.use_black_list = true;
         tmn_options.use_dhs_list = false;
@@ -969,6 +973,8 @@ TRACKMENOT.TMNSearch = function() {
         
         TMNQueries = {};
         TMNQueries.zeitgeist = zeit_queries;
+        
+        
         TMNQueries.rss = [];
         let feeds = tmn_options.feedList;
         feeds.forEach(doRssFetch); 
@@ -1013,7 +1019,9 @@ function getStorage(keys,callback) {
         tmn_options = item;
         debug("Restore: " + tmn_options.enabled);
         
-        initQueries();      
+        if (tmn_options.feedList) {
+            initQueries();  
+        }
 
         if (tmn_options.enabled)  startTMN();
         else stopTMN();
