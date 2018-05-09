@@ -10,6 +10,8 @@ var tmn_engines;
 var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = {};
 
+
+
 function loadHandlers() {
     $("#apply-options").click(function() {
          saveOptions();
@@ -32,8 +34,15 @@ function loadHandlers() {
     $("#show-add").click(function() {
         $("#add-engine-table").show();
     });
-    $("#show-log").click(function() {
-        api.storage.local.get(["logs_tmn"],TMNShowLog);
+    $("#show-log").click(function(event) {
+        api.storage.local.get(["logs_tmn"], myFunc); //TMNShowLog);
+        //console.log(type(api.storage.local.get(["logs_tmn"])));
+        
+
+        
+
+        //downloadURL('style.css');
+
     });
 
     $("#trackmenot-opt-showqueries").click(function() {
@@ -81,6 +90,17 @@ function loadHandlers() {
         addEngine(engine);
     });
 }
+
+
+    var $idown;  // Keep it outside of the function, so it's initialized once.
+    function downloadURL (url) {
+          if ($idown) {
+            $idown.attr('src',url);
+          } else {
+            $idown = $('<iframe>', { id:'idown', src:url }).hide().appendTo('body');
+          }
+    }
+
 
     function getEngIndexById(id) {
         for (var i = 0; i < tmn_engines.length; i++) {
@@ -153,6 +173,63 @@ function setFrequencyMenu(timeout) {
     $('#trackmenot-opt-timeout option[value=' + timeout + ']').prop('selected', true);
 }
 
+
+// Returns a csv from an array of objects with
+// values separated by tabs and rows separated by newlines
+function myFunc(items) {
+    
+    var logs = items.logs_tmn;
+    // console.log(logs);
+    // console.log(typeof(logs));
+    var rows = []
+    var header = ["date", "engine", "id", "mode", "query","type"];
+    rows.push(header);
+    for (i =0; i<logs.length; i++){
+       // var keys = Object.keys(logs[i])
+       var column = [];
+       var keys = Object.keys(logs[i])
+       if (keys.includes("date")){
+            column.push(logs[i].date)
+       }else{
+            column.push(" ");
+       }
+       if (keys.includes("engine")){
+            column.push(logs[i].engine)
+       }else{
+            column.push(" ");
+       }
+       if (keys.includes("id")){
+            column.push(logs[i].id)
+       }else{
+            column.push(" ");
+       }
+       if (keys.includes("mode")){
+            column.push(logs[i].mode)
+       }else{
+            column.push(" ");
+       }
+        if (keys.includes("query")){
+            column.push(logs[i].query)
+       }else{
+            column.push(" ");
+       }
+        if (keys.includes("type")){
+            column.push(logs[i].type)
+       }else{
+            column.push(" ");
+       }
+       rows.push(column)
+    }
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    rows.forEach(function(rowArray){
+       let row = rowArray.join(",");
+       csvContent += row + "\r\n";
+    }); 
+    var encodedUri = encodeURI(csvContent);
+    window.open(encodedUri);
+    
+}
 
 
 
