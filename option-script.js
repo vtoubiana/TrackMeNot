@@ -34,15 +34,18 @@ function loadHandlers() {
     $("#show-add").click(function() {
         $("#add-engine-table").show();
     });
-    $("#show-log").click(function(event) {
+    $("#show-log").click(function() { //event
+        console.log("show log CLICKED")
+        api.storage.local.get(["logs_tmn"], TMNShowLog); //TMNShowLog);
+        //console.log(type(api.storage.local.get(["logs_tmn"])));
+        //downloadURL('style.css');
+    });
+
+    $("#download-log").click(function() {
+        console.log("DOWNLOAD BUTTON CLICKED")
         api.storage.local.get(["logs_tmn"], myFunc); //TMNShowLog);
         //console.log(type(api.storage.local.get(["logs_tmn"])));
-        
-
-        
-
         //downloadURL('style.css');
-
     });
 
     $("#trackmenot-opt-showqueries").click(function() {
@@ -89,6 +92,12 @@ function loadHandlers() {
         }
         addEngine(engine);
     });
+
+
+
+
+
+
 }
 
 
