@@ -1,6 +1,7 @@
 import codecs
 import re
 import csv
+import datetime
 
 
 def getTrackMeNot():
@@ -65,20 +66,63 @@ def parseGoogleTime(googleTime):
 
 	return googleTimeParsed
 
+def trackMeNotTimeParsed(trackMeNotTimes):
+	arrayOfParsedDict = []
+	for entry in trackMeNotTimes:
+		parsed_dict = {}
+		time_format = re.compile(r'(?P<hour>[1]?[0-9])'
+								r'(:)'
+								r'(?P<min>[0-9][0-9])'
+								r'(:)'
+								r'(?P<sec>[0-9][0-9])'
+								)
+		time = time_format.search(entry).group(0)
+		first_colon = time.find(':')
+		second_colon = time[first_comma+1:].find(':')
 
+		hour = time[0:first_colon]
+		minute = time[first_colon+1:second_colon]
+		second = time[second_colon+1:]
 
+		parsed_dict[hour] = hour
+		parsed_dict[minute] = minute
+		parsed_dict[second] = second
 
+		date_format = re.copmile(r'(?P<month>[1]?[0-9])'
+								r'(/)'
+								r'(?P<day>[0-9]?[0-9])'
+								r'(/)'
+								r'(?P<year>201[78])'
+								)
+		date = date_format.search(entry).group(0)
+		first_slash = date.find('/')
+		second_slash = date[first_slash+1:].find('/')
 
+		month = date[0:first_slash]
+		day = date[first_slash+1:second_slash]
+		year = date[second_slash+1:]
 
+		parsed_dict[month] = month
+		parsed_dict[day] = day
+		parsed_dict[year] = year
 
+		arrayOfParsedDict.append(parsed_dict)
 
 
 def compareQueryTimes(googleTime, trackMeNotTimes):
-	googleTimeParsed = parseGoogleTime()
-	trackMeNotTimeParsed = parseTrackMeNotTime()
-	print ("CHECK QUERYS")
-	print (googleTime)
-	print (trackMeNotTimes)
+	'''Check that the google search time is within 10 seconds of
+	one of the matched trackMeNot times'''
+	googleParsed = parseGoogleTime(googleTime)
+	trackMeParsedTimeArray = parseTrackMeNotTime(trackMeNotTimes)
+	googleDateTime = datetime.datetime(googleParsed.year,googleParsed.month,googleParsed.day,googleParsed.hour,googleParsed.minute,googleParsed.second)
+	for trackMeEntry in trackMeParsedTimeArray:
+		trackMeDateTime = datetime.datetime(trackMeEntry.year,trackMeEntry.month,trackMeEntry.day,trackMeEntry.hour,trackMeEntry.minute,trackMeEntry.second)
+		if abs(trackMeDateTime - googleDateTime) <= 10:
+			return True
+	return False
+
+
+	
 
 	with open('Testing.csv', 'a') as csvfile:
 		fieldnames = ['GoogleTime', 'TrackMeNotTimes']
