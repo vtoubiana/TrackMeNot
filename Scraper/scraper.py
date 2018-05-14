@@ -5,6 +5,12 @@ import datetime
 
 
 def getTrackMeNot():
+	'''
+	Crawl through the trackMeNot logs and create the trackMeNotDict
+	key: trackMeNotQuery
+	value: array of times at which that trackMeNoT query was made
+	'''
+
 	with open('TrackMeNotLogs.csv','r') as f:
 		reader = csv.reader(f)
 		trackMeNotDict = {}
@@ -21,6 +27,10 @@ def getTrackMeNot():
 
 
 def parseGoogleTime(googleTime):
+	'''
+	parses googleTime into a dict so that it can be easily
+	made into a datetime.datetime object
+	'''
 	googleTimeParsed = {}
 
 	month_format = re.compile(r'(?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)')
@@ -43,7 +53,7 @@ def parseGoogleTime(googleTime):
 								)
 	time = time_format.search(googleTime).group(0)
 	first_colon = time.find(':')
-	second_colon = time[first_comma+1:].find(':')
+	second_colon = time[first_colon+1:].find(':')
 
 	hour = time[0:first_colon]
 	minute = time[first_colon+1:second_colon]
@@ -67,6 +77,11 @@ def parseGoogleTime(googleTime):
 	return googleTimeParsed
 
 def trackMeNotTimeParsed(trackMeNotTimes):
+	'''
+	parses each of the times in trackMeNotTimes 
+	into a dict so that it can be easily made into a 
+	datetime.datetime object
+	'''
 	arrayOfParsedDict = []
 	for entry in trackMeNotTimes:
 		parsed_dict = {}
@@ -78,7 +93,7 @@ def trackMeNotTimeParsed(trackMeNotTimes):
 								)
 		time = time_format.search(entry).group(0)
 		first_colon = time.find(':')
-		second_colon = time[first_comma+1:].find(':')
+		second_colon = time[first_colon+1:].find(':')
 
 		hour = time[0:first_colon]
 		minute = time[first_colon+1:second_colon]
@@ -110,8 +125,10 @@ def trackMeNotTimeParsed(trackMeNotTimes):
 
 
 def compareQueryTimes(googleTime, trackMeNotTimes):
-	'''Check that the google search time is within 10 seconds of
-	one of the matched trackMeNot times'''
+	'''
+	Check that the time described by googleTime is within 10 seconds of
+	one of the times in the trackMeNotTimes array
+	'''
 	googleParsed = parseGoogleTime(googleTime)
 	trackMeParsedTimeArray = parseTrackMeNotTime(trackMeNotTimes)
 	googleDateTime = datetime.datetime(googleParsed.year,googleParsed.month,googleParsed.day,googleParsed.hour,googleParsed.minute,googleParsed.second)
@@ -124,30 +141,34 @@ def compareQueryTimes(googleTime, trackMeNotTimes):
 
 	
 
-	with open('Testing.csv', 'a') as csvfile:
-		fieldnames = ['GoogleTime', 'TrackMeNotTimes']
-		writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
-		writer.writerow({'GoogleTime':googleTime,'TrackMeNotTimes':trackMeNotTimes})
+	# with open('Testing.csv', 'a') as csvfile:
+	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
+	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+	# 	writer.writerow({'GoogleTime':googleTime,'TrackMeNotTimes':trackMeNotTimes})
 
 
-	return True
+	#return True
 	#check that the googleTime is close enough to at least one of the trackMeNotTimes
 
 
-def checkTrackMeNotQuery(googleQuery, googleTime, trackMeNotDict):
+def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
+	'''
+	Determines if a given google search query was made by TrackMeNot
+	Does this by checking the googleQuery and the googleQueryTime against 
+	the TrackMeNotDict {trackMeNotQuery: [array of times at which trackMeNoT query was made]}
+	'''
+
 	if googleQuery not in trackMeNotDict:
 		return "No"
 	else:
 		print ("ITS IN")
 		trackMeNotTimes = trackMeNotDict[googleQuery] #this is an array 
-		timesMatch = compareQueryTimes(googleTime, trackMeNotTimes)
+		timesMatch = compareQueryTimes(googleQueryTime, trackMeNotTimes)
 		if timesMatch is True:
 			return "Yes"
 		else:
-			return "No"
+			return "No, Times Don't Match"
 
-	if "palm" in trackMeNotDict:
-		print ("HELLO WORLD")
 
 def getGoogleActivity(trackMeNotDict):
 	'''
@@ -155,7 +176,10 @@ def getGoogleActivity(trackMeNotDict):
 	It includes the searches made by TrackmMNot
 	This function parses MyActivity.html
 	Specifically, it retrieves all Google Searches and excludes everything else
-
+	It places all google searches in the GoogleSearchResults.csv file
+	The GoogleSearchResults.csv file has 3 columns:
+	(query, time, TrackMeNot)
+	The TrackMeNot column is a "Yes" if the query was made by TrackMeNot. o.w. it is a "No"
 	'''
 	f=codecs.open("MyActivity.html", 'r')
 	#print f.read()
@@ -187,6 +211,7 @@ def getGoogleActivity(trackMeNotDict):
 	with open('GoogleSearchResults.csv', 'w') as csvfile:
 		fieldnames = ['Time', 'Query', 'TrackMeNot']
 		writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+		writer.writeheader()
 		for wrapper in (parsed_html.body.find_all('div', attrs={'class':'content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1'})):
 			time_tag_match = time_format.search(wrapper.text)
 			if time_tag_match is not None:
@@ -202,10 +227,10 @@ def getGoogleActivity(trackMeNotDict):
 			
 
 def main():
-	with open('Testing.csv', 'w') as csvfile:
-		fieldnames = ['GoogleTime', 'TrackMeNotTimes']
-		writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
-		writer.writeheader()
+	# with open('Testing.csv', 'w') as csvfile:
+	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
+	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+	# 	writer.writeheader()
 	trackMeNotDict = getTrackMeNot()
 	getGoogleActivity(trackMeNotDict)
 
