@@ -1,0 +1,684 @@
+date,engine,id,mode,query,type
+23:06:29   5/13/2018,google,621,timed,american idol,query
+23:06:19   5/13/2018,google,620,timed,isla fisher,query
+23:06:12   5/13/2018,google,619,timed,in the,query
+23:06:05   5/13/2018,google,618,timed,jack the box,query
+23:05:57   5/13/2018,google,617,timed,jack in the,query
+23:05:48   5/13/2018,google,616,timed,michael douglas,query
+23:05:40   5/13/2018,google,615,timed,william shatner,query
+23:05:32   5/13/2018,google,614,timed,george clooney,query
+23:05:24   5/13/2018,google,613,timed,Amtrak,query
+23:05:15   5/13/2018,google,612,timed,tiger woods,query
+23:05:08   5/13/2018,google,611,timed,pampers,query
+23:04:59   5/13/2018,google,610,timed,william shatner,query
+23:04:50   5/13/2018,google,609,timed,iraq,query
+23:04:42   5/13/2018,google,608,timed,goldman sachs,query
+23:04:33   5/13/2018,google,607,timed,m.i.a.,query
+23:04:23   5/13/2018,google,606,timed,michael douglas,query
+23:04:14   5/13/2018,google,605,timed,walmart,query
+23:04:06   5/13/2018,google,604,timed,nfl draft,query
+23:03:57   5/13/2018,google,603,timed,sandra bullock,query
+23:03:48   5/13/2018,google,602,timed,Molly Ringwald,query
+23:03:41   5/13/2018,google,601,timed,acm awards,query
+23:03:31   5/13/2018,google,600,timed,rebbie jackson,query
+23:03:24   5/13/2018,google,599,timed,Madea's Big Happy Family,query
+23:03:15   5/13/2018,google,598,timed,Madea's Big Happy,query
+23:03:06   5/13/2018,google,597,timed,madea's family,query
+23:02:58   5/13/2018,google,596,timed,big happy,query
+23:02:50   5/13/2018,google,595,timed,montreal canadiens,query
+23:02:43   5/13/2018,google,594,timed,box jellyfish,query
+23:02:34   5/13/2018,google,593,timed,goldman sachs,query
+23:02:25   5/13/2018,google,592,timed,new 100 dollar bill,query
+23:02:17   5/13/2018,google,591,timed,einstein horse,query
+23:02:08   5/13/2018,google,590,timed,american idol,query
+23:01:58   5/13/2018,google,589,timed,nasa space shuttle,query
+23:01:48   5/13/2018,google,588,timed,rolling stone magazine,query
+23:01:41   5/13/2018,google,587,timed,Earth Day,query
+23:01:33   5/13/2018,google,586,timed,kentucky derby,query
+23:01:25   5/13/2018,google,585,timed,ebay,query
+23:01:15   5/13/2018,google,584,timed,hertz,query
+23:01:08   5/13/2018,google,583,timed,einstein horse,query
+23:00:59   5/13/2018,google,582,timed,nascar,query
+23:00:52   5/13/2018,google,581,timed,heather locklear,query
+23:00:45   5/13/2018,google,580,timed,halle berry,query
+23:00:37   5/13/2018,google,579,timed,einstein horse,query
+23:00:30   5/13/2018,google,578,timed,acm awards,query
+23:00:22   5/13/2018,google,577,timed,xbox,query
+23:00:13   5/13/2018,google,576,timed,with the stars,query
+23:00:03   5/13/2018,google,575,timed,Dancing With the Stars,query
+22:59:54   5/13/2018,google,574,timed,with the,query
+22:59:46   5/13/2018,google,573,timed,tiger woods,query
+22:59:39   5/13/2018,google,572,timed,yahoo,query
+22:59:32   5/13/2018,google,571,timed,earth day,query
+22:59:24   5/13/2018,google,570,timed,nascar,query
+22:59:17   5/13/2018,google,569,timed,earth day,query
+22:59:08   5/13/2018,google,568,timed,jennifer aniston,query
+22:58:58   5/13/2018,google,567,timed,amazon,query
+22:58:49   5/13/2018,google,566,timed,william shatner,query
+22:58:41   5/13/2018,google,565,timed,Borders,query
+22:58:33   5/13/2018,google,564,timed,face transplant,query
+22:58:26   5/13/2018,google,563,timed,justin bieber,query
+22:58:17   5/13/2018,google,562,timed,dorothy height,query
+22:58:10   5/13/2018,google,561,timed,NASCAR,query
+22:58:01   5/13/2018,google,560,timed,earth day,query
+22:57:52   5/13/2018,google,559,timed,best buy,query
+22:57:42   5/13/2018,google,558,timed,Kate Gosselin,query
+22:57:34   5/13/2018,google,557,timed,youtube,query
+22:57:24   5/13/2018,google,556,timed,pampers,query
+22:57:18   5/13/2018,google,555,timed,david mclaughlin,query
+22:57:10   5/13/2018,google,554,timed,justin bieber,query
+22:57:03   5/13/2018,google,553,burst,yahoo,query
+22:56:58   5/13/2018,google,552,burst,palm,query
+22:56:51   5/13/2018,google,551,burst,beastie boys,query
+22:56:45   5/13/2018,google,550,burst,Milwaukee Bucks,query
+22:56:41   5/13/2018,google,549,burst,conan o'brien,query
+22:56:32   5/13/2018,google,548,burst,dorothy provine,query
+22:56:23   5/13/2018,google,547,burst,ncis,query
+22:56:15   5/13/2018,google,546,burst,american idol,query
+22:56:08   5/13/2018,google,545,burst,Crystal Bowersox,query
+22:56:01   5/13/2018,google,544,timed,tiger woods,query
+22:55:53   5/13/2018,google, , , ,info
+22:55:53   5/13/2018,google, , , ,URLmap
+22:55:53   5/13/2018,google, , , ,info
+22:55:51   5/13/2018,google,543,timed,american idol,query
+22:55:42   5/13/2018,google,542,timed,heather locklear,query
+22:55:33   5/13/2018,google,541,timed,nasa space shuttle,query
+22:55:24   5/13/2018,google,540,timed,oil rig explosion,query
+22:55:15   5/13/2018,google,539,timed,joey lawrence,query
+22:55:06   5/13/2018,google,538,burst,dell,query
+22:55:02   5/13/2018,google,537,burst,halle berry,query
+22:54:53   5/13/2018,google,536,burst,borders,query
+22:54:47   5/13/2018,google,535,burst,m.i.a.,query
+22:54:39   5/13/2018,google,534,burst,amtrak,query
+22:54:34   5/13/2018,google,533,burst,face transplant,query
+22:54:27   5/13/2018,google,532,burst,home depot,query
+22:54:20   5/13/2018,google,531,burst,facebook,query
+22:54:14   5/13/2018,google,530,burst,nasa space shuttle,query
+22:54:10   5/13/2018,google, , , ,info
+22:54:10   5/13/2018,google, , , ,info
+22:54:05   5/13/2018,google,529,timed,milwaukee bucks,query
+22:54:01   5/13/2018,google, , , ,info
+22:54:01   5/13/2018,google, , , ,URLmap
+22:54:01   5/13/2018,google, , , ,info
+22:53:57   5/13/2018,google,528,recovery,american idol,query
+22:45:52   5/13/2018,google, , , ,ERROR
+22:45:44   5/13/2018,google,527,timed,nascar,query
+22:45:37   5/13/2018,google,526,timed,jennifer aniston,query
+22:45:29   5/13/2018,google,525,timed,molly ringwald,query
+22:45:21   5/13/2018,google,524,timed,gang starr,query
+22:45:11   5/13/2018,google,523,timed,ncis,query
+22:45:05   5/13/2018,google,522,timed,taiwan earthquake,query
+22:44:56   5/13/2018,google,521,timed,dukan diet,query
+22:44:49   5/13/2018,google,520,timed,santa clara county,query
+22:44:41   5/13/2018,google,519,timed,nascar,query
+22:44:32   5/13/2018,google,518,timed,dell,query
+22:44:24   5/13/2018,google,517,recovery,star trek,query
+22:42:55   5/13/2018,google, , , ,ERROR
+22:41:59   5/13/2018,google,516,timed,tara reid,query
+22:41:49   5/13/2018,google,515,timed,oil spill,query
+22:41:42   5/13/2018,google,514,timed,acm awards,query
+22:41:32   5/13/2018,google,513,timed,dorothy provine,query
+22:41:24   5/13/2018,google,512,timed,youtube,query
+22:41:16   5/13/2018,google,511,timed,santa clara county,query
+22:41:09   5/13/2018,google,510,timed,Southwest Airlines,query
+22:41:02   5/13/2018,google,509,timed,goldman sachs,query
+22:40:55   5/13/2018,google,508,timed,santa clara county,query
+22:40:47   5/13/2018,google,507,burst,Tito Ortiz,query
+22:40:38   5/13/2018,google,506,burst,Conan O'Brien,query
+22:40:30   5/13/2018,google,505,burst,star trek,query
+22:40:21   5/13/2018,google,504,burst,amazon,query
+22:40:16   5/13/2018,google,503,burst,home depot,query
+22:40:12   5/13/2018,google,502,burst,dukan diet,query
+22:40:07   5/13/2018,google,501,burst,kentucky derby,query
+22:40:02   5/13/2018,google, , , ,info
+22:40:02   5/13/2018,google, , , ,URLmap
+22:40:02   5/13/2018,google, , , ,info
+22:39:57   5/13/2018,google,500,burst,katie holmes,query
+22:39:57   5/13/2018,google, , , ,info
+22:39:57   5/13/2018,google, , , ,info
+22:39:52   5/13/2018,google,499,burst,sandra bullock,query
+22:39:43   5/13/2018,google,498,burst,dukan diet,query
+22:39:35   5/13/2018,google,497,burst,dorothy height,query
+22:39:31   5/13/2018,google,496,burst,old navy coupon,query
+22:39:24   5/13/2018,google,495,timed,mississippi tornado,query
+22:39:23   5/13/2018,google, , , ,info
+22:39:22   5/13/2018,google, , , ,URLmap
+22:39:22   5/13/2018,google, , , ,info
+22:39:14   5/13/2018,google,494,timed,earth day,query
+22:39:07   5/13/2018,google,493,timed,Box Jellyfish,query
+22:38:59   5/13/2018,google,492,timed,Bret Michaels,query
+22:38:51   5/13/2018,google,491,timed,craigslist,query
+22:38:43   5/13/2018,google,490,timed,old navy coupon,query
+22:38:33   5/13/2018,google,489,timed,craigslist,query
+22:38:25   5/13/2018,google,488,timed,halle berry,query
+22:38:16   5/13/2018,google,487,timed,south park,query
+22:38:08   5/13/2018,google,486,timed,tito ortiz,query
+22:37:59   5/13/2018,google,485,timed,einstein horse,query
+22:37:52   5/13/2018,google,484,timed,myspace,query
+22:37:42   5/13/2018,google,483,timed,santa clara county,query
+22:37:35   5/13/2018,google,482,timed,pampers,query
+22:37:28   5/13/2018,google,481,timed,heather locklear,query
+22:37:19   5/13/2018,google,480,timed,melanie griffith,query
+22:37:10   5/13/2018,google,479,timed,yahoo,query
+22:37:01   5/13/2018,google,478,timed,ebay,query
+22:36:54   5/13/2018,google,477,timed,conan o'brien,query
+22:36:45   5/13/2018,google,476,timed,7-Eleven,query
+22:36:36   5/13/2018,google,475,timed,stephen hawking,query
+22:36:27   5/13/2018,google,474,timed,blackberry pearl,query
+22:36:19   5/13/2018,google,473,timed,American Idol,query
+22:36:10   5/13/2018,google,472,timed,craigslist,query
+22:36:03   5/13/2018,google,471,timed,7-eleven,query
+22:35:53   5/13/2018,google,470,timed,space shuttle discovery,query
+22:35:46   5/13/2018,google,469,timed,dorothy height,query
+22:35:36   5/13/2018,google,468,timed,pampers,query
+22:35:27   5/13/2018,google,467,timed,pampers,query
+22:35:20   5/13/2018,google,466,timed,best buy,query
+22:35:12   5/13/2018,google,465,timed,mcafee anti-virus,query
+22:35:05   5/13/2018,google,464,timed,ipad cases,query
+22:34:57   5/13/2018,google,463,timed,volcanic ash,query
+22:34:48   5/13/2018,google,462,timed,dorothy provine,query
+22:34:40   5/13/2018,google,461,timed,M.I.A.,query
+22:34:32   5/13/2018,google,460,timed,yahoo,query
+22:34:24   5/13/2018,google,459,timed,box jellyfish,query
+22:34:15   5/13/2018,google,458,timed,xbox,query
+22:34:05   5/13/2018,google,457,timed,rebbie jackson,query
+22:33:58   5/13/2018,google,456,timed,jennifer aniston,query
+22:33:50   5/13/2018,google,455,timed,Halle Berry,query
+22:33:42   5/13/2018,google,454,timed,dorothy provine,query
+22:33:34   5/13/2018,google,453,timed,tiger woods,query
+22:33:24   5/13/2018,google,452,timed,big happy family,query
+22:33:16   5/13/2018,google,451,timed,madea's happy,query
+22:33:07   5/13/2018,google,450,timed,madea's big,query
+22:33:00   5/13/2018,google,449,timed,madea's family,query
+22:32:53   5/13/2018,google,448,timed,madea's big happy,query
+22:32:45   5/13/2018,google,447,timed,justin bieber,query
+22:32:38   5/13/2018,google,446,timed,amazon,query
+22:32:31   5/13/2018,google,445,timed,tito ortiz,query
+22:32:23   5/13/2018,google,444,timed,nascar,query
+22:32:15   5/13/2018,google,443,timed,michael douglas,query
+22:32:06   5/13/2018,google,442,timed,Joey Lawrence,query
+22:31:56   5/13/2018,google,441,timed,einstein horse,query
+22:31:48   5/13/2018,google,440,timed,tito ortiz,query
+22:31:41   5/13/2018,google,439,timed,santa clara county,query
+22:31:31   5/13/2018,google,438,timed,big happy family,query
+22:31:22   5/13/2018,google,437,timed,madea's happy family,query
+22:31:14   5/13/2018,google,436,timed,madea's happy family,query
+22:31:05   5/13/2018,google,435,timed,einstein horse,query
+22:30:56   5/13/2018,google,434,timed,M.I.A.,query
+22:30:46   5/13/2018,google,433,timed,iraq,query
+22:30:36   5/13/2018,google,432,timed,crib recall,query
+22:30:29   5/13/2018,google,431,timed,Unemployment,query
+22:30:21   5/13/2018,google,430,timed,netflix,query
+22:30:12   5/13/2018,google,429,timed,myspace,query
+22:30:05   5/13/2018,google,428,timed,ipad cases,query
+22:29:56   5/13/2018,google,427,timed,public bike rental,query
+22:29:49   5/13/2018,google,426,timed,amazon,query
+22:29:40   5/13/2018,google,425,timed,tito ortiz,query
+22:29:30   5/13/2018,google,424,timed,nascar,query
+22:29:23   5/13/2018,google,423,timed,tara reid,query
+22:29:14   5/13/2018,google,422,timed,palm,query
+22:29:06   5/13/2018,google,421,timed,tiger woods,query
+22:28:58   5/13/2018,google,420,timed,acm awards,query
+22:28:50   5/13/2018,google,419,timed,nasa space shuttle,query
+22:28:42   5/13/2018,google,418,timed,Dorothy Height,query
+22:28:33   5/13/2018,google,417,timed,walmart,query
+22:28:24   5/13/2018,google,416,timed,halle berry,query
+22:28:17   5/13/2018,google,415,timed,nasa space shuttle,query
+22:28:09   5/13/2018,google,414,timed,7-eleven,query
+22:28:02   5/13/2018,google,413,timed,south park,query
+22:27:54   5/13/2018,google,412,timed,walmart,query
+22:27:45   5/13/2018,google,411,timed,mcafee anti-virus,query
+22:27:36   5/13/2018,google,410,timed,oil rig explosion,query
+22:27:28   5/13/2018,google,409,timed,comic day,query
+22:27:20   5/13/2018,google,408,timed,comic day,query
+22:27:11   5/13/2018,google,407,timed,free comic day,query
+22:27:03   5/13/2018,google,406,timed,free day,query
+22:26:56   5/13/2018,google,405,burst,free comic book,query
+22:26:47   5/13/2018,google,404,burst,santa clara county,query
+22:26:41   5/13/2018,google,403,burst,earth day,query
+22:26:32   5/13/2018,google,402,burst,the box,query
+22:26:26   5/13/2018,google,401,burst,in box,query
+22:26:22   5/13/2018,google,400,burst,jack in box,query
+22:26:14   5/13/2018,google,399,burst,rihanna,query
+22:26:08   5/13/2018,google,398,timed,volcanic ash,query
+22:26:05   5/13/2018,google, , , ,info
+22:26:05   5/13/2018,google, , , ,URLmap
+22:26:05   5/13/2018,google, , , ,info
+22:26:01   5/13/2018,google,397,timed,jennifer aniston,query
+22:25:53   5/13/2018,google,396,timed,kelley blue book,query
+22:25:44   5/13/2018,google,395,timed,tiger woods,query
+22:25:35   5/13/2018,google,394,timed,pampers,query
+22:25:27   5/13/2018,google,393,timed,David McLaughlin,query
+22:25:19   5/13/2018,google,392,timed,jack the box,query
+22:25:10   5/13/2018,google,391,timed,jack in the,query
+22:25:01   5/13/2018,google,390,timed,madea's happy,query
+22:24:52   5/13/2018,google,389,timed,madea's big happy family,query
+22:24:43   5/13/2018,google,388,timed,madea's happy,query
+22:24:34   5/13/2018,google,387,timed,hertz,query
+22:24:26   5/13/2018,google,386,timed,george clooney,query
+22:24:17   5/13/2018,google,385,timed,jillian michaels,query
+22:24:08   5/13/2018,google,384,timed,offshore drilling,query
+22:24:01   5/13/2018,google,383,timed,new 100 dollar,query
+22:23:52   5/13/2018,google,382,timed,american idol,query
+22:23:42   5/13/2018,google,381,timed,dukan diet,query
+22:23:34   5/13/2018,google,380,timed,Michael Douglas,query
+22:23:25   5/13/2018,google,379,timed,tito ortiz,query
+22:23:16   5/13/2018,google,378,timed,ncis,query
+22:23:09   5/13/2018,google,377,timed,matt damon,query
+22:22:59   5/13/2018,google,376,timed,katie holmes,query
+22:22:52   5/13/2018,google,375,timed,facebook,query
+22:22:42   5/13/2018,google,374,timed,george clooney,query
+22:22:32   5/13/2018,google,373,timed,stephen hawking,query
+22:22:24   5/13/2018,google,372,timed,face transplant,query
+22:22:18   5/13/2018,google,371,timed,michael douglas,query
+22:22:10   5/13/2018,google,370,timed,youtube,query
+22:22:01   5/13/2018,google,369,timed,offshore drilling,query
+22:21:54   5/13/2018,google,368,burst,best buy,query
+22:21:45   5/13/2018,google,367,burst,auto financing,query
+22:21:41   5/13/2018,google,366,burst,yahoo,query
+22:21:34   5/13/2018,google,365,burst,George Clooney,query
+22:21:26   5/13/2018,google,364,burst,kelley blue book,query
+22:21:17   5/13/2018,google,363,burst,pampers,query
+22:21:16   5/13/2018,google, , , ,info
+22:21:16   5/13/2018,google, , , ,info
+22:21:10   5/13/2018,google,362,burst,earth day,query
+22:21:10   5/13/2018,google, , , ,info
+22:21:10   5/13/2018,google, , , ,URLmap
+22:21:10   5/13/2018,google, , , ,info
+22:21:01   5/13/2018,google,361,burst,melanie griffith,query
+22:20:52   5/13/2018,google,360,burst,kentucky derby,query
+22:20:45   5/13/2018,google,359,burst,malcolm x,query
+22:20:41   5/13/2018,google,358,burst,taiwan earthquake,query
+22:20:32   5/13/2018,google,357,burst,Katie Holmes,query
+22:20:31   5/13/2018,google, , , ,info
+22:20:31   5/13/2018,google, , , ,URLmap
+22:20:31   5/13/2018,google, , , ,info
+22:20:28   5/13/2018,google, , , ,info
+22:20:28   5/13/2018,google, , , ,URLmap
+22:20:28   5/13/2018,google, , , ,info
+22:20:24   5/13/2018,google,356,burst,craigslist,query
+22:20:22   5/13/2018,google, , , ,info
+22:20:22   5/13/2018,google, , , ,info
+22:20:19   5/13/2018,google,355,burst,borders,query
+22:20:16   5/13/2018,google, , , ,info
+22:20:16   5/13/2018,google, , , ,URLmap
+22:20:16   5/13/2018,google, , , ,info
+22:20:12   5/13/2018,google, , , ,info
+22:20:12   5/13/2018,google, , , ,info
+22:20:12   5/13/2018,google,354,burst,face transplant,query
+22:20:05   5/13/2018,google,353,burst,goldman sachs,query
+22:20:02   5/13/2018,google, , , ,info
+22:20:02   5/13/2018,google, , , ,URLmap
+22:20:02   5/13/2018,google, , , ,info
+22:19:58   5/13/2018,google,352,timed,jack in the,query
+22:19:56   5/13/2018,google, , , ,info
+22:19:56   5/13/2018,google, , , ,URLmap
+22:19:55   5/13/2018,google, , , ,info
+22:19:49   5/13/2018,google,351,timed,jack the box,query
+22:19:41   5/13/2018,google,350,timed,jack in the,query
+22:19:34   5/13/2018,google,349,timed,in the box,query
+22:19:26   5/13/2018,google,348,timed,jack in box,query
+22:19:19   5/13/2018,google,347,timed,netflix,query
+22:19:10   5/13/2018,google,346,timed,m.i.a.,query
+22:19:01   5/13/2018,google,345,timed,ipad cases,query
+22:18:52   5/13/2018,google,344,timed,space shuttle discovery,query
+22:18:45   5/13/2018,google,343,timed,hugh hefner,query
+22:18:38   5/13/2018,google,342,timed,ncis,query
+22:18:30   5/13/2018,google,341,timed,face transplant,query
+22:18:23   5/13/2018,google,340,timed,crib recall,query
+22:18:15   5/13/2018,google,339,timed,Goldman Sachs,query
+22:18:07   5/13/2018,google,338,timed,myspace,query
+22:17:59   5/13/2018,google,337,timed,Rolling Stone Magazine,query
+22:17:51   5/13/2018,google,336,timed,madea's big family,query
+22:17:44   5/13/2018,google,335,timed,madea's big happy family,query
+22:17:34   5/13/2018,google,334,timed,Big Happy,query
+22:17:25   5/13/2018,google,333,timed,madea's big happy,query
+22:17:15   5/13/2018,google,332,timed,madea's big,query
+22:17:06   5/13/2018,google,331,timed,palm,query
+22:16:59   5/13/2018,google,330,timed,gang starr,query
+22:16:51   5/13/2018,google,329,timed,montreal canadiens,query
+22:16:41   5/13/2018,google,328,timed,auto financing,query
+22:16:33   5/13/2018,google,327,timed,offshore drilling,query
+22:16:24   5/13/2018,google,326,timed,ncis,query
+22:16:16   5/13/2018,google,325,timed,matt damon,query
+22:16:09   5/13/2018,google,324,timed,7-eleven,query
+22:16:01   5/13/2018,google,323,timed,southwest airlines,query
+22:15:52   5/13/2018,google,322,timed,Stephen Hawking,query
+22:15:43   5/13/2018,google,321,timed,crib recall,query
+22:15:35   5/13/2018,google,320,timed,blackberry,query
+22:15:28   5/13/2018,google,319,timed,montreal canadiens,query
+22:15:19   5/13/2018,google,318,timed,conan o'brien,query
+22:15:12   5/13/2018,google,317,timed,joey lawrence,query
+22:15:04   5/13/2018,google,316,timed,american idol,query
+22:14:55   5/13/2018,google,315,timed,7-eleven,query
+22:14:46   5/13/2018,google,314,timed,ipad cases,query
+22:14:36   5/13/2018,google,313,burst,dukan diet,query
+22:14:29   5/13/2018,google,312,burst,amazon,query
+22:14:22   5/13/2018,google,311,burst,justin bieber,query
+22:14:13   5/13/2018,google,310,burst,oil spill,query
+22:14:04   5/13/2018,google,309,burst,youtube,query
+22:13:54   5/13/2018,google,308,burst,madea's big family,query
+22:13:50   5/13/2018,google,307,burst,gang starr,query
+22:13:44   5/13/2018,google,306,burst,youtube,query
+22:13:39   5/13/2018,google,305,burst,beef recall,query
+22:13:33   5/13/2018,google,304,timed,kentucky derby,query
+22:13:33   5/13/2018,google, , , ,info
+22:13:33   5/13/2018,google, , , ,URLmap
+22:13:33   5/13/2018,google, , , ,info
+22:13:24   5/13/2018,google,303,timed,volcanic ash,query
+22:13:15   5/13/2018,google,302,timed,oil rig explosion,query
+22:13:05   5/13/2018,google,301,timed,palm,query
+22:12:55   5/13/2018,google,300,timed,auto financing,query
+22:12:46   5/13/2018,google,299,timed,joey lawrence,query
+22:12:38   5/13/2018,google,298,timed,matt damon,query
+22:12:30   5/13/2018,google,297,timed,halle berry,query
+22:12:21   5/13/2018,google,296,timed,hertz,query
+22:12:12   5/13/2018,google,295,timed,amazon,query
+22:12:05   5/13/2018,google,294,timed,beef recall,query
+22:11:58   5/13/2018,google,293,timed,Dukan Diet,query
+22:11:51   5/13/2018,google,292,timed,craigslist,query
+22:11:44   5/13/2018,google,291,timed,dukan diet,query
+22:11:35   5/13/2018,google,290,timed,dukan diet,query
+22:11:25   5/13/2018,google,289,timed,auto financing,query
+22:11:16   5/13/2018,google,288,timed,tito ortiz,query
+22:11:09   5/13/2018,google,287,timed,hugh hefner,query
+22:11:01   5/13/2018,google,286,timed,oil rig explosion,query
+22:10:52   5/13/2018,google,285,timed,george clooney,query
+22:10:45   5/13/2018,google,284,timed,ebay,query
+22:10:35   5/13/2018,google,283,timed,Kentucky Derby,query
+22:10:28   5/13/2018,google,282,timed,Kentucky Derby,query
+22:10:18   5/13/2018,google,281,timed,dell,query
+22:10:10   5/13/2018,google,280,timed,NASCAR,query
+22:10:01   5/13/2018,google,279,timed,katie holmes,query
+22:09:52   5/13/2018,google,278,timed,Molly Ringwald,query
+22:09:44   5/13/2018,google,277,timed,einstein horse,query
+22:09:37   5/13/2018,google,276,timed,hugh hefner,query
+22:09:29   5/13/2018,google,275,timed,Dukan Diet,query
+22:09:22   5/13/2018,google,274,timed,ebay,query
+22:09:13   5/13/2018,google,273,timed,xbox,query
+22:09:06   5/13/2018,google,272,timed,best buy,query
+22:08:59   5/13/2018,google,271,timed,Bret Michaels,query
+22:08:50   5/13/2018,google,270,timed,amazon,query
+22:08:42   5/13/2018,google,269,timed,mariah carey,query
+22:08:35   5/13/2018,google,268,timed,xbox,query
+22:08:27   5/13/2018,google,267,timed,george clooney,query
+22:08:19   5/13/2018,google,266,timed,space shuttle discovery,query
+22:08:11   5/13/2018,google,265,timed,dorothy provine,query
+22:08:01   5/13/2018,google,264,timed,heather locklear,query
+22:07:54   5/13/2018,google,263,timed,michael douglas,query
+22:07:45   5/13/2018,google,262,timed,mcafee anti-virus,query
+22:07:37   5/13/2018,google,261,timed,matt damon,query
+22:07:29   5/13/2018,google,260,timed,hertz,query
+22:07:21   5/13/2018,google,259,timed,ipad cases,query
+22:07:13   5/13/2018,google,258,timed,david mclaughlin,query
+22:07:04   5/13/2018,google,257,timed,box jellyfish,query
+22:06:54   5/13/2018,google,256,timed,bret michaels,query
+22:06:46   5/13/2018,google,255,timed,m.i.a.,query
+22:06:37   5/13/2018,google,254,timed,pampers,query
+22:06:30   5/13/2018,google,253,timed,yahoo,query
+22:06:23   5/13/2018,google,252,timed,amazon,query
+22:06:16   5/13/2018,google,251,timed,netflix,query
+22:06:09   5/13/2018,google,250,timed,david mclaughlin,query
+22:05:59   5/13/2018,google,249,timed,nfl draft,query
+22:05:52   5/13/2018,google,248,timed,face transplant,query
+22:05:42   5/13/2018,google,247,timed,netflix,query
+22:05:33   5/13/2018,google,246,timed,taiwan earthquake,query
+22:05:25   5/13/2018,google,245,timed,kentucky derby,query
+22:05:15   5/13/2018,google,244,timed,gang starr,query
+22:05:08   5/13/2018,google,243,timed,nasa space shuttle,query
+22:05:00   5/13/2018,google,242,timed,jennifer aniston,query
+22:04:53   5/13/2018,google,241,timed,box jellyfish,query
+22:04:44   5/13/2018,google,240,timed,palm,query
+22:04:35   5/13/2018,google,239,timed,yahoo,query
+22:04:28   5/13/2018,google,238,timed,Dancing the Stars,query
+22:04:20   5/13/2018,google,237,timed,with the,query
+22:04:11   5/13/2018,google,236,timed,m.i.a.,query
+22:04:03   5/13/2018,google,235,timed,ebay,query
+22:03:55   5/13/2018,google,234,timed,m.i.a.,query
+22:03:47   5/13/2018,google,233,timed,Einstein Horse,query
+22:03:39   5/13/2018,google,232,timed,Earth Day,query
+22:03:30   5/13/2018,google,231,timed,palm,query
+22:03:21   5/13/2018,google,230,timed,star trek,query
+22:03:12   5/13/2018,google,229,timed,dell,query
+22:03:03   5/13/2018,google,228,timed,comic book,query
+22:02:55   5/13/2018,google,227,timed,free book day,query
+22:02:47   5/13/2018,google,226,timed,Free Book Day,query
+22:02:38   5/13/2018,google,225,timed,free book day,query
+22:02:30   5/13/2018,google,224,timed,free day,query
+22:02:22   5/13/2018,google,223,timed,dukan diet,query
+22:02:13   5/13/2018,google,222,timed,tito ortiz,query
+22:02:04   5/13/2018,google,221,timed,malcolm x,query
+22:01:57   5/13/2018,google,220,timed,beastie boys,query
+22:01:49   5/13/2018,google,219,timed,dukan diet,query
+22:01:41   5/13/2018,google,218,timed,amtrak,query
+22:01:32   5/13/2018,google,217,timed,george clooney,query
+22:01:25   5/13/2018,google,216,timed,peta,query
+22:01:17   5/13/2018,google,215,timed,beastie boys,query
+22:01:08   5/13/2018,google,214,timed,mariah carey,query
+22:01:01   5/13/2018,google,213,timed,tito ortiz,query
+22:00:52   5/13/2018,google,212,timed,ipad cases,query
+22:00:44   5/13/2018,google,211,timed,hugh hefner,query
+22:00:36   5/13/2018,google,210,timed,facebook,query
+22:00:27   5/13/2018,google,209,timed,M.I.A.,query
+22:00:19   5/13/2018,google,208,timed,nfl draft,query
+22:00:11   5/13/2018,google,207,timed,walmart,query
+22:00:03   5/13/2018,google,206,timed,best buy,query
+21:59:54   5/13/2018,google,205,timed,joey lawrence,query
+21:59:46   5/13/2018,google,204,timed,oil spill,query
+21:59:39   5/13/2018,google,203,timed,netflix,query
+21:59:29   5/13/2018,google,202,timed,craigslist,query
+21:59:21   5/13/2018,google,201,timed,dorothy height,query
+21:59:14   5/13/2018,google,200,timed,blackberry pearl,query
+21:59:06   5/13/2018,google,199,timed,Kate Gosselin,query
+21:58:59   5/13/2018,google,198,timed,dorothy height,query
+21:58:50   5/13/2018,google,197,timed,kelley blue book,query
+21:58:41   5/13/2018,google,196,timed,rebbie jackson,query
+21:58:32   5/13/2018,google,195,timed,nasa space shuttle,query
+21:58:22   5/13/2018,google,194,timed,iraq,query
+21:58:13   5/13/2018,google,193,timed,facebook,query
+21:58:06   5/13/2018,google,192,timed,heather locklear,query
+21:57:57   5/13/2018,google,191,timed,malcolm x,query
+21:57:48   5/13/2018,google,190,timed,craigslist,query
+21:57:41   5/13/2018,google,189,timed,michael douglas,query
+21:57:33   5/13/2018,google,188,timed,rebbie jackson,query
+21:57:25   5/13/2018,google,187,timed,new 100 bill,query
+21:57:16   5/13/2018,google,186,timed,New Bill,query
+21:57:08   5/13/2018,google,185,timed,new 100 dollar bill,query
+21:57:01   5/13/2018,google,184,timed,new 100,query
+21:56:52   5/13/2018,google,183,timed,new 100 dollar,query
+21:56:45   5/13/2018,google,182,timed,craigslist,query
+21:56:37   5/13/2018,google,181,timed,m.i.a.,query
+21:56:27   5/13/2018,google,180,timed,Dell,query
+21:56:19   5/13/2018,google,179,timed,kelley blue book,query
+21:56:10   5/13/2018,google,178,timed,blackberry pearl,query
+21:56:01   5/13/2018,google,177,timed,nascar,query
+21:55:52   5/13/2018,google,176,timed,dorothy provine,query
+21:55:42   5/13/2018,google,175,timed,Gang Starr,query
+21:55:32   5/13/2018,google,174,timed,borders,query
+21:55:23   5/13/2018,google,173,timed,beastie boys,query
+21:55:14   5/13/2018,google,172,timed,acm awards,query
+21:55:05   5/13/2018,google,171,timed,yahoo,query
+21:54:58   5/13/2018,google,170,timed,dell,query
+21:54:50   5/13/2018,google,169,timed,space shuttle discovery,query
+21:54:42   5/13/2018,google,168,timed,einstein horse,query
+21:54:33   5/13/2018,google,167,timed,walmart,query
+21:54:23   5/13/2018,google,166,timed,Rolling Stone Magazine,query
+21:54:15   5/13/2018,google,165,timed,amazon,query
+21:54:08   5/13/2018,google,164,timed,face transplant,query
+21:53:58   5/13/2018,google,163,timed,blackberry,query
+21:53:51   5/13/2018,google,162,timed,pampers,query
+21:53:44   5/13/2018,google,161,timed,offshore drilling,query
+21:53:35   5/13/2018,google,160,timed,myspace,query
+21:53:27   5/13/2018,google,159,timed,boston marathon,query
+21:53:18   5/13/2018,google,158,timed,iraq,query
+21:53:11   5/13/2018,google,157,timed,nfl draft,query
+21:53:01   5/13/2018,google,156,timed,offshore drilling,query
+21:52:54   5/13/2018,google,155,timed,joey lawrence,query
+21:52:45   5/13/2018,google,154,timed,crib recall,query
+21:52:36   5/13/2018,google,153,timed,einstein horse,query
+21:52:27   5/13/2018,google,152,timed,nascar,query
+21:52:20   5/13/2018,google,151,timed,bret michaels,query
+21:52:10   5/13/2018,google,150,timed,kentucky derby,query
+21:52:01   5/13/2018,google,149,timed,palm,query
+21:51:53   5/13/2018,google,148,timed,american idol,query
+21:51:44   5/13/2018,google,147,timed,kentucky derby,query
+21:51:35   5/13/2018,google,146,timed,oil rig explosion,query
+21:51:25   5/13/2018,google,145,timed,american idol,query
+21:51:17   5/13/2018,google,144,timed,With the Stars,query
+21:51:10   5/13/2018,google,143,timed,dancing stars,query
+21:51:02   5/13/2018,google,142,timed,dancing with stars,query
+21:50:53   5/13/2018,google,141,timed,george clooney,query
+21:50:44   5/13/2018,google,140,timed,southwest airlines,query
+21:50:36   5/13/2018,google,139,timed,beef recall,query
+21:50:29   5/13/2018,google,138,burst,craigslist,query
+21:50:25   5/13/2018,google,137,burst,youtube,query
+21:50:17   5/13/2018,google,136,burst,myspace,query
+21:50:13   5/13/2018,google,135,burst,mississippi tornado,query
+21:50:07   5/13/2018,google,134,burst,south park,query
+21:49:58   5/13/2018,google,133,burst,craigslist,query
+21:49:51   5/13/2018,google,132,timed,hugh hefner,query
+21:49:43   5/13/2018,google, , , ,info
+21:49:43   5/13/2018,google, , , ,URLmap
+21:49:43   5/13/2018,google, , , ,info
+21:49:43   5/13/2018,google,131,timed,oil spill,query
+21:49:34   5/13/2018,google,130,timed,earth day,query
+21:49:26   5/13/2018,google,129,timed,halle berry,query
+21:49:19   5/13/2018,google,128,timed,facebook,query
+21:49:10   5/13/2018,google,127,timed,Borders,query
+21:49:02   5/13/2018,google,126,timed,beef recall,query
+21:48:52   5/13/2018,google,125,timed,dancing with the stars,query
+21:48:45   5/13/2018,google,124,timed,dancing the stars,query
+21:48:36   5/13/2018,google,123,timed,dancing the stars,query
+21:48:27   5/13/2018,google,122,timed,tara reid,query
+21:48:17   5/13/2018,google,121,timed,south park,query
+21:48:08   5/13/2018,google,120,timed,molly ringwald,query
+21:47:59   5/13/2018,google,119,timed,jennifer aniston,query
+21:47:50   5/13/2018,google,118,timed,rebbie jackson,query
+21:47:41   5/13/2018,google,117,timed,crystal bowersox,query
+21:47:32   5/13/2018,google,116,timed,Einstein Horse,query
+21:47:22   5/13/2018,google,115,timed,justin bieber,query
+21:47:12   5/13/2018,google,114,timed,sandra bullock,query
+21:47:03   5/13/2018,google,113,timed,face transplant,query
+21:46:54   5/13/2018,google,112,timed,santa clara county,query
+21:46:46   5/13/2018,google,111,timed,justin bieber,query
+21:46:37   5/13/2018,google,110,timed,ipad cases,query
+21:46:31   5/13/2018,google,109,timed,nasa space shuttle,query
+21:46:23   5/13/2018,google,108,timed,santa clara county,query
+21:46:15   5/13/2018,google,107,timed,conan o'brien,query
+21:46:07   5/13/2018,google,106,timed,nascar,query
+21:46:00   5/13/2018,google,105,timed,Blackberry,query
+21:45:53   5/13/2018,google,104,timed,facebook,query
+21:45:44   5/13/2018,google,103,timed,free comic day,query
+21:45:37   5/13/2018,google,102,timed,free comic book,query
+21:45:27   5/13/2018,google,101,timed,volcanic ash,query
+21:45:18   5/13/2018,google,100,timed,southwest airlines,query
+21:45:10   5/13/2018,google,99,timed,dollar bill,query
+21:45:01   5/13/2018,google,98,timed,new 100 dollar bill,query
+21:44:53   5/13/2018,google,97,timed,New 100 Bill,query
+21:44:45   5/13/2018,google,96,timed,100 dollar,query
+21:44:36   5/13/2018,google,95,timed,beef recall,query
+21:44:26   5/13/2018,google,94,timed,palm,query
+21:44:18   5/13/2018,google,93,timed,crib recall,query
+21:44:10   5/13/2018,google,92,timed,tiger woods,query
+21:44:01   5/13/2018,google,91,timed,home depot,query
+21:43:52   5/13/2018,google,90,timed,xbox,query
+21:43:44   5/13/2018,google,89,timed,ipad cases,query
+21:43:37   5/13/2018,google,88,burst,beef recall,query
+21:43:29   5/13/2018,google,87,burst,xbox,query
+21:43:24   5/13/2018,google,86,burst,william shatner,query
+21:43:15   5/13/2018,google,85,burst,netflix,query
+21:43:05   5/13/2018,google,84,burst,crib recall,query
+21:42:57   5/13/2018,google,83,burst,beastie boys,query
+21:42:52   5/13/2018,google,82,timed,american idol,query
+21:42:43   5/13/2018,google, , , ,info
+21:42:43   5/13/2018,google, , , ,URLmap
+21:42:43   5/13/2018,google, , , ,info
+21:42:43   5/13/2018,google,81,timed,tito ortiz,query
+21:42:36   5/13/2018,google,80,timed,Palm,query
+21:42:27   5/13/2018,google,79,timed,borders,query
+21:42:20   5/13/2018,google,78,timed,mississippi tornado,query
+21:42:11   5/13/2018,google,77,timed,conan o'brien,query
+21:42:04   5/13/2018,google,76,timed,mcafee anti-virus,query
+21:41:57   5/13/2018,google,75,timed,dell,query
+21:41:49   5/13/2018,google,74,timed,mississippi tornado,query
+21:41:41   5/13/2018,google,73,burst,rolling stone magazine,query
+21:41:37   5/13/2018,google,72,burst,rebbie jackson,query
+21:41:33   5/13/2018,google,71,burst,public bike rental,query
+21:41:26   5/13/2018,google,70,burst,space shuttle discovery,query
+21:41:21   5/13/2018,google,69,burst,Box Jellyfish,query
+21:41:17   5/13/2018,google,68,burst,yahoo,query
+21:41:09   5/13/2018,google,67,burst,oil spill,query
+21:41:01   5/13/2018,google,66,burst,sandra bullock,query
+21:40:57   5/13/2018,google,65,timed,Halle Berry,query
+21:40:54   5/13/2018,google, , , ,info
+21:40:54   5/13/2018,google, , , ,URLmap
+21:40:54   5/13/2018,google, , , ,info
+21:40:50   5/13/2018,google, , , ,info
+21:40:50   5/13/2018,google, , , ,URLmap
+21:40:50   5/13/2018,google, , , ,info
+21:40:49   5/13/2018,google,64,timed,Bret Michaels,query
+21:40:42   5/13/2018,google,63,timed,kelley blue book,query
+21:40:34   5/13/2018,google,62,timed,dorothy provine,query
+21:40:27   5/13/2018,google,61,timed,xbox,query
+21:40:19   5/13/2018,google,60,timed,oil spill,query
+21:40:12   5/13/2018,google,59,timed,dorothy provine,query
+21:40:05   5/13/2018,google,58,timed,nascar,query
+21:39:55   5/13/2018,google,57,timed,pampers,query
+21:39:48   5/13/2018,google,56,timed,free comic book,query
+21:39:39   5/13/2018,google,55,timed,comic day,query
+21:39:30   5/13/2018,google,54,timed,American Idol,query
+21:39:20   5/13/2018,google,53,timed,nfl draft,query
+21:39:12   5/13/2018,google,52,timed,new 100,query
+21:39:04   5/13/2018,google,51,timed,100 dollar bill,query
+21:38:56   5/13/2018,google,50,timed,new dollar bill,query
+21:38:48   5/13/2018,google,49,timed,new dollar bill,query
+21:38:40   5/13/2018,google,48,timed,new 100 dollar bill,query
+21:38:32   5/13/2018,google,47,timed,craigslist,query
+21:38:25   5/13/2018,google,46,timed,tiger woods,query
+21:38:18   5/13/2018,google,45,timed,public bike rental,query
+21:38:11   5/13/2018,google,44,timed,kate gosselin,query
+21:38:03   5/13/2018,google,43,timed,david mclaughlin,query
+21:37:56   5/13/2018,google,42,timed,dell,query
+21:37:46   5/13/2018,google,41,timed,hertz,query
+21:37:38   5/13/2018,google,40,timed,south park,query
+21:37:28   5/13/2018,google,39,timed,south park,query
+21:37:19   5/13/2018,google,38,timed,xbox,query
+21:37:12   5/13/2018,google,37,timed,katie holmes,query
+21:37:04   5/13/2018,google,36,timed,amtrak,query
+21:36:55   5/13/2018,google,35,timed,isla fisher,query
+21:36:47   5/13/2018,google,34,timed,Taiwan Earthquake,query
+21:36:39   5/13/2018,google,33,timed,dollar bill,query
+21:36:32   5/13/2018,google,32,timed,100 dollar bill,query
+21:36:24   5/13/2018,google,31,timed,new bill,query
+21:36:15   5/13/2018,google,30,timed,New Dollar Bill,query
+21:36:06   5/13/2018,google,29,timed,new 100 dollar bill,query
+21:35:58   5/13/2018,google,28,timed,box jellyfish,query
+21:35:49   5/13/2018,google,27,timed,nasa space shuttle,query
+21:35:41   5/13/2018,google,26,timed,amtrak,query
+21:35:32   5/13/2018,google,25,timed,acm awards,query
+21:35:24   5/13/2018,google,24,timed,peta,query
+21:35:16   5/13/2018,google,23,timed,oil rig explosion,query
+21:35:06   5/13/2018,google,22,timed,Tara Reid,query
+21:34:58   5/13/2018,google,21,timed,home depot,query
+21:34:50   5/13/2018,google,20,timed,mariah carey,query
+21:34:41   5/13/2018,google,19,timed,new 100 dollar,query
+21:34:33   5/13/2018,google,18,timed,new 100,query
+21:34:26   5/13/2018,google,17,timed,South Park,query
+21:34:17   5/13/2018,google,16,timed,halle berry,query
+21:34:08   5/13/2018,google,15,timed,tiger woods,query
+21:34:00   5/13/2018,google,14,timed,american idol,query
+21:33:51   5/13/2018,google,13,timed,Palm,query
+21:33:43   5/13/2018,google,12,timed,Jennifer Aniston,query
+21:33:36   5/13/2018,google,11,timed,Hugh Hefner,query
+21:33:27   5/13/2018,google,10,timed,molly ringwald,query
+21:33:18   5/13/2018,google,9,timed,halle berry,query
+21:33:10   5/13/2018,google,8,timed,blackberry,query
+21:33:00   5/13/2018,google,7,timed,beastie boys,query
+21:32:52   5/13/2018,google,6,timed,Jillian Michaels,query
+21:32:43   5/13/2018,google,5,timed,face transplant,query
+21:32:36   5/13/2018,google,4,timed,tito ortiz,query
+21:32:28   5/13/2018,google,3,recovery,american idol,query
+21:30:59   5/13/2018,bing, , , ,ERROR
+21:30:35   5/13/2018,yahoo,2,timed,oil spill,query
+21:30:27   5/13/2018,bing,1,timed,pampers,query
+21:30:20   5/13/2018,bing,0,timed,NASA Space Shuttle,query
