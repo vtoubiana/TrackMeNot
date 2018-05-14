@@ -6,7 +6,9 @@ import datetime
 
 def getTrackMeNot():
 	'''
-	Crawl through the trackMeNot logs and create the trackMeNotDict
+	Crawl through the TrackMeNotLogs.csv - file containing all of the 
+	downloaded trackMeNot logs along with the times at which they were made
+	Create the trackMeNotDict
 	key: trackMeNotQuery
 	value: array of times at which that trackMeNoT query was made
 	'''
@@ -30,20 +32,24 @@ def parseGoogleTime(googleTime):
 	'''
 	parses googleTime into a dict so that it can be easily
 	made into a datetime.datetime object
+	example googleTime: 'May 13, 2018, 2:48:56 PM'
 	'''
 	googleTimeParsed = {}
 
 	month_format = re.compile(r'(?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)')
-	month = month_format.search(googleTime).group(0)
-	googleTimeParsed[month] = month
+	month_str = month_format.search(googleTime).group(0)
+	months_array = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+	month_int = months_array.index(month_str)
+	googleTimeParsed['month'] = month_int
 
 	day_format = re.compile(r'(?P<day>[123]?[0-9][,])')
-	day  = day_format.search(googleTime).group(0)[1:]
-	googleTimeParsed[day] = day
+	day_str  = day_format.search(googleTime).group(0)
+	day_int = int(day_str[0:len(day_str)-1])
+	googleTimeParsed['day'] = day_int
 
 	year_format = re.compile(r'(?P<year>201[78])')
-	year = year_format.search(googleTime).group(0)
-	googleTimeParsed[year] = year
+	year = int(year_format.search(googleTime).group(0))
+	googleTimeParsed['year'] = year
 
 	time_format = re.compile(r'(?P<hour>[1]?[0-9])'
 								r'(:)'
@@ -55,13 +61,13 @@ def parseGoogleTime(googleTime):
 	first_colon = time.find(':')
 	second_colon = time[first_colon+1:].find(':')
 
-	hour = time[0:first_colon]
-	minute = time[first_colon+1:second_colon]
-	second = time[second_colon+1:]
+	hour = int(time[0:first_colon])
+	minute = int(time[first_colon+1:second_colon])
+	second = int(time[second_colon+1:])
 
 	
-	googleTimeParsed[minute] = minute
-	googleTimeParsed[second] = second
+	googleTimeParsed['minute'] = minute
+	googleTimeParsed['second'] = second
 
 	am_pm_format = re.compile(r'(?P<AM_PM>PM)')
 	am_pm = am_pm_format.search(googleTime).group(0)
@@ -72,7 +78,7 @@ def parseGoogleTime(googleTime):
 		if am_pm == "PM":
 			hour = hour +12
 
-	googleTimeParsed[hour] = hour
+	googleTimeParsed['hour'] = hour
 
 	return googleTimeParsed
 
@@ -81,6 +87,7 @@ def trackMeNotTimeParsed(trackMeNotTimes):
 	parses each of the times in trackMeNotTimes 
 	into a dict so that it can be easily made into a 
 	datetime.datetime object
+	example trackMeNotTimes ['22:54:53   5/13/2018', '22:20:19   5/13/2018', '21:55:32   5/13/2018', '21:42:27   5/13/2018']
 	'''
 	arrayOfParsedDict = []
 	for entry in trackMeNotTimes:
@@ -95,13 +102,13 @@ def trackMeNotTimeParsed(trackMeNotTimes):
 		first_colon = time.find(':')
 		second_colon = time[first_colon+1:].find(':')
 
-		hour = time[0:first_colon]
-		minute = time[first_colon+1:second_colon]
-		second = time[second_colon+1:]
+		hour = int(time[0:first_colon])
+		minute = int(time[first_colon+1:second_colon])
+		second = int(time[second_colon+1:])
 
-		parsed_dict[hour] = hour
-		parsed_dict[minute] = minute
-		parsed_dict[second] = second
+		parsed_dict['hour'] = hour
+		parsed_dict['minute'] = minute
+		parsed_dict['second'] = second
 
 		date_format = re.copmile(r'(?P<month>[1]?[0-9])'
 								r'(/)'
@@ -113,13 +120,13 @@ def trackMeNotTimeParsed(trackMeNotTimes):
 		first_slash = date.find('/')
 		second_slash = date[first_slash+1:].find('/')
 
-		month = date[0:first_slash]
-		day = date[first_slash+1:second_slash]
-		year = date[second_slash+1:]
+		month = int(date[0:first_slash])
+		day = int(date[first_slash+1:second_slash])
+		year = int(date[second_slash+1:])
 
-		parsed_dict[month] = month
-		parsed_dict[day] = day
-		parsed_dict[year] = year
+		parsed_dict['month'] = month
+		parsed_dict['day'] = day
+		parsed_dict['year'] = year
 
 		arrayOfParsedDict.append(parsed_dict)
 
@@ -157,7 +164,6 @@ def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
 	Does this by checking the googleQuery and the googleQueryTime against 
 	the TrackMeNotDict {trackMeNotQuery: [array of times at which trackMeNoT query was made]}
 	'''
-
 	if googleQuery not in trackMeNotDict:
 		return "No"
 	else:
@@ -182,7 +188,6 @@ def getGoogleActivity(trackMeNotDict):
 	The TrackMeNot column is a "Yes" if the query was made by TrackMeNot. o.w. it is a "No"
 	'''
 	f=codecs.open("MyActivity.html", 'r')
-	#print f.read()
 
 	try: 
 	    from BeautifulSoup import BeautifulSoup
@@ -224,8 +229,7 @@ def getGoogleActivity(trackMeNotDict):
 				writer.writerow({'Time':time_text,'Query':search_text, 'TrackMeNot': trackMeNot})
 				#print (search_text, time_text)
 
-			
-
+		
 def main():
 	# with open('Testing.csv', 'w') as csvfile:
 	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
