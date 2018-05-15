@@ -8,9 +8,9 @@ def getTrackMeNot():
 	'''
 	Crawl through the TrackMeNotLogs.csv - file containing all of the 
 	downloaded trackMeNot logs along with the times at which they were made
-	Create the trackMeNotDict
-	key: trackMeNotQuery
-	value: array of times at which that trackMeNoT query was made
+	Create the dict trackMeNotDict w/ following structure
+		key: trackMeNotQuery (string)
+		value: array of times at which that trackMeNoT query was made (array of strings)
 	'''
 
 	with open('TrackMeNotLogs.csv','r') as f:
@@ -32,7 +32,8 @@ def parseGoogleTime(googleTime):
 	'''
 	parses googleTime into a dict so that it can be easily
 	made into a datetime.datetime object
-	example googleTime: 'May 13, 2018, 2:48:56 PM'
+	example:
+	input googleTime: 'May 13, 2018, 2:48:56 PM'
 	'''
 	googleTimeParsed = {}
 
@@ -92,7 +93,8 @@ def parseTrackMeNotTime(trackMeNotTimes):
 	arrayOfParsedDict = []
 	for entry in trackMeNotTimes:
 		parsed_dict = {}
-		time_format = re.compile(r'(?P<hour>[1]?[0-9])'
+		print (entry)
+		time_format = re.compile(r'(?P<hour>[12]?[0-9])'
 								r'(:)'
 								r'(?P<min>[0-9][0-9])'
 								r'(:)'
@@ -101,8 +103,9 @@ def parseTrackMeNotTime(trackMeNotTimes):
 		time = time_format.search(entry).group(0)
 		first_colon = time.find(':')
 		second_colon = time.find(':',first_colon+1)
-
+		print (time)
 		hour = int(time[0:first_colon])
+		
 		minute = int(time[first_colon+1:second_colon])
 		second = int(time[second_colon+1:])
 
@@ -129,7 +132,7 @@ def parseTrackMeNotTime(trackMeNotTimes):
 		parsed_dict['year'] = year
 
 		arrayOfParsedDict.append(parsed_dict)
-		return arrayOfParsedDict
+	return arrayOfParsedDict
 
 
 def compareQueryTimes(googleTime, trackMeNotTimes):
@@ -140,6 +143,12 @@ def compareQueryTimes(googleTime, trackMeNotTimes):
 	googleParsed = parseGoogleTime(googleTime)
 	trackMeParsedTimeArray = parseTrackMeNotTime(trackMeNotTimes)
 	googleDateTime = datetime.datetime(googleParsed['year'],googleParsed['month'],googleParsed['day'],googleParsed['hour'],googleParsed['minute'],googleParsed['second'])
+	# with open('Testing.csv', 'a') as csvfile:
+	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
+	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+	# 	writer.writerow({'GoogleTime':googleTime,'TrackMeNotTimes':trackMeNotTimes})
+	#print (trackMeParsedTimeArray)
+
 	for trackMeEntry in trackMeParsedTimeArray:
 		trackMeDateTime = datetime.datetime(trackMeEntry['year'],trackMeEntry['month'],trackMeEntry['day'],trackMeEntry['hour'],trackMeEntry['minute'],trackMeEntry['second'])
 		diffTimeDelta = abs(trackMeDateTime - googleDateTime) 
@@ -147,10 +156,7 @@ def compareQueryTimes(googleTime, trackMeNotTimes):
 			return True
 	return False
 
-	# with open('Testing.csv', 'a') as csvfile:
-	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
-	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
-	# 	writer.writerow({'GoogleTime':googleTime,'TrackMeNotTimes':trackMeNotTimes})
+		
 
 
 	#return True
@@ -169,13 +175,17 @@ def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
 		trackMeNotTimes = trackMeNotDict[googleQuery] #this is an array 
 		timesMatch = compareQueryTimes(googleQueryTime, trackMeNotTimes)
 		if timesMatch is True:
+			#print ("WE GOT A YES")
 			return "Yes"
 		else:
+			#print ("WE GOT A NO")
 			return "No"
 
 
 def createGoogleSearchFile(trackMeNotDict):
 	'''
+	parameters:
+		trackMeNotDict: see getTrackMeNotDict()
 	This function parses MyActivity.html
 	Specifically, it retrieves all Google Searches and excludes everything else
 	It places all google searches in the GoogleSearchResults.csv file
@@ -194,10 +204,12 @@ def createGoogleSearchFile(trackMeNotDict):
 	href = re.compile('https://www.google.com/search\?q=[a-zA-Z0-9]*')
 	html = f.read() #the HTML code you've written above
 	parsed_html = BeautifulSoup(html, "lxml")
+	x = '[1]';
+	y = '[3]';
 	time_format = re.compile(
 				r'(?P<month>May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)' 
 				r'([ ])'
-				r'(?P<day>[1][3])' #    [123]?[0-9])'
+				r'(?P<day>[1][3])'#[1][3])' #    [123]?[0-9])'
 				r'(,)'
 				r'([ ])'
 				r'(?P<year>201[78])'
@@ -260,8 +272,14 @@ def main():
 	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
 	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
 	# 	writer.writeheader()
-	trackMeNotDict = getTrackMeNot()
-	createGoogleSearchFile(trackMeNotDict)
+	
+	#trackMeNotDict = getTrackMeNot()
+	
+	#print (trackMeNotDict)
+	# month = ['May']
+	# day = [13, 14]
+	# year = [2018]
+	#createGoogleSearchFile(trackMeNotDict)
 	analyzeGoogleSearches()
 
 
