@@ -293,7 +293,7 @@ def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 	return cutoffIndex
 
 
-def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex):
+def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 	'''
 	parameters:
 		googleLogFile (string) is csv file name of file with google logs
@@ -332,8 +332,8 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex):
 					logFrequencyDict[query_text] = 1
 			else:
 				break
-	amount_correct = 0
-	amount_wrong  =0
+	# amount_correct = 0
+	# amount_wrong  =0
 	counter = 0
 	with open(googleLogFile, 'r+') as csvfile:
 		reader = csv.reader(csvfile)
@@ -342,31 +342,45 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex):
 		for log in reader:
 			counter +=1
 			query_text = log[1]
-			actual_yes_no = log[2]
-			#if counter < cutoffIndex:
 			if counter <= cutoffIndex:
 				if logFrequencyDict[query_text] > 1:
 					guess = "Yes"
 				else:
 					guess = "No"
 				guessResultsArray.append(guess)
-				if actual_yes_no == guess:
-					amount_correct +=1
-				else:
-					amount_wrong +=1
 			else:
 				break
+
+		
+
+
+		# for log in reader:
+		# 	counter +=1
+		# 	query_text = log[1]
+		# 	actual_yes_no = log[2]
+		# 	#if counter < cutoffIndex:
+		# 	if counter <= cutoffIndex:
+		# 		if logFrequencyDict[query_text] > 1:
+		# 			guess = "Yes"
+		# 		else:
+		# 			guess = "No"
+		# 		guessResultsArray.append(guess)
+		# 		if actual_yes_no == guess:
+		# 			amount_correct +=1
+		# 		else:
+		# 			amount_wrong +=1
+		# 	else:
+		# 		break
 	
-	df = pd.read_csv(googleLogFile)
-	df['Frequency Analysis'] = pd.Series(guessResultsArray)
-	df.to_csv(googleLogFile, index=False)
+	# df = pd.read_csv(googleLogFile)
+	# df['Frequency Analysis'] = pd.Series(guessResultsArray)
+	# df.to_csv(googleLogFile, index=False)
 
-
-	print ('amount_correct', amount_correct)
-	print ('amount_wrong', amount_wrong)
+	# print ('amount_correct', amount_correct)
+	# print ('amount_wrong', amount_wrong)
 
 	columnHeader = "Frequency Analysis"
-	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader)
+	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
 	return guessResultsArray
 
@@ -382,18 +396,19 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 			o.w guess that is is an authentic query (i.e. not trackMeNot)
 	'''
 	file = open(popularQueriesFile, "r") 
-	popular_queries_set = {}
+	popular_queries_set = set()
 	for line in file:
 		line = re.sub(r'\t\n', '', line)
 		popular_queries_set.add(line)
-	amount_correct = 0
-	amount_wrong = 0
+	# amount_correct = 0
+	# amount_wrong = 0
+	counter = 0
 	with open(googleLogFile, 'r') as csvfile:
 		reader = csv.reader(csvfile)
 		next(reader) #SKIP THE HEADER
 		guessResultsArray= []
-		
 		for log in reader:
+			counter +=1
 			query_text = log[1]
 			actual_yes_no = log[2]
 			if counter <= cutoffIndex:
@@ -402,31 +417,35 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 				else:
 					guess = "No"
 				guessResultsArray.append(guess)
-				if yes_no == actual_yes_no:
-					amount_correct +=1
-				else:
-					amount_wrong +=1
+				# if guess == actual_yes_no:
+				# 	amount_correct +=1
+				# else:
+				# 	amount_wrong +=1
 			else:
 				break
 
+	# df = pd.read_csv(googleLogFile)
+	# df['Popular Seed Analysis'] = pd.Series(guessResultsArray)
+	# df.to_csv(googleLogFile, index=False)
 
-	df = pd.read_csv(googleLogFile)
-	df['Popular Seed Analysis'] = pd.Series(guessResultsArray)
-	df.to_csv(googleLogFile, index=False)
-
-
-	print ('amount_correct', amount_correct)
-	print ('amount_wrong', amount_wrong)
+	# print ('amount_correct', amount_correct)
+	# print ('amount_wrong', amount_wrong)
 
 	columnHeader = "Popular Seed Analysis"
-	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader)
+	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
 
 	return guessResultsArray
 
 
-def analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults):
+def analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults, cutoffIndex):
 	'''
+	Inputs:
+		googleLogFile: (string) name of google log file
+		frequencyGuessResults: (array) of guess results from analyzeByQueryFrequency()
+		popularityGuessResults: (array) of guess results from analyzeByPopularSeedWords()
+		cutoffIndex: (int) index returned from determineGoogleLogCutoff()
+
 	Objective:
 		Determine (guess) which Google search queries were made by TrackMeNot 
 		and determine which Google search queries were authentic
@@ -445,10 +464,10 @@ def analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popula
 		else:
 			guess = "No"
 		guessResultsArray.append(guess)
-	columnHeader = "Popularity and Frequencye"
-	evaluateGuessArray(guessResultsArray, googleLogFile, )
+	columnHeader = "Popularity and Frequency"
+	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
-def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader):
+def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex):
 	'''
 	Given a guessArray
 	evaluate it => determine how many guesses were right and how many were wrong
@@ -457,23 +476,77 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader):
 	index = 0
 	amount_correct = 0
 	amount_wrong = 0
+
+	counter = 0
 	with open(googleLogFile, 'r') as csvfile:
 		reader = csv.reader(csvfile)
 		next(reader) #SKIP THE HEADER		
 		for log in reader:
-			actual_yes_no = log[2]
-			guess = guessResultsArray[0]
-			if guess == actual_yes_no:
-				amount_correct +=1
+			counter += 1
+			if counter < cutoffIndex:
+				actual_yes_no = log[2]
+				guess = guessResultsArray[0]
+				if guess == actual_yes_no:
+					amount_correct +=1
+				else:
+					amount_wrong +=1
 			else:
-				amount_wrong +=1
+				break
 
-	print (header, "amount correct", amount_correct)
-	print (header, "amount wrong", amount_wrong)
+	percent_right = round(((amount_correct / (amount_correct + amount_wrong)) * 100), 2)
+
+	print (columnHeader, "amount correct", amount_correct)
+	print (columnHeader, "amount wrong", amount_wrong)
+	print (columnHeader, "percent right", percent_right)
 
 	df = pd.read_csv(googleLogFile)
 	df[columnHeader] = pd.Series(guessResultsArray)
 	df.to_csv(googleLogFile, index=False)
+
+
+
+	with open("output.txt", "a") as out:
+		out.write(columnHeader)
+		out.write("Amount Correct: " + str(amount_correct))
+		out.write("\n")
+		out.write("Amount Wrong :" + str(amount_wrong))
+		out.write("\n")
+		out.write("Percent Right : " + str(percent_right))
+		out.write("\n")
+
+
+def isUserUsingTrackMeNot(googleLogFile):
+	'''
+	Objective:
+		Determine if a user is using TrackMeNot or not
+
+	Returns:
+		True if user is using TrackMeNot
+		False if user is not using TrackMeNot
+	'''
+	return True
+
+
+def prepareOutputFile():
+	with open('output.txt','w') as out:
+		out.write("Results from TrackMeNot Analysis")
+		out.write("\n")
+
+
+def dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles):
+	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
+
+	createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
+	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
+
+def dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles):
+	prepareOutputFile()
+	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
+	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex)
+	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFiles, cutoffIndex)
+	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults, cutoffIndex)
+
+	isUserUsingTrackMeNot(googleLogFile)
 
 
 def main():
@@ -482,15 +555,8 @@ def main():
 	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
 	popularQueriesFiles = 'popular_queries.txt'
 
-	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
-
-	createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
-	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
-	
-	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
-	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex)
-	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFiles, cutOffIndex)
-	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults)
+	dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles)
+	dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles)
 
 if __name__ == "__main__":
 	main()
