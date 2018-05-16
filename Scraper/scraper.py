@@ -268,7 +268,32 @@ def getLatestTrackMeNotTime(trackMeNotLogFile):
 	print (last_time_parsed)
 	return last_time_parsed
 
-def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
+
+
+def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
+	'''
+	Returns the index of log in googleLogFile that was made at time t
+	where time t is the time of the earliest log in the TrackMeNotLogFile
+	'''
+	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile)
+	cutoffIndex = 0
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		
+		for log in reader:
+			query_time = log[0]
+			googleDateTime = parseGoogleTime(query_time)
+			diff  = googleDateTime - latestTrackMeNotDateTime
+			if diff.days >= 0:
+				cutoffIndex +=1
+			else:
+				break
+				
+	return cutoffIndex
+
+
+def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex):
 	'''
 	parameters:
 		googleLogFile (string) is csv file name of file with google logs
@@ -293,9 +318,9 @@ def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
 	with open(googleLogFile, 'r') as csvfile:
 		reader = csv.reader(csvfile)
 		next(reader) #SKIP THE HEADER
-		cutoffIndex = 0
+		#cutoffIndex = 0
 		for log in reader:
-			cutoffIndex +=1
+			#cutoffIndex +=1
 			query_text = log[1]
 			query_time = log[0]
 			googleDateTime = parseGoogleTime(query_time)
@@ -317,14 +342,15 @@ def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
 		for log in reader:
 			counter +=1
 			query_text = log[1]
-			yes_no = log[2]
-			if counter < cutoffIndex:
+			actual_yes_no = log[2]
+			#if counter < cutoffIndex:
+			if counter <= cutoffIndex:
 				if logFrequencyDict[query_text] > 1:
 					guess = "Yes"
 				else:
 					guess = "No"
 				guessResultsArray.append(guess)
-				if yes_no == guess:
+				if actual_yes_no == guess:
 					amount_correct +=1
 				else:
 					amount_wrong +=1
@@ -332,37 +358,139 @@ def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
 				break
 	
 	df = pd.read_csv(googleLogFile)
-	df['Guesses'] = pd.Series(guessResultsArray)
+	df['Frequency Analysis'] = pd.Series(guessResultsArray)
 	df.to_csv(googleLogFile, index=False)
 
 
 	print ('amount_correct', amount_correct)
 	print ('amount_wrong', amount_wrong)
 
+	columnHeader = "Frequency Analysis"
+	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader)
 
-def analyzePopularSearches(popularQueriesFile):
+	return guessResultsArray
+
+def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
+	'''
+	Objective:
+		Determine (guess) which Google search queries were made by TrackMeNot 
+		and determine which Google search queries were authentic
+	Method:
+		For each search query in googleLogFile:
+			if the query is in popularQueriesFile, then guess that it is 
+			a trackMeNotQuery
+			o.w guess that is is an authentic query (i.e. not trackMeNot)
+	'''
 	file = open(popularQueriesFile, "r") 
-	popular_queries = []
+	popular_queries_set = {}
 	for line in file:
-		popular_queries.append(line)
-	print (popular_queries)
+		line = re.sub(r'\t\n', '', line)
+		popular_queries_set.add(line)
+	amount_correct = 0
+	amount_wrong = 0
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		guessResultsArray= []
+		
+		for log in reader:
+			query_text = log[1]
+			actual_yes_no = log[2]
+			if counter <= cutoffIndex:
+				if query_text in popular_queries_set:
+					guess = "Yes"
+				else:
+					guess = "No"
+				guessResultsArray.append(guess)
+				if yes_no == actual_yes_no:
+					amount_correct +=1
+				else:
+					amount_wrong +=1
+			else:
+				break
 
 
+	df = pd.read_csv(googleLogFile)
+	df['Popular Seed Analysis'] = pd.Series(guessResultsArray)
+	df.to_csv(googleLogFile, index=False)
+
+
+	print ('amount_correct', amount_correct)
+	print ('amount_wrong', amount_wrong)
+
+	columnHeader = "Popular Seed Analysis"
+	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader)
+
+
+	return guessResultsArray
+
+
+def analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults):
+	'''
+	Objective:
+		Determine (guess) which Google search queries were made by TrackMeNot 
+		and determine which Google search queries were authentic
+	Method:
+		For each search query in googleLogFile:
+			if analyzeByPopularSeedWords() or analyzeByQueryFrequency() guessed "Yes"
+			(i.e. that it is a TrackMeNot query) then guess "yes"
+			o.w. guess no (i.e. that it is not a TrackMeNot query)
+	'''
+	if len(frequencyGuessResults) != len(popularityGuessResults):
+		return
+	guessResultsArray = []
+	for i in range(len(frequencyGuessResults)):
+		if frequencyGuessResults[i] == "Yes" or popularityGuessResults[i] == "Yes":
+			guess = "Yes"
+		else:
+			guess = "No"
+		guessResultsArray.append(guess)
+	columnHeader = "Popularity and Frequencye"
+	evaluateGuessArray(guessResultsArray, googleLogFile, )
+
+def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader):
+	'''
+	Given a guessArray
+	evaluate it => determine how many guesses were right and how many were wrong
+	also, make a new column in the googleLogFile recording the guesses
+	'''
+	index = 0
+	amount_correct = 0
+	amount_wrong = 0
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER		
+		for log in reader:
+			actual_yes_no = log[2]
+			guess = guessResultsArray[0]
+			if guess == actual_yes_no:
+				amount_correct +=1
+			else:
+				amount_wrong +=1
+
+	print (header, "amount correct", amount_correct)
+	print (header, "amount wrong", amount_wrong)
+
+	df = pd.read_csv(googleLogFile)
+	df[columnHeader] = pd.Series(guessResultsArray)
+	df.to_csv(googleLogFile, index=False)
 
 
 def main():
-	# googleActivityFile = 'MyActivity2.html'
-	# googleLogFile = 'GoogleSearchResults2.csv'
-	# trackMeNotLogFile = 'TrackMeNotLogs2.csv'
+	googleActivityFile = 'MyActivity2.html'
+	googleLogFile = 'GoogleSearchResults2.csv'
+	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
 	popularQueriesFiles = 'popular_queries.txt'
 
-	# trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
+	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
 
-	# createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
-	# addTrackMeNotColumn(googleLogFile, trackMeNotDict)
-	# analyzeGoogleSearches(googleLogFile, trackMeNotLogFile)
-
-	analyzePopularSearches(popularQueriesFiles)
+	createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
+	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
+	
+	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
+	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutOffIndex)
+	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFiles, cutOffIndex)
+	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults)
 
 if __name__ == "__main__":
 	main()
