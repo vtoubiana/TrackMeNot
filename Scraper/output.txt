@@ -1,0 +1,26 @@
+Results from TrackMeNot Analysis
+
+
+*******************************
+Frequency Analysis
+
+Amount Correct: 2132
+Amount Wrong :761
+Percent Right : 73.7
+*******************************
+
+*******************************
+Popular Seed Analysis
+
+Amount Correct: 2127
+Amount Wrong :766
+Percent Right : 73.52
+*******************************
+
+*******************************
+Popularity and Frequency
+
+Amount Correct: 2139
+Amount Wrong :754
+Percent Right : 73.94
+*******************************

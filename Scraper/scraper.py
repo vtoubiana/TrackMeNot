@@ -268,8 +268,6 @@ def getLatestTrackMeNotTime(trackMeNotLogFile):
 	print (last_time_parsed)
 	return last_time_parsed
 
-
-
 def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 	'''
 	Returns the index of log in googleLogFile that was made at time t
@@ -351,34 +349,6 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 			else:
 				break
 
-		
-
-
-		# for log in reader:
-		# 	counter +=1
-		# 	query_text = log[1]
-		# 	actual_yes_no = log[2]
-		# 	#if counter < cutoffIndex:
-		# 	if counter <= cutoffIndex:
-		# 		if logFrequencyDict[query_text] > 1:
-		# 			guess = "Yes"
-		# 		else:
-		# 			guess = "No"
-		# 		guessResultsArray.append(guess)
-		# 		if actual_yes_no == guess:
-		# 			amount_correct +=1
-		# 		else:
-		# 			amount_wrong +=1
-		# 	else:
-		# 		break
-	
-	# df = pd.read_csv(googleLogFile)
-	# df['Frequency Analysis'] = pd.Series(guessResultsArray)
-	# df.to_csv(googleLogFile, index=False)
-
-	# print ('amount_correct', amount_correct)
-	# print ('amount_wrong', amount_wrong)
-
 	columnHeader = "Frequency Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
@@ -417,23 +387,12 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 				else:
 					guess = "No"
 				guessResultsArray.append(guess)
-				# if guess == actual_yes_no:
-				# 	amount_correct +=1
-				# else:
-				# 	amount_wrong +=1
+				
 			else:
 				break
 
-	# df = pd.read_csv(googleLogFile)
-	# df['Popular Seed Analysis'] = pd.Series(guessResultsArray)
-	# df.to_csv(googleLogFile, index=False)
-
-	# print ('amount_correct', amount_correct)
-	# print ('amount_wrong', amount_wrong)
-
 	columnHeader = "Popular Seed Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
-
 
 	return guessResultsArray
 
@@ -464,7 +423,7 @@ def analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popula
 		else:
 			guess = "No"
 		guessResultsArray.append(guess)
-	columnHeader = "Popularity and Frequency"
+	columnHeader = "Popularity and Frequency Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
 def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex):
@@ -482,10 +441,11 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 		reader = csv.reader(csvfile)
 		next(reader) #SKIP THE HEADER		
 		for log in reader:
-			counter += 1
 			if counter < cutoffIndex:
+				
 				actual_yes_no = log[2]
-				guess = guessResultsArray[0]
+				guess = guessResultsArray[counter]
+				counter += 1
 				if guess == actual_yes_no:
 					amount_correct +=1
 				else:
@@ -503,16 +463,14 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 	df[columnHeader] = pd.Series(guessResultsArray)
 	df.to_csv(googleLogFile, index=False)
 
-
-
 	with open("output.txt", "a") as out:
-		out.write(columnHeader)
-		out.write("Amount Correct: " + str(amount_correct))
-		out.write("\n")
-		out.write("Amount Wrong :" + str(amount_wrong))
-		out.write("\n")
-		out.write("Percent Right : " + str(percent_right))
-		out.write("\n")
+		out.write("\n\n")
+		out.write("*******************************" + "\n")
+		out.write(columnHeader + "\n\n")
+		out.write("Amount Correct: " + str(amount_correct) + "\n")
+		out.write("Amount Wrong :" + str(amount_wrong) + "\n")
+		out.write("Percent Right : " + str(percent_right) + "\n")
+		out.write("*******************************")
 
 
 def isUserUsingTrackMeNot(googleLogFile):
@@ -529,9 +487,7 @@ def isUserUsingTrackMeNot(googleLogFile):
 
 def prepareOutputFile():
 	with open('output.txt','w') as out:
-		out.write("Results from TrackMeNot Analysis")
-		out.write("\n")
-
+		out.write("Results from TrackMeNot Analysis" + "\n")
 
 def dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles):
 	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
@@ -550,9 +506,9 @@ def dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQuer
 
 
 def main():
-	googleActivityFile = 'MyActivity2.html'
-	googleLogFile = 'GoogleSearchResults2.csv'
-	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
+	googleActivityFile = 'MyActivity.html'
+	googleLogFile = 'GoogleSearchResults.csv'
+	trackMeNotLogFile = 'TrackMeNotLogs.csv'
 	popularQueriesFiles = 'popular_queries.txt'
 
 	dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles)
