@@ -91,6 +91,7 @@ def getPopularWords(popularQueriesFile):
 	popular_queries_set = set()
 	for line in file:
 		line = re.sub(r'\t\n', '', line)
+		line = line.lower()
 		popular_queries_set.add(line)
 	return popular_queries_set
 
@@ -456,6 +457,7 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 	guessResultsArray = []
 	for i in range(len(queryTextList)):
 		queryText = queryTextList[i]
+		queryText = queryText.lower()
 		actualYesNo = actualYesNoList[i]
 		counter += 1
 		if counter <= cutoffIndex:
@@ -588,7 +590,7 @@ def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	numIterations = 500
 	thresholdPercentage = 25
 	for i in range(numIterations):
-		thisQuery = googleQueryTextList[i]
+		thisQuery = googleQueryTextList[i].lower()
 		if thisQuery in popularQuerySet:
 			print ("popular query", thisQuery)
 			numberOfPopular +=1
@@ -727,8 +729,8 @@ def main():
 	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 	individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 
-	#isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
-	#whenIsUserUsing(googleLogFile, popularQueriesFile)
+	isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
+	whenIsUserUsing(googleLogFile, popularQueriesFile)
 
 if __name__ == "__main__":
 	main()
