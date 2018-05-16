@@ -547,16 +547,38 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 	df.to_csv(googleLogFile, index=False)
 
 	with open("output.txt", "a") as out:
-		out.write("\n\n")
 		out.write("*******************************" + "\n")
 		out.write(columnHeader + "\n\n")
 		out.write("Amount Correct: " + str(amount_correct) + "\n")
 		out.write("Amount Wrong :" + str(amount_wrong) + "\n")
 		out.write("Percent Right : " + str(percent_right) + "\n")
 		out.write("*******************************")
+		out.write("\n")
 
 
-def isUserUsingTrackMeNot(googleLogFile, popularQueriesFile):
+def evaluateUserUsing(guess, experimentName):
+	'''
+	Input:
+		guess: (boolean) true iff determined that user is using TrackMeNot
+		experimentName (string) name of experiment run
+	Output:
+		None
+	Functionality:
+		Update output.txt with appropriate Information
+	'''
+	if guess == True:
+		writeIn = "We think this user is using TrackMeNot"
+	else:
+		writeIn = "We do not think this user is using TrackMeNot"
+	with open("output.txt", "a") as out:
+		out.write("*******************************" + "\n")
+		out.write(experimentName + "\n\n")
+		out.write(writeIn + "\n")
+		out.write("*******************************")
+		out.write("\n")
+
+
+def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	'''
 	Objective:
 		Determine if a user is using TrackMeNot or not
@@ -565,30 +587,63 @@ def isUserUsingTrackMeNot(googleLogFile, popularQueriesFile):
 		True if user is using TrackMeNot
 		False if user is not using TrackMeNot
 	'''
-	popular_queries_set = getPopularWords(popularQueriesFile)
-	google_query_text_set = getAllGoogleQueryTextsInSet(googleLogFile)
+	popularQueriesSet = getPopularWords(popularQueriesFile)
+	googleQueryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	numberOfPopular = 0
+	numIterations = 500
+	for i in range(numIterations):
+		thisQuery = googleQueryTextList[0]
+		if thisQuery in popularQueriesSet:
+			numberOfPopular +=1
+	percentPopular = (numberOfPopular / numIterations) * 100
+	experimentName = "Looking for Queries in TrackMeNot's Popular List"
+	if percentPopular > 25:
+		evaluateUserUsing(True, experimentName)
+		return True
+	else:
+		evaluateUserUsing(True, experimentName)
+		return False
 
-
+def whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile):
+	return True
 
 def prepareOutputFile():
 	with open('output.txt','w') as out:
 		out.write("Results from TrackMeNot Analysis" + "\n")
 
-def dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
+def dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
+	'''
+	These functions serve to set up data (generate necessary csv files) and clean up the data
+	so that they can be analyzed
+	'''
 	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
-
 	createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict)
 	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
 
-def dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
+def individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
+	'''
+	These functions observe each individual query and for each query determines if it was generated
+	by TrackMeNot or if it was an authentic query 
+	'''
 	prepareOutputFile()
 	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
 	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex)
 	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex)
 	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults, cutoffIndex)
 
-	isUserUsingTrackMeNot(googleLogFile, popularQueriesFile)
+def isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile):
+	'''
+	These functions observe an individuals search history and seeks to determine if they are using
+	TrackMeNot or not
+	'''
+	userUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
+def whenIsUserUsing(googleLogFile, popularQueriesFile):
+	'''
+	These functions observe and inviduals search history and seeks to determine when, if at all,
+	they have TrackMeNot turned and when, if at all, they have trackMeNot turned off
+	'''
+	whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def main():
 	googleActivityFile = 'MyActivity.html'
@@ -596,8 +651,11 @@ def main():
 	trackMeNotLogFile = 'TrackMeNotLogs.csv'
 	popularQueriesFile = 'popular_queries.txt'
 
-	dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
-	dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
+	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
+	individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
+
+	isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
+	whenIsUserUsing(googleLogFile, popularQueriesFile)
 
 if __name__ == "__main__":
 	main()
