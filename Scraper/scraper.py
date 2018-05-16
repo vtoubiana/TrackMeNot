@@ -165,7 +165,7 @@ def parseGoogleTime(googleTime):
 	googleTimeParsed['minute'] = minute
 	googleTimeParsed['second'] = second
 
-	am_pm_format = re.compile(r'(?P<AM_PM>PM)')
+	am_pm_format = re.compile(r'(?P<AM_PM>AM|PM)')
 	am_pm = am_pm_format.search(googleTime).group(0)
 	if hour == 12:
 		if am_pm == "AM":
@@ -310,7 +310,7 @@ def createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict):
 				r'(:)'
 				r'(?P<sec>[0-9][0-9])'
 				r'([ ])'
-				r'(?P<AM_PM>PM)' #   AM|PM)'
+				r'(?P<AM_PM>AM|PM)' #   AM|PM)'
 				)
 	with open(googleLogFile, 'w') as csvfile:
 		fieldnames = ['Time', 'Query', 'TrackMeNot']
@@ -415,7 +415,6 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 
 	counter = 0
 	
-		
 	guessResultsArray = []
 	for i in range(len(queryTextList)):
 		queryText = queryTextList[i]
@@ -436,8 +435,6 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 	return guessResultsArray
 
 
-
-
 def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 	'''
 	Objective:
@@ -454,7 +451,6 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 	# amount_wrong = 0
 	counter = 0
 
-
 	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
 	actualYesNoList = getAllGoogleYesNoInList(googleLogFile)
 	guessResultsArray = []
@@ -470,7 +466,6 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 			guessResultsArray.append(guess)
 		else:
 			break
-
 
 	columnHeader = "Popular Seed Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
@@ -535,8 +530,10 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 				amount_wrong +=1
 		else:
 			break
-
-	percent_right = round(((amount_correct / (amount_correct + amount_wrong)) * 100), 2)
+	if amount_correct == 0:
+		percent_right = 0
+	else:
+		percent_right = round(((amount_correct / (amount_correct + amount_wrong)) * 100), 2)
 
 	print (columnHeader, "amount correct", amount_correct)
 	print (columnHeader, "amount wrong", amount_wrong)
@@ -547,14 +544,13 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 	df.to_csv(googleLogFile, index=False)
 
 	with open("output.txt", "a") as out:
+		out.write("\n")
 		out.write("*******************************" + "\n")
 		out.write(columnHeader + "\n\n")
 		out.write("Amount Correct: " + str(amount_correct) + "\n")
 		out.write("Amount Wrong :" + str(amount_wrong) + "\n")
 		out.write("Percent Right : " + str(percent_right) + "\n")
-		out.write("*******************************")
-		out.write("\n")
-
+		out.write("*******************************" + "\n")
 
 def evaluateUserUsing(guess, experimentName):
 	'''
@@ -571,12 +567,11 @@ def evaluateUserUsing(guess, experimentName):
 	else:
 		writeIn = "We do not think this user is using TrackMeNot"
 	with open("output.txt", "a") as out:
+		out.write("\n\n\n")
 		out.write("*******************************" + "\n")
 		out.write(experimentName + "\n\n")
 		out.write(writeIn + "\n")
-		out.write("*******************************")
-		out.write("\n")
-
+		out.write("*******************************" + "\n")
 
 def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	'''
@@ -587,25 +582,103 @@ def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 		True if user is using TrackMeNot
 		False if user is not using TrackMeNot
 	'''
-	popularQueriesSet = getPopularWords(popularQueriesFile)
+	popularQuerySet = getPopularWords(popularQueriesFile)
 	googleQueryTextList = getAllGoogleQueryTextsInList(googleLogFile)
 	numberOfPopular = 0
 	numIterations = 500
+	thresholdPercentage = 25
 	for i in range(numIterations):
-		thisQuery = googleQueryTextList[0]
-		if thisQuery in popularQueriesSet:
+		thisQuery = googleQueryTextList[i]
+		if thisQuery in popularQuerySet:
+			print ("popular query", thisQuery)
 			numberOfPopular +=1
-	percentPopular = (numberOfPopular / numIterations) * 100
+	print ("Number Popular", numberOfPopular)
+	percentPopular = round(((numberOfPopular / numIterations) * 100),2)
+	print ("Percent Popular", percentPopular)
 	experimentName = "Looking for Queries in TrackMeNot's Popular List"
-	if percentPopular > 25:
-		evaluateUserUsing(True, experimentName)
-		return True
+	if percentPopular > thresholdPercentage:
+		writeIn = "We think this user is using TrackMeNot"
+		result = True
 	else:
-		evaluateUserUsing(True, experimentName)
-		return False
+		writeIn = "We do not think this user is using TrackMeNot"
+		result = False
+
+	with open("output.txt", "a") as out:
+		out.write("\n")
+		out.write("*******************************" + "\n")
+		out.write(experimentName + "\n\n")
+		out.write(writeIn + "\n")
+		out.write(str(percentPopular) + "% of their search queries are in TrackMeNot's 'popular queries' list" + "\n")
+		out.write("Our threshold is "+str(thresholdPercentage)+"%" +'\n')
+		out.write("*******************************" + "\n")
+	
+	return result
 
 def whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile):
-	return True
+	'''
+	Input:
+		googleLogFile (string) name of google log file
+		popularQueriesFile (string) name of file containing TrackMeNot's
+		popular queries
+	Returns:
+		None
+	Functionality:
+		Determines when TrackMeNot is on and when it is off
+	Method:
+		Look at search history in 'windows' of 100 queries. 
+		For each query, IF of the 50 queries that happened immediately before it
+		and the 50 queries that happened immediately after it, threshold% of them are
+		in popularQueriesFile, then trackMeNot is on at that instant
+	'''
+	threshold = 25
+	trackMeNotOnOffArray = []
+	popularQuerySet = getPopularWords(popularQueriesFile)
+	googleQueryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	
+	#index 0 to 49
+
+	numberOfPopular = 0
+	for i in range(0,50):
+		thisQuery = googleQueryTextList[i]
+		if thisQuery in popularQuerySet:
+			numberOfPopular +=1
+	percentPopular = round(((numberOfPopular / 50) * 100),2)
+	if percentPopular > threshold:
+		firstFifty = ["Yes"] * 50	
+	else:
+		firstFifty = ["No"] * 50
+	trackMeNotOnOffArray.extend(firstFifty)
+	#index 50 to len(googleQueryTextList) - 50
+	middleQueries = []
+	for i in range(50, len(googleQueryTextList)-50):
+		numberOfPopular = 0
+		for j in range(i-50, i+50):
+			thisQuery = googleQueryTextList[i]
+			if thisQuery in popularQuerySet:
+				numberOfPopular +=1
+		thisPercentPopular = round(((numberOfPopular / 100) * 100),2)
+		if thisPercentPopular > threshold:
+			middleQueries.append("Yes")
+		else:
+			middleQueries.append("No")
+	trackMeNotOnOffArray.extend(middleQueries)
+	
+	numberOfPopular = 0
+	for i in range(len(googleQueryTextList)-50, len(googleQueryTextList)):
+		thisQuery = googleQueryTextList[i]
+		if thisQuery in popularQuerySet:
+			numberOfPopular +=1
+	percentPopular = round(((numberOfPopular / 50) * 100),2)
+	if percentPopular > threshold:
+		lastFifty = ["Yes"] * 50	
+	else:
+		lastFifty = ["No"] * 50
+	trackMeNotOnOffArray.extend(lastFifty)
+
+	df = pd.read_csv(googleLogFile)
+	df['Is TrackMeNot On'] = trackMeNotOnOffArray
+	df.to_csv(googleLogFile, index=False)
+		
 
 def prepareOutputFile():
 	with open('output.txt','w') as out:
@@ -613,8 +686,8 @@ def prepareOutputFile():
 
 def dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
 	'''
-	These functions serve to set up data (generate necessary csv files) and clean up the data
-	so that they can be analyzed
+	These functions serve to set up the data (generate necessary csv files) and clean up the data
+	so that they can be analyzed. More info provided in each function
 	'''
 	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
 	createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict)
@@ -633,34 +706,32 @@ def individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,
 
 def isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile):
 	'''
-	These functions observe an individuals search history and seeks to determine if they are using
+	These functions observe an individuals search history and seek to determine if they are using
 	TrackMeNot or not
 	'''
 	userUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def whenIsUserUsing(googleLogFile, popularQueriesFile):
 	'''
-	These functions observe and inviduals search history and seeks to determine when, if at all,
+	These functions observe an inviduals search history and seek to determine when, if at all,
 	they have TrackMeNot turned and when, if at all, they have trackMeNot turned off
 	'''
 	whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def main():
-	googleActivityFile = 'MyActivity.html'
-	googleLogFile = 'GoogleSearchResults.csv'
-	trackMeNotLogFile = 'TrackMeNotLogs.csv'
+	googleActivityFile = 'MyActivity2.html'
+	googleLogFile = 'GoogleSearchResults2.csv'
+	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
 	popularQueriesFile = 'popular_queries.txt'
 
 	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 	individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 
-	isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
-	whenIsUserUsing(googleLogFile, popularQueriesFile)
+	#isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
+	#whenIsUserUsing(googleLogFile, popularQueriesFile)
 
 if __name__ == "__main__":
 	main()
-
-
 
 
 # with open('Testing.csv', 'a') as csvfile:
