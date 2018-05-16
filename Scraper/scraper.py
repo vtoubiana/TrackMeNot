@@ -721,13 +721,13 @@ def whenIsUserUsing(googleLogFile, popularQueriesFile):
 	whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def main():
-	googleActivityFile = 'MyActivity2.html'
-	googleLogFile = 'GoogleSearchResults2.csv'
+	googleActivityFile = 'MyActivityDad.html'
+	googleLogFile = 'GoogleSearchResultsDad.csv'
 	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
 	popularQueriesFile = 'popular_queries.txt'
 
 	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
-	individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
+	# individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 
 	isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
 	whenIsUserUsing(googleLogFile, popularQueriesFile)
