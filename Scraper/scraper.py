@@ -113,7 +113,7 @@ def getTrackMeNotDict(trackMeNotLogFile):
 		for log in reader:
 			date_time = log[0]
 			engine = log[1]
-			query = log[4]	
+			query = log[4].lower() #lets be case insensitive	
 			if engine == 'google' and not query.isspace() and not date_time.isspace():
 				if query not in trackMeNotDict:
 					trackMeNotDict[query] = [date_time]
@@ -240,7 +240,7 @@ def parseTrackMeNotTime(trackMeNotTimes):
 
 def compareQueryTimes(googleTime, trackMeNotTimes):
 	'''
-	Check that the time described by googleTime is within 10 seconds of
+	Check that the time described by googleTime is within 20 seconds of
 	one of the times in the trackMeNotTimes array
 	'''
 	googleDateTime = parseGoogleTime(googleTime)
@@ -248,7 +248,7 @@ def compareQueryTimes(googleTime, trackMeNotTimes):
 	#googleDateTime = datetime.datetime(googleParsed['year'],googleParsed['month'],googleParsed['day'],googleParsed['hour'],googleParsed['minute'],googleParsed['second'])
 	for trackMeDateTime in trackMeParsedTimeArray:
 		diffTimeDelta = abs(trackMeDateTime - googleDateTime) 
-		if diffTimeDelta.seconds <= 10:
+		if diffTimeDelta.seconds <= 20:
 			return True
 	return False
 
@@ -258,15 +258,16 @@ def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
 	Does this by checking the tuple (googleQuery, googleQueryTime) against 
 	the TrackMeNotDict {trackMeNotQuery: [array of times at which trackMeNoT query was made]}
 	'''
+	googleQuery = googleQuery.lower() #lets be case insensitive
 	if googleQuery not in trackMeNotDict:
 		return "No"
 	else:
-		trackMeNotTimes = trackMeNotDict[googleQuery] #this is an array 
+		trackMeNotTimes = trackMeNotDict[googleQuery] 
 		timesMatch = compareQueryTimes(googleQueryTime, trackMeNotTimes)
 		if timesMatch is True:
 			return "Yes"
 		else:
-			return "Yes"
+			return "No"
 
 
 def createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict):
@@ -353,14 +354,22 @@ def getLatestTrackMeNotTime(trackMeNotLogFile):
 	last_time = subprocess.check_output(["tail", "-1", trackMeNotLogFile]).decode("utf-8") 
 	last_time = last_time[0:last_time.find(',')]
 	last_time_parsed = parseTrackMeNotTime([last_time])[0]
-	print (last_time_parsed)
+	#print (last_time_parsed)
 	return last_time_parsed
 
 def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 	'''
 	Returns the index of log in googleLogFile that was made at time t
 	where time t is the time of the earliest log in the TrackMeNotLogFile
+	Unless trackMeNotLogFile is None
 	'''
+	if trackMeNotLogFile == "None":
+		row_count = sum(1 for line in open(googleLogFile))
+		if row_count < 1000:
+			return row_count -1 #subtract 1 to account for header
+		else:
+			return 1000
+		#return row_count-1 #subtract 1 to account for header
 	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile)
 	cutoffIndex = 0
 	
@@ -376,7 +385,7 @@ def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 	return cutoffIndex
 
 
-def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
+def analyzeByQueryFrequency(googleLogFile, cutoffIndex):
 	'''
 	parameters:
 		googleLogFile (string) is csv file name of file with google logs
@@ -396,24 +405,22 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 	time t is the time of the first TrackMeNot log we have record of
 	'''
 	logFrequencyDict = {}
-	#create log_dict
-	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile) #return datetime.datetime object
-	
+	#create log_dict	
 	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
 	queryTimeList = getAllGoogleQueryTimesInList(googleLogFile)
+	counter = 0
 	for i in range(len(queryTextList)):
 		queryText = queryTextList[i]
 		queryTime = queryTimeList[i]
-		googleDateTime = parseGoogleTime(queryTime)
-		diff  = googleDateTime - latestTrackMeNotDateTime
-		if diff.days >= 0:
+		#googleDateTime = parseGoogleTime(queryTime)
+		counter +=1
+		if counter <= cutoffIndex:
 			if queryText in logFrequencyDict:
 				logFrequencyDict[queryText] += 1
 			else:
 				logFrequencyDict[queryText] = 1
 		else:
 			break
-
 	counter = 0
 	
 	guessResultsArray = []
@@ -579,10 +586,14 @@ def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	'''
 	Objective:
 		Determine if a user is using TrackMeNot or not
-
 	Returns:
 		True if user is using TrackMeNot
 		False if user is not using TrackMeNot
+	Method:
+		Check numIterations most recent search queries
+		If thresholdPercentage% of them are in TrackMeNot's popular seed list, 
+		then return True
+		o.w. return False
 	'''
 	popularQuerySet = getPopularWords(popularQueriesFile)
 	googleQueryTextList = getAllGoogleQueryTextsInList(googleLogFile)
@@ -592,11 +603,11 @@ def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	for i in range(numIterations):
 		thisQuery = googleQueryTextList[i].lower()
 		if thisQuery in popularQuerySet:
-			print ("popular query", thisQuery)
+			#print ("popular query", thisQuery)
 			numberOfPopular +=1
-	print ("Number Popular", numberOfPopular)
+	#print ("Number Popular", numberOfPopular)
 	percentPopular = round(((numberOfPopular / numIterations) * 100),2)
-	print ("Percent Popular", percentPopular)
+	#print ("Percent Popular", percentPopular)
 	experimentName = "Looking for Queries in TrackMeNot's Popular List"
 	if percentPopular > thresholdPercentage:
 		writeIn = "We think this user is using TrackMeNot"
@@ -615,6 +626,52 @@ def userUsingPopularityCheck(googleLogFile, popularQueriesFile):
 		out.write("*******************************" + "\n")
 	
 	return result
+
+def userUsingFrequencyCheck(googleLogFile):
+	'''
+	Objective:
+		Determine if a user is using TrackMeNot or not
+	Returns:
+		True if user is using TrackMeNot
+		False if user is not using TrackMeNot
+	Method:
+		Check numIterations most recent search queries
+		If thresholdPercentage% of them were repeated, 
+		then return True
+		o.w. return False
+	'''
+	googleQueryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	numIterations = 500
+	queryDict = {}
+	thresholdPercentage = 30
+	for i in range(numIterations):
+		thisQuery = googleQueryTextList[i]
+		if thisQuery in queryDict:
+			queryDict[thisQuery] +=1
+		else:
+			queryDict[thisQuery] = 1
+	numRepeated = 0
+	for query in queryDict.keys():
+		if queryDict[query] > 1:
+			numRepeated +=1
+	percentRepeated = round(((numRepeated / len(queryDict)) * 100), 2)
+	experimentName = "Observing Frequency of Queries"
+	if percentRepeated > thresholdPercentage:
+		writeIn = "We think this user is using TrackMeNot"
+		result = True
+	else:
+		writeIn = "We do not think this user is using TrackMeNot"
+		result = False
+	with open("output.txt", "a") as out:
+		out.write("\n")
+		out.write("*******************************" + "\n")
+		out.write(experimentName + "\n\n")
+		out.write(writeIn + "\n")
+		out.write(str(percentRepeated) + "% of their past " + str(numIterations) + " search queries were repeats" + "\n")
+		out.write("Our threshold is "+str(thresholdPercentage)+"%" +'\n')
+		out.write("*******************************" + "\n")
+
+
 
 def whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile):
 	'''
@@ -691,7 +748,10 @@ def dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile,pop
 	These functions serve to set up the data (generate necessary csv files) and clean up the data
 	so that they can be analyzed. More info provided in each function
 	'''
-	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
+	if trackMeNotLogFile is 'None':
+		trackMeNotDict = {}
+	else:
+		trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
 	createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict)
 	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
 
@@ -700,9 +760,9 @@ def individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,
 	These functions observe each individual query and for each query determines if it was generated
 	by TrackMeNot or if it was an authentic query 
 	'''
-	prepareOutputFile()
+	
 	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
-	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex)
+	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, cutoffIndex)
 	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex)
 	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults, cutoffIndex)
 
@@ -712,8 +772,9 @@ def isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile):
 	TrackMeNot or not
 	'''
 	userUsingPopularityCheck(googleLogFile, popularQueriesFile)
+	userUsingFrequencyCheck(googleLogFile)
 
-def whenIsUserUsing(googleLogFile, popularQueriesFile):
+def whenIsUserUsingTrackMeNot(googleLogFile, popularQueriesFile):
 	'''
 	These functions observe an inviduals search history and seek to determine when, if at all,
 	they have TrackMeNot turned and when, if at all, they have trackMeNot turned off
@@ -721,16 +782,16 @@ def whenIsUserUsing(googleLogFile, popularQueriesFile):
 	whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def main():
-	googleActivityFile = 'MyActivityDad.html'
-	googleLogFile = 'GoogleSearchResultsDad.csv'
-	trackMeNotLogFile = 'TrackMeNotLogs2.csv'
+	googleActivityFile = './Takeout/My Activity/Search/MyActivity.html' #'MyActivityDad.html'
+	googleLogFile = 'GoogleSearchResults.csv' #
+	trackMeNotLogFile = 'TrackMeNotLogs.csv'
 	popularQueriesFile = 'popular_queries.txt'
 
 	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
-	# individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
-
+	prepareOutputFile()
+	individualQueryAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 	isUserUsingTrackMeNotAnalysis(googleLogFile, popularQueriesFile)
-	whenIsUserUsing(googleLogFile, popularQueriesFile)
+	whenIsUserUsingTrackMeNot(googleLogFile, popularQueriesFile)
 
 if __name__ == "__main__":
 	main()
@@ -771,5 +832,17 @@ if __name__ == "__main__":
 	# 	if diffTimeDelta.seconds <= 10:
 	# 		return True
 	# return False
+
+
+
+
+		# diff  = googleDateTime - latestTrackMeNotDateTime
+		# if diff.days >= 0:
+		# 	if queryText in logFrequencyDict:
+		# 		logFrequencyDict[queryText] += 1
+		# 	else:
+		# 		logFrequencyDict[queryText] = 1
+		# else:
+		# 	break
 
 		
