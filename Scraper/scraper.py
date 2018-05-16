@@ -6,6 +6,95 @@ import pandas as pd
 import subprocess
 
 
+def getAllGoogleQueryTextsInSet(googleLogFile):
+	'''
+	Input:
+		googleLogFile: (string) filename of google log file
+	Output:
+		set of all queries in googleLogFile file. 
+		return only query text (i.e. don't return query times)
+	'''
+	query_text_set = set()
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		for log in reader:
+			query_text = log[1]
+			query_text_set.add(query_text)
+	return query_text_set
+	
+def getAllGoogleQueryTextsInList(googleLogFile):
+	'''
+	Input:
+		googleLogFile: (string) filename of google log file
+	Output:
+		list of all queries in googleLogFile file. 
+		return only query text (i.e. don't return query times)
+		list is ordered by their order in googleLogFile
+	'''
+	query_text_list = []
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		for log in reader:
+			query_text = log[1]
+			query_text_list.append(query_text)
+	return query_text_list
+
+
+def getAllGoogleQueryTimesInList(googleLogFile):
+	'''
+	Input:
+		googleLogFile: (string) filename of google log file
+	Output:
+		list of all queries times in googleLogFile file. 
+		return only query times (i.e. don't return query texts)
+		list is ordered by their order in googleLogFile
+	'''
+	query_time_list = []
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		for log in reader:
+			query_time = log[0]
+			query_time_list.append(query_time)
+	return query_time_list
+
+def getAllGoogleYesNoInList(googleLogFile):
+	'''
+	Input:
+		googleLogFile: (string) filename of google log file
+	Output:
+		list of all actual yes/no values in googleLogFile file. 
+		the yes/no values tell us if a given query was actually a 
+		TrackMeNot query or not
+		list is ordered by their order in googleLogFile
+	'''
+	actual_yes_no_list = []
+	with open(googleLogFile, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		next(reader) #SKIP THE HEADER
+		for log in reader:
+			actual_yes_no = log[2]
+			actual_yes_no_list.append(actual_yes_no)
+	return actual_yes_no_list
+
+
+def getPopularWords(popularQueriesFile):
+	'''
+	Input:
+		popularQuerieFile: (string) filename of popular_queries.txt
+	Output:
+		set of all queries in popularQueriesFile file
+	'''
+	file = open(popularQueriesFile, "r") 
+	popular_queries_set = set()
+	for line in file:
+		line = re.sub(r'\t\n', '', line)
+		popular_queries_set.add(line)
+	return popular_queries_set
+
+
 def getTrackMeNotDict(trackMeNotLogFile):
 	'''
 	Input: string (filename)
@@ -179,7 +268,7 @@ def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
 			return "Yes"
 
 
-def createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict):
+def createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict):
 	'''
 	parameters:
 		googleActivityFile: search downloaded from Google My Activity 
@@ -243,19 +332,17 @@ def addTrackMeNotColumn(googleLogFile, trackMeNotDict):
 	add a TrackMeNotColumn to googleLogFile using the trackMeNotDict
 	The TrackMeNot column is a "Yes" if the query was made by TrackMeNot. o.w. it is a "No"
 	'''
-	with open(googleLogFile,'r') as csvfile:
-		##DON"T READ THE DAMN HEADER
-		reader = csv.reader(csvfile)
-		next(reader) #skip the header
-		trackMeNotColumn = []
-		for record in reader:
-			query_time = record[0]
-			query_text = record[1]
-			trackMeNot = checkTrackMeNotQuery(query_text, query_time, trackMeNotDict)
-			trackMeNotColumn.append(trackMeNot)
+
+	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	queryTimeList = getAllGoogleQueryTimesInList(googleLogFile)
+	trackMeNotColumn = []
+	for i in range(len(queryTextList)):
+		trackMeNot = checkTrackMeNotQuery(queryTextList[i], queryTimeList[i], trackMeNotDict)
+		trackMeNotColumn.append(trackMeNot)
 	df = pd.read_csv(googleLogFile)
 	df['TrackMeNot'] = trackMeNotColumn
 	df.to_csv(googleLogFile, index=False)
+
 
 def getLatestTrackMeNotTime(trackMeNotLogFile):
 	'''
@@ -275,18 +362,15 @@ def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 	'''
 	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile)
 	cutoffIndex = 0
-	with open(googleLogFile, 'r') as csvfile:
-		reader = csv.reader(csvfile)
-		next(reader) #SKIP THE HEADER
-		
-		for log in reader:
-			query_time = log[0]
-			googleDateTime = parseGoogleTime(query_time)
-			diff  = googleDateTime - latestTrackMeNotDateTime
-			if diff.days >= 0:
+	
+	queryTimeList = getAllGoogleQueryTimesInList(googleLogFile)
+	for queryTime in queryTimeList:
+		googleDateTime = parseGoogleTime(queryTime)
+		diff = googleDateTime - latestTrackMeNotDateTime
+		if diff.days >= 0:
 				cutoffIndex +=1
-			else:
-				break
+		else:
+			break
 				
 	return cutoffIndex
 
@@ -313,46 +397,46 @@ def analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex):
 	logFrequencyDict = {}
 	#create log_dict
 	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile) #return datetime.datetime object
-	with open(googleLogFile, 'r') as csvfile:
-		reader = csv.reader(csvfile)
-		next(reader) #SKIP THE HEADER
-		#cutoffIndex = 0
-		for log in reader:
-			#cutoffIndex +=1
-			query_text = log[1]
-			query_time = log[0]
-			googleDateTime = parseGoogleTime(query_time)
-			diff  = googleDateTime - latestTrackMeNotDateTime
-			if diff.days >= 0:
-				if query_text in logFrequencyDict:
-					logFrequencyDict[query_text] += 1
-				else:
-					logFrequencyDict[query_text] = 1
+	
+	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	queryTimeList = getAllGoogleQueryTimesInList(googleLogFile)
+	for i in range(len(queryTextList)):
+		queryText = queryTextList[i]
+		queryTime = queryTimeList[i]
+		googleDateTime = parseGoogleTime(queryTime)
+		diff  = googleDateTime - latestTrackMeNotDateTime
+		if diff.days >= 0:
+			if queryText in logFrequencyDict:
+				logFrequencyDict[queryText] += 1
 			else:
-				break
-	# amount_correct = 0
-	# amount_wrong  =0
+				logFrequencyDict[queryText] = 1
+		else:
+			break
+
 	counter = 0
-	with open(googleLogFile, 'r+') as csvfile:
-		reader = csv.reader(csvfile)
-		next(reader) #SKIP THE HEADER
-		guessResultsArray = []
-		for log in reader:
-			counter +=1
-			query_text = log[1]
-			if counter <= cutoffIndex:
-				if logFrequencyDict[query_text] > 1:
-					guess = "Yes"
-				else:
-					guess = "No"
-				guessResultsArray.append(guess)
+	
+		
+	guessResultsArray = []
+	for i in range(len(queryTextList)):
+		queryText = queryTextList[i]
+		queryTime = queryTimeList[i]
+		counter +=1
+		if counter <= cutoffIndex:
+			if logFrequencyDict[queryText] >1:
+				guess = "Yes"
 			else:
-				break
+				guess = "No"
+			guessResultsArray.append(guess)
+		else:
+			break
 
 	columnHeader = "Frequency Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
 
 	return guessResultsArray
+
+
+
 
 def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 	'''
@@ -365,31 +449,28 @@ def analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex):
 			a trackMeNotQuery
 			o.w guess that is is an authentic query (i.e. not trackMeNot)
 	'''
-	file = open(popularQueriesFile, "r") 
-	popular_queries_set = set()
-	for line in file:
-		line = re.sub(r'\t\n', '', line)
-		popular_queries_set.add(line)
+	popularQueriesSet = getPopularWords(popularQueriesFile)
 	# amount_correct = 0
 	# amount_wrong = 0
 	counter = 0
-	with open(googleLogFile, 'r') as csvfile:
-		reader = csv.reader(csvfile)
-		next(reader) #SKIP THE HEADER
-		guessResultsArray= []
-		for log in reader:
-			counter +=1
-			query_text = log[1]
-			actual_yes_no = log[2]
-			if counter <= cutoffIndex:
-				if query_text in popular_queries_set:
-					guess = "Yes"
-				else:
-					guess = "No"
-				guessResultsArray.append(guess)
-				
+
+
+	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	actualYesNoList = getAllGoogleYesNoInList(googleLogFile)
+	guessResultsArray = []
+	for i in range(len(queryTextList)):
+		queryText = queryTextList[i]
+		actualYesNo = actualYesNoList[i]
+		counter += 1
+		if counter <= cutoffIndex:
+			if queryText in popularQueriesSet:
+				guess = "Yes"
 			else:
-				break
+				guess = "No"
+			guessResultsArray.append(guess)
+		else:
+			break
+
 
 	columnHeader = "Popular Seed Analysis"
 	evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffIndex)
@@ -437,21 +518,23 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 	amount_wrong = 0
 
 	counter = 0
-	with open(googleLogFile, 'r') as csvfile:
-		reader = csv.reader(csvfile)
-		next(reader) #SKIP THE HEADER		
-		for log in reader:
-			if counter < cutoffIndex:
-				
-				actual_yes_no = log[2]
-				guess = guessResultsArray[counter]
-				counter += 1
-				if guess == actual_yes_no:
+
+	queryTextList = getAllGoogleQueryTextsInList(googleLogFile)
+	queryTimeList = getAllGoogleQueryTimesInList(googleLogFile)
+	actualYesNoList = getAllGoogleYesNoInList(googleLogFile)
+	for i in range(len(queryTextList)):
+		queryText = queryTextList[i]
+		queryTime = queryTimeList[i]
+		actualYesNo = actualYesNoList[i]
+		if counter < cutoffIndex:
+			guess = guessResultsArray[counter]
+			counter +=1
+			if guess == actualYesNo:
 					amount_correct +=1
-				else:
-					amount_wrong +=1
 			else:
-				break
+				amount_wrong +=1
+		else:
+			break
 
 	percent_right = round(((amount_correct / (amount_correct + amount_wrong)) * 100), 2)
 
@@ -473,7 +556,7 @@ def evaluateGuessArray(guessResultsArray, googleLogFile, columnHeader, cutoffInd
 		out.write("*******************************")
 
 
-def isUserUsingTrackMeNot(googleLogFile):
+def isUserUsingTrackMeNot(googleLogFile, popularQueriesFile):
 	'''
 	Objective:
 		Determine if a user is using TrackMeNot or not
@@ -482,37 +565,39 @@ def isUserUsingTrackMeNot(googleLogFile):
 		True if user is using TrackMeNot
 		False if user is not using TrackMeNot
 	'''
-	return True
+	popular_queries_set = getPopularWords(popularQueriesFile)
+	google_query_text_set = getAllGoogleQueryTextsInSet(googleLogFile)
+
 
 
 def prepareOutputFile():
 	with open('output.txt','w') as out:
 		out.write("Results from TrackMeNot Analysis" + "\n")
 
-def dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles):
+def dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
 	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
 
-	createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
+	createGoogleLogFile(googleActivityFile, googleLogFile, trackMeNotDict)
 	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
 
-def dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles):
+def dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFile):
 	prepareOutputFile()
 	cutoffIndex = determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile)
 	frequencyGuessResults = analyzeByQueryFrequency(googleLogFile, trackMeNotLogFile, cutoffIndex)
-	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFiles, cutoffIndex)
+	popularityGuessResults = analyzeByPopularSeedWords(googleLogFile, popularQueriesFile, cutoffIndex)
 	analyzeByPopularityAndFrequency(googleLogFile, frequencyGuessResults, popularityGuessResults, cutoffIndex)
 
-	isUserUsingTrackMeNot(googleLogFile)
+	isUserUsingTrackMeNot(googleLogFile, popularQueriesFile)
 
 
 def main():
 	googleActivityFile = 'MyActivity.html'
 	googleLogFile = 'GoogleSearchResults.csv'
 	trackMeNotLogFile = 'TrackMeNotLogs.csv'
-	popularQueriesFiles = 'popular_queries.txt'
+	popularQueriesFile = 'popular_queries.txt'
 
-	dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles)
-	dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile,popularQueriesFiles)
+	dataCleaning(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
+	dataAnalysis(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
 
 if __name__ == "__main__":
 	main()
