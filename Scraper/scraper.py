@@ -24,7 +24,7 @@ def getTrackMeNotDict(trackMeNotLogFile):
 			date_time = log[0]
 			engine = log[1]
 			query = log[4]	
-			if engine == 'google':
+			if engine == 'google' and not query.isspace() and not date_time.isspace():
 				if query not in trackMeNotDict:
 					trackMeNotDict[query] = [date_time]
 				else:
@@ -176,7 +176,7 @@ def checkTrackMeNotQuery(googleQuery, googleQueryTime, trackMeNotDict):
 		if timesMatch is True:
 			return "Yes"
 		else:
-			return "No"
+			return "Yes"
 
 
 def createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict):
@@ -206,12 +206,10 @@ def createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict):
 	href = re.compile('https://www.google.com/search\?q=[a-zA-Z0-9]*')
 	html = f.read() #the HTML code you've written above
 	parsed_html = BeautifulSoup(html, "lxml")
-	x = '[1]';
-	y = '[3]';
 	time_format = re.compile(
 				r'(?P<month>Jun|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)' 
 				r'([ ])'
-				r'(?P<day>[1][3])'#[1][3])' #    [123]?[0-9])'
+				r'(?P<day>[1-3]?[0-9])'#[1][3])' #    
 				r'(,)'
 				r'([ ])'
 				r'(?P<year>201[78])'
@@ -315,6 +313,7 @@ def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
 	with open(googleLogFile, 'r+') as csvfile:
 		reader = csv.reader(csvfile)
 		next(reader) #SKIP THE HEADER
+		guessResultsArray = []
 		for log in reader:
 			counter +=1
 			query_text = log[1]
@@ -324,24 +323,46 @@ def analyzeGoogleSearches(googleLogFile, trackMeNotLogFile):
 					guess = "Yes"
 				else:
 					guess = "No"
+				guessResultsArray.append(guess)
 				if yes_no == guess:
 					amount_correct +=1
 				else:
 					amount_wrong +=1
 			else:
 				break
+	
+	df = pd.read_csv(googleLogFile)
+	df['Guesses'] = pd.Series(guessResultsArray)
+	df.to_csv(googleLogFile, index=False)
+
+
 	print ('amount_correct', amount_correct)
 	print ('amount_wrong', amount_wrong)
 
-def main():
-	googleActivityFile = 'MyActivity.html'
-	googleLogFile = 'GoogleSearchResults.csv'
-	trackMeNotLogFile = 'TrackMeNotLogs.csv'
-	trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
 
-	createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
-	addTrackMeNotColumn(googleLogFile, trackMeNotDict)
-	analyzeGoogleSearches(googleLogFile, trackMeNotLogFile)
+def analyzePopularSearches(popularQueriesFile):
+	file = open(popularQueriesFile, "r") 
+	popular_queries = []
+	for line in file:
+		popular_queries.append(line)
+	print (popular_queries)
+
+
+
+
+def main():
+	# googleActivityFile = 'MyActivity2.html'
+	# googleLogFile = 'GoogleSearchResults2.csv'
+	# trackMeNotLogFile = 'TrackMeNotLogs2.csv'
+	popularQueriesFiles = 'popular_queries.txt'
+
+	# trackMeNotDict = getTrackMeNotDict(trackMeNotLogFile)
+
+	# createGoogleSearchFile(googleActivityFile, googleLogFile, trackMeNotDict)
+	# addTrackMeNotColumn(googleLogFile, trackMeNotDict)
+	# analyzeGoogleSearches(googleLogFile, trackMeNotLogFile)
+
+	analyzePopularSearches(popularQueriesFiles)
 
 if __name__ == "__main__":
 	main()
