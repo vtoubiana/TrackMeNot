@@ -4,6 +4,7 @@ import csv
 import datetime
 import pandas as pd
 import subprocess
+import os.path
 
 
 def getAllGoogleQueryTextsInSet(googleLogFile):
@@ -368,7 +369,7 @@ def determineGoogleLogCutoff(googleLogFile, trackMeNotLogFile):
 		if row_count < 1000:
 			return row_count -1 #subtract 1 to account for header
 		else:
-			return 1000
+			return 500
 		#return row_count-1 #subtract 1 to account for header
 	latestTrackMeNotDateTime = getLatestTrackMeNotTime(trackMeNotLogFile)
 	cutoffIndex = 0
@@ -782,9 +783,12 @@ def whenIsUserUsingTrackMeNot(googleLogFile, popularQueriesFile):
 	whenIsUserUsingPopularityCheck(googleLogFile, popularQueriesFile)
 
 def main():
-	googleActivityFile = './Takeout/My Activity/Search/MyActivity.html' #'MyActivityDad.html'
+	googleActivityFile = './Takeout/My Activity/Search/MyActivity.html'
 	googleLogFile = 'GoogleSearchResults.csv' #
-	trackMeNotLogFile = 'TrackMeNotLogs.csv'
+	if os.path.isfile('TrackMeNotLogs.csv'):
+		trackMeNotLogFile = 'TrackMeNotLogs.csv'
+	else:
+		trackMeNotLogFile = 'None' 
 	popularQueriesFile = 'popular_queries.txt'
 
 	dataCleaningAndSetup(googleActivityFile, googleLogFile,trackMeNotLogFile, popularQueriesFile)
@@ -797,52 +801,12 @@ if __name__ == "__main__":
 	main()
 
 
-# with open('Testing.csv', 'a') as csvfile:
-	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
-	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
-	# 	writer.writerow({'GoogleTime':googleTime,'TrackMeNotTimes':trackMeNotTimes})
-	#print (trackMeParsedTimeArray)
-
-	#return True
-	#check that the googleTime is close enough to at least one of the trackMeNotTimes
-
-
-
-	#addColumn()
-
-#print (trackMeNotDict)
-	# month = ['May']
-	# day = [13, 14]
-	# year = [2018]
-
-	# with open('Testing.csv', 'w') as csvfile:
-	# 	fieldnames = ['GoogleTime', 'TrackMeNotTimes']
-	# 	writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
-	# 	writer.writeheader()
 
 
 
 
-# googleParsed = parseGoogleTime(googleTime)
-	# trackMeParsedTimeArray = parseTrackMeNotTime(trackMeNotTimes)
-	# googleDateTime = datetime.datetime(googleParsed['year'],googleParsed['month'],googleParsed['day'],googleParsed['hour'],googleParsed['minute'],googleParsed['second'])
-	# for trackMeEntry in trackMeParsedTimeArray:
-	# 	trackMeDateTime = datetime.datetime(trackMeEntry['year'],trackMeEntry['month'],trackMeEntry['day'],trackMeEntry['hour'],trackMeEntry['minute'],trackMeEntry['second'])
-	# 	diffTimeDelta = abs(trackMeDateTime - googleDateTime) 
-	# 	if diffTimeDelta.seconds <= 10:
-	# 		return True
-	# return False
 
 
 
-
-		# diff  = googleDateTime - latestTrackMeNotDateTime
-		# if diff.days >= 0:
-		# 	if queryText in logFrequencyDict:
-		# 		logFrequencyDict[queryText] += 1
-		# 	else:
-		# 		logFrequencyDict[queryText] = 1
-		# else:
-		# 	break
 
 		
