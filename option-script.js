@@ -35,17 +35,11 @@ function loadHandlers() {
         $("#add-engine-table").show();
     });
     $("#show-log").click(function() { //event
-        console.log("show log CLICKED")
-        api.storage.local.get(["logs_tmn"], TMNShowLog); //TMNShowLog);
-        //console.log(type(api.storage.local.get(["logs_tmn"])));
-        //downloadURL('style.css');
+        api.storage.local.get(["logs_tmn"], TMNShowLog); 
     });
 
     $("#download-log").click(function() {
-        console.log("DOWNLOAD BUTTON CLICKED")
-        api.storage.local.get(["logs_tmn"], myFunc); //TMNShowLog);
-        //console.log(type(api.storage.local.get(["logs_tmn"])));
-        //downloadURL('style.css');
+        api.storage.local.get(["logs_tmn"], TMNDownload); 
     });
 
     $("#trackmenot-opt-showqueries").click(function() {
@@ -185,16 +179,13 @@ function setFrequencyMenu(timeout) {
 
 // Returns a csv from an array of objects with
 // values separated by tabs and rows separated by newlines
-function myFunc(items) {
+function TMNDownload(items) {
     
     var logs = items.logs_tmn;
-    // console.log(logs);
-    // console.log(typeof(logs));
     var rows = []
     var header = ["date", "engine", "id", "mode", "query","type"];
     rows.push(header);
     for (i =0; i<logs.length; i++){
-       // var keys = Object.keys(logs[i])
        var column = [];
        var keys = Object.keys(logs[i])
        if (keys.includes("date")){
