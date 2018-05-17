@@ -1,0 +1,41 @@
+Results from TrackMeNot Analysis
+
+*******************************
+Frequency Analysis
+
+Amount Correct: 54
+Amount Wrong :446
+Percent Right : 10.8
+*******************************
+
+*******************************
+Popular Seed Analysis
+
+Amount Correct: 113
+Amount Wrong :387
+Percent Right : 22.6
+*******************************
+
+*******************************
+Popularity and Frequency Analysis
+
+Amount Correct: 51
+Amount Wrong :449
+Percent Right : 10.2
+*******************************
+
+*******************************
+Looking for Queries in TrackMeNot's Popular List
+
+We think this user is using TrackMeNot
+77.4% of their search queries are in TrackMeNot's 'popular queries' list
+Our threshold is 25%
+*******************************
+
+*******************************
+Observing Frequency of Queries
+
+We think this user is using TrackMeNot
+69.49% of their past 500 search queries were repeats
+Our threshold is 30%
+*******************************
