@@ -586,15 +586,23 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function updateOnErr() {
-        api.browserAction.setBadgeBackgroundColor({'color': [255, 0, 0, 255]});
-        api.browserAction.setBadgeText({'text': 'Error'});
-        api.browserAction.setTitle({'title': 'TMN Error'});
+		try {
+			api.browserAction.setBadgeBackgroundColor({'color': [255, 0, 0, 255]});
+			api.browserAction.setBadgeText({'text': 'Error'});
+			api.browserAction.setTitle({'title': 'TMN Error'});
+		} catch (ex){
+			debug("browserAction are not supported on mobile")
+		}
     }
 
     function updateOnSend(queryToSend) {
-        api.browserAction.setBadgeBackgroundColor({'color': [113, 113, 198, 255]})
-        api.browserAction.setBadgeText({'text': queryToSend});
-        api.browserAction.setTitle({'title': engine + ': ' + queryToSend});
+		try{
+			api.browserAction.setBadgeBackgroundColor({'color': [113, 113, 198, 255]})
+			api.browserAction.setBadgeText({'text': queryToSend});
+			api.browserAction.setTitle({'title': engine + ': ' + queryToSend});
+		} catch (ex){
+			debug("browserAction are not supported on mobile")
+		}
     }
 
     function createLog(type, engine, mode, query, id, asearch) {
@@ -791,9 +799,13 @@ TRACKMENOT.TMNSearch = function() {
     function stopTMN() {
         tmn_options.enabled= false;
         deleteTab();
-        api.browserAction.setBadgeBackgroundColor({'color': [255, 0, 0, 255]});
-        api.browserAction.setBadgeText({'text': 'Off'});
-        api.browserAction.setTitle({'title': 'Off'});
+		try {
+			api.browserAction.setBadgeBackgroundColor({'color': [255, 0, 0, 255]});
+			api.browserAction.setBadgeText({'text': 'Off'});
+			api.browserAction.setTitle({'title': 'Off'});
+		} catch (ex) {
+			debug("browserAction are not supported on mobile")
+		}
         window.clearTimeout(tmn_searchTimer);
         window.clearTimeout(tmn_errTimeout);
     }
@@ -879,14 +891,14 @@ TRACKMENOT.TMNSearch = function() {
             sendResponse({});
             return;
         }
-        //cout("Background page received message: " + request.tmn);
+
         switch (request.tmn) {
             case "currentURL":
                 sendResponse({
                     "url": currentTMNURL
                 });
                 return;
-            case "pageLoaded": //Remove timer and then reschedule;
+            case "pageLoaded": 
                 if (!tmn_hasloaded) {
                     tmn_hasloaded = true;
                     clearTimeout(tmn_errTimeout);
@@ -983,19 +995,22 @@ TRACKMENOT.TMNSearch = function() {
         }
 
 
-        changeTabStatus(tmn_options.useTab);           
-        if (tmn_options.enabled) {
-            api.browserAction.setBadgeText({'text': 'ON'});
-            api.browserAction.setTitle({'title': 'TMN is ON'});
-        } else {
-            api.browserAction.setBadgeText({'text': 'OFF'});
-            api.browserAction.setTitle({'title': 'TMN is OFF'});
-        }
+        changeTabStatus(tmn_options.useTab);     
+		try{
+			if (tmn_options.enabled) {
+				api.browserAction.setBadgeText({'text': 'ON'});
+				api.browserAction.setTitle({'title': 'TMN is ON'});
+			} else {
+				api.browserAction.setBadgeText({'text': 'OFF'});
+				api.browserAction.setTitle({'title': 'TMN is OFF'});
+			}
+		} catch (ex) {
+			debug("browserAction are not supported on mobile")
+		}
+        
     }
     
     function updateOptions (item) {
-        tmn_options = item;
-        debug("Restore: " + tmn_options.enabled);
         
         if ( tmn_options.feedList !== item.feedList  ){
             tmn_options.feedList = item.feedList ;
@@ -1010,14 +1025,18 @@ TRACKMENOT.TMNSearch = function() {
             else stopTMN();
         }
 
-        changeTabStatus(tmn_options.useTab);           
-        if (tmn_options.enabled) {
-            api.browserAction.setBadgeText({'text': 'ON'});
-            api.browserAction.setTitle({'title': 'TMN is ON'});
-        } else {
-            api.browserAction.setBadgeText({'text': 'OFF'});
-            api.browserAction.setTitle({'title': 'TMN is OFF'});
-        }
+        changeTabStatus(tmn_options.useTab); 
+		try {
+			if (tmn_options.enabled) {
+				api.browserAction.setBadgeText({'text': 'ON'});
+				api.browserAction.setTitle({'title': 'TMN is ON'});
+			} else {
+				api.browserAction.setBadgeText({'text': 'OFF'});
+				api.browserAction.setTitle({'title': 'TMN is OFF'});
+			}
+		} catch (ex) {
+			debug("browserAction are not supported on mobile")
+		}
     }
     
     
@@ -1048,14 +1067,11 @@ TRACKMENOT.TMNSearch = function() {
         _logStorageChange: function (items) {
             if ('options_tmn' in items) 
                 updateOptions(items.options_tmn.newValue);
-           // if (items["gen_queries"])
-           //     restoreQueries(items["gen_queries"]);
             if ('engines' in items)
                 setEngines(items.engines.newValue);        
         },
         
         _restoreTMN: function (items) {
-            //api.storage.local.get(["options_tmn","gen_queries","engines_tmn","logs_tmn"])
             if (!items["engines_tmn"]) {			
                setDefaultEngines(); 
             } else {       
@@ -1098,24 +1114,43 @@ TRACKMENOT.TMNSearch = function() {
          _getStorage: function(keys,callback) {
             getStorage(keys,callback);
          },
+		 
 
-		  _preserveTMNTab: function(tab_id) {
+        _resetSettings: function () {			
+            setDefaultEngines(); 
+            setDefaultOptions();
+            initQueries();
+        
+            try {
+                tmnLogs = items(["logs_tmn"]);
+            } catch (ex) {
+                tmnLogs = [];
+                cout("can not restore logs")
+            }
+            saveOptions();
+
+        },
+
+		 _preserveTMNTab: function(tab_id) {
             if (tmn_tab_id===tab_id) {
                 tmn_tab_id = -1;
                 cout('TMN tab has been deleted by the user, reload it');
                 return;
             }
-        }
+        },
+		
+		_deleteTab : function() {
+			deleteTab();
+		}
 
     }
 
 }();
 
-
+api.windows.onRemoved.addListener(TRACKMENOT.TMNSearch._deleteTab)
 
 api.runtime.onMessage.addListener(TRACKMENOT.TMNSearch._handleRequest);
 
-//browser.tabs.onSelectionChanged.addListener(TRACKMENOT.TMNSearch._hideTMNTab);
 api.tabs.onRemoved.addListener(TRACKMENOT.TMNSearch._preserveTMNTab);
 
 TRACKMENOT.TMNSearch._getStorage(["options_tmn","gen_queries","engines_tmn","logs_tmn"],TRACKMENOT.TMNSearch._restoreTMN);

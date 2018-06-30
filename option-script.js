@@ -1,12 +1,20 @@
-"use strict"
+"use strict";
 
-var api = chrome;
+var api;
+if (chrome == undefined) {
+    api = browser;
+} else {
+    api = chrome;
+}
 
 
 var tmn_options = {};
 var tmn_engines ={};
 var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = {};
+
+
+
 
 function loadHandlers() {
     $("#apply-options").unbind().click(function() {
@@ -103,7 +111,10 @@ function loadHandlers() {
     }
     
     function clearOptions() {
+		var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 		api.storage.local.clear();
+		tmn._resetSettings();
+		getStorage(["engines_tmn","options_tmn"],TMNLoadOptionWindow );
 	}
 
       function addEngine(param) {
@@ -149,8 +160,6 @@ function TMNSetOptionsMenu(item) {
     $("#trackmenot-use-blacklist").prop('checked', options.use_black_list);
     $("#trackmenot-use-dhslist").prop('checked', options.use_dhs_list);
 
-
-
     setFrequencyMenu(options.timeout);
 }
 
@@ -192,6 +201,7 @@ function TMNShowLog(items) {
     htmlStr += '</table>';
     $('#tmn_logs_container').html(htmlStr);
     $('#tmn_logs_container').css("visibility","visible");
+	//window.setTimeout(TMNShowLog, 1000,items);
 }
 
 
@@ -212,6 +222,7 @@ function TMNShowEngines(item) {
 }
 
 function TMNShowQueries(tmn_queries) {
+
 var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#popular"> Popular </a>|<a href="#extracted"> Extracted</a>';
 	htmlStr += '<div style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     if ( tmn_queries.dhs ) {
@@ -271,6 +282,7 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
     htmlStr += '</table></div>';
     $('#tmn_logs_container').html(htmlStr);
     $('#tmn_logs_container').css("visibility","visible");
+	
 }
 
 
@@ -284,7 +296,6 @@ function saveOptions() {
     options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked');
     options.saveLogs = $("#trackmenot-opt-save-logs").is(':checked');
     options.timeout = $("#trackmenot-opt-timeout").val();
-    //setFrequencyMenu(options.timeout);
 
     options.feedList = $("#trackmenot-seed").val().split('|');
     options.use_black_list = $("#trackmenot-use-blacklist").is(':checked');
@@ -313,10 +324,10 @@ function onError(){
 
 function getStorage(keys,callback) {
     try {
-        let gettingItem = browser.storage.local.get(keys);
+        let gettingItem = api.storage.local.get(keys);
         gettingItem.then(callback, onError);
     } catch (ex) {
-        browser.storage.local.get(keys,callback); 
+        api.storage.local.get(keys,callback); 
     }   
 }
 
