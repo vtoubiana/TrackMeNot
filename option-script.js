@@ -1,48 +1,51 @@
-var api;
-if (chrome === undefined) {
-    api = browser;
-} else {
-    api = chrome;
-}
+"use strict"
+
+var api = chrome;
+
 
 var tmn_options = {};
-var tmn_engines;
+var tmn_engines ={};
 var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
 var options = {};
 
 function loadHandlers() {
-    $("#apply-options").click(function() {
+    $("#apply-options").unbind().click(function() {
          saveOptions();
          updateEngineList();
     });
+	
+	$("#clear-options").unbind().click(function() {
+         clearOptions();
+         updateEngineList();
+    });
 
-    $("#trackmenot-opt-help").click(function() {
+    $("#trackmenot-opt-help").unbind().click(function() {
         api.tabs.create({
             url: "http://cs.nyu.edu/trackmenot/faq.html#options"
         });
     });
 
-    $("#trackmenot-opt-site").click(function() {
+    $("#trackmenot-opt-site").unbind().click(function() {
         api.tabs.create({
             url: "https://cs.nyu.edu/trackmenot"
         });
 
     });
 
-    $("#show-add").click(function() {
+    $("#show-add").unbind().click(function() {
         $("#add-engine-table").show();
     });
-    $("#show-log").click(function() {
+    $("#show-log").unbind().click(function() {
         api.storage.local.get(["logs_tmn"],TMNShowLog);
     });
 
     $("#trackmenot-opt-showqueries").click(function() {
         var tmn = api.extension.getBackgroundPage().TRACKMENOT.TMNSearch;
         var queries = tmn._getQueries();
-        TMNShowQueries(queries)
+        TMNShowQueries(queries);
     });
 
-    $("#validate-feed").click(function() {
+    $("#validate-feed").unbind().click(function() {
         var feeds = $("#trackmenot-seed").val();
         var param = {
             "feeds": feeds
@@ -53,7 +56,7 @@ function loadHandlers() {
         });
     });
 
-    $("#clear-log").click(function() {
+    $("#clear-log").unbind().click(function() {
         api.storage.local.set({"logs_tmn":""});
     });
 
@@ -64,13 +67,13 @@ function loadHandlers() {
     });
 
     $("#trackmenot-opt-timeout").change(function() {
-        timeout = $("#trackmenot-opt-timeout").val();
+        var timeout = $("#trackmenot-opt-timeout").val();
         setFrequencyMenu(timeout);
     });
 
 
 
-    $("#add-engine").click(function() {
+    $("#add-engine").unbind().click(function() {
         var engine = {};
         engine.name = $("#newengine-name").val();
         engine.urlmap = $("#newengine-map").val();
@@ -83,25 +86,28 @@ function loadHandlers() {
 }
 
     function getEngIndexById(id) {
-        for (var i = 0; i < tmn_engines.length; i++) {
-            if (tmn_engines[i].id == id) return i
+        for (var i = 0; i < tmn_engines.list.length; i++) {
+            if (tmn_engines.list[i].id === id) return i;
         }
-        return -1
+        return -1;
     }
 
      function updateEngineList() {
-        tmn_engines.forEach(function (x) {return x.enabled = false;});
+        tmn_engines.list.forEach(function (x) {return x.enabled = false;});
         $("#search-engine-list :checked").each(function() {
             console.log(($(this).val()));
-            tmn_engines[getEngIndexById($(this).val())].enabled = true ;
+            tmn_engines.list[getEngIndexById($(this).val())].enabled = true ;
         });
-        api.storage.local.set({'engines':tmn_engines});
-        TMNShowEngines({'engines':tmn_engines});
+        api.storage.local.set({'engines_tmn':tmn_engines});
+        TMNShowEngines(tmn_engines);
     }
     
-    
+    function clearOptions() {
+		api.storage.local.clear();
+	}
 
       function addEngine(param) {
+
         var new_engine = {};
         new_engine.name = param.name;
         new_engine.id = new_engine.name.toLowerCase();
@@ -110,21 +116,23 @@ function loadHandlers() {
         var kw_param = query_params[0].split('?')[1].split('&').pop();
         new_engine.regexmap = '^(' + new_engine.urlmap.replace(/\//g, "\\/").replace(/\./g, "\\.").split('?')[0] + "\\?.*?[&\\?]{1}" + kw_param + ")([^&]*)(.*)$";
         new_engine.enabled = true;
-        tmn_engines.push(new_engine);
+        tmn_engines.list.push(new_engine);
         //cout("Added engine : " + new_engine.name + " url map is " + new_engine.urlmap);
+		TMNShowEngines(tmn_engines) 
         updateEngineList();
     }
 
 
 
     function delEngine(del_engine) {
-        tmn_engines = tmn_engines.filter(function(x) {return x.id !== del_engine;});
+        tmn_engines.list = tmn_engines.list.filter(function(x) {return x.id !== del_engine;});
+		TMNShowEngines(tmn_engines) 
         updateEngineList();
     }
     
     
-function TMNSetOptionsMenu(items) {
-    var options =items.options_tmn; 
+function TMNSetOptionsMenu(item) {
+    options =item; 
     var feedList = options.feedList.join('|');
     
     var kw_black_list = options.kwBlackList;
@@ -187,11 +195,11 @@ function TMNShowLog(items) {
 }
 
 
-function TMNShowEngines(items) {
-    tmn_engines= items.engines;
+function TMNShowEngines(item) {
+    tmn_engines= item;
     var htmlStr = "<table>";
-    for (var i = 0; i < tmn_engines.length; i++) {
-        var engine = tmn_engines[i];
+    for (var i = 0; i < tmn_engines.list.length; i++) {
+        var engine = tmn_engines.list[i];
         let is_checked = engine.enabled? " checked " : "";
         htmlStr += '<tr >';
         htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '" ' + is_checked +'">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
@@ -204,7 +212,7 @@ function TMNShowEngines(items) {
 }
 
 function TMNShowQueries(tmn_queries) {
-var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#popular"> Popular </a>|<a href="#extracted"> Extracted</a>'
+var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#popular"> Popular </a>|<a href="#extracted"> Extracted</a>';
 	htmlStr += '<div style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     if ( tmn_queries.dhs ) {
 		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
@@ -213,11 +221,11 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
 		htmlStr += '</tr>';
 		for (var i=0;  i<tmn_queries.dhs.length ; i++) {
 			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
-			htmlStr += '<td>' +tmn_queries.dhs[i].category_name+ '<td>'
+			htmlStr += '<td>' +tmn_queries.dhs[i].category_name+ '<td>';
 			htmlStr += '</tr>';
 			for (var j=0;  j< tmn_queries.dhs[i].words.length ; j++) {
 				htmlStr += '<tr style="color:Black">';
-				htmlStr += '<td>' +tmn_queries.dhs[i].words[j]+ '<td>'
+				htmlStr += '<td>' +tmn_queries.dhs[i].words[j]+ '<td>';
 				htmlStr += '</tr>';
 			}
 		}
@@ -229,23 +237,23 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
 		htmlStr += '</tr>';
 		for (var i=0;  i<tmn_queries.rss.length ; i++) {
 			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
-			htmlStr += '<td>' +tmn_queries.rss[i].name+ '<td>'
+			htmlStr += '<td>' +tmn_queries.rss[i].name+ '<td>';
 			htmlStr += '</tr>';
 			for (var j=0;  j< tmn_queries.rss[i].words.length ; j++) {
 				htmlStr += '<tr style="color:Black">';
-				htmlStr += '<td>' +tmn_queries.rss[i].words[j]+ '<td>'
+				htmlStr += '<td>' +tmn_queries.rss[i].words[j]+ '<td>';
 				htmlStr += '</tr>';
 			}
 		}
     }
 	if ( tmn_queries.zeitgeist ) {
 		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
-		htmlStr += '<td > Popular <td>'
+		htmlStr += '<td > Popular <td>';
 		htmlStr += '<a name="popular"></a>';
 		htmlStr += '</tr>';
 		for (var i=0;  i< tmn_queries.zeitgeist.length ; i++) {
 			htmlStr += '<tr style="color:Black">';
-			htmlStr += '<td>' +tmn_queries.zeitgeist[i]+ '<td>'
+			htmlStr += '<td>' +tmn_queries.zeitgeist[i]+ '<td>';
 			htmlStr += '</tr>';
 		}
     }
@@ -256,7 +264,7 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
 		htmlStr += '</tr>';
 		for (var i=0; i<tmn_queries.extracted.length ; i++) {
 			htmlStr += '<tr style="color:Black"  bgcolor=#F0F0F0 align=center>';
-			htmlStr += '<td>' +tmn_queries.extracted[i]+ '<td>'
+			htmlStr += '<td>' +tmn_queries.extracted[i]+ '<td>';
 			htmlStr += '</tr>';
 		}
 	}
@@ -267,7 +275,7 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
 
 
 function saveOptions() {
-    options = {};
+    var options = {};
     options.enabled = $("#trackmenot-opt-enabled").is(':checked');
 
     console.log("Saved Enabled: " + options.enabled);
@@ -299,18 +307,32 @@ function handleRequest(request, sender, sendResponse) {
 
 }
 
-function getStorage(keys,callback) {
-    try {
-        api.storage.local.get(keys,callback);
-    } catch(ex) {
-        let gettingItem = api.storage.local.get(keys);
-        gettingItem.then(callback, onError);
-    }
+function onError(){
+	console.log("Error");
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    api.storage.local.get(["options_tmn"],TMNSetOptionsMenu)
-    api.storage.local.get(["engines"],TMNShowEngines);
+function getStorage(keys,callback) {
+    try {
+        let gettingItem = browser.storage.local.get(keys);
+        gettingItem.then(callback, onError);
+    } catch (ex) {
+        browser.storage.local.get(keys,callback); 
+    }   
+}
+
+
+function TMNLoadOptionWindow(items) {
+    if (items["options_tmn"]) {
+        TMNSetOptionsMenu(items["options_tmn"]);
+    }
+    if (items["engines_tmn"]) {
+        TMNShowEngines(items["engines_tmn"]);
+    }
+    
+}
+
+window.addEventListener('load', function() {
+    getStorage(["engines_tmn","options_tmn"],TMNLoadOptionWindow );
 });
 
 

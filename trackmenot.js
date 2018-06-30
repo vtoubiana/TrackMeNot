@@ -13,6 +13,8 @@
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************/
+"use strict";
+
 var api;
 if (chrome == undefined) {
     api = browser;
@@ -31,7 +33,7 @@ TRACKMENOT.TMNSearch = function() {
     var useIncrementals = true;
     var incQueries = [];
     var engine = 'google';
-    var tmn_engines= [];
+    var tmn_engines= {};
     var TMNQueries = {};
     var zeit_queries = ["facebook", "youtube", "myspace", "craigslist", "ebay", "yahoo", "walmart", "netflix", "amazon", "home depot", "best buy", "Kentucky Derby", "NCIS", "Offshore Drilling", "Halle Berry", "iPad Cases", "Dorothy Provine", "Emeril", "Conan O'Brien", "Blackberry", "Free Comic Book Day", " American Idol", "Palm", "Montreal Canadiens", "George Clooney", "Crib Recall", "Auto Financing", "Katie Holmes", "Madea's Big Happy Family", "Old Navy Coupon", "Sandra Bullock", "Dancing With the Stars", "M.I.A.", "Matt Damon", "Santa Clara County", "Joey Lawrence", "Southwest Airlines", "Malcolm X", "Milwaukee Bucks", "Goldman Sachs", "Hugh Hefner", "Tito Ortiz", "David McLaughlin", "Box Jellyfish", "Amtrak", "Molly Ringwald", "Einstein Horse", "Oil Spill", " Bret Michaels", "Mississippi Tornado", "Stephen Hawking", "Kelley Blue Book", "Hertz", "Mariah Carey", "Taiwan Earthquake", "Justin Bieber", "Public Bike Rental", "BlackBerry Pearl", "NFL Draft", "Jillian Michaels", "Face Transplant", "Dell", "Jack in the Box", "Rebbie Jackson", "Xbox", "Pampers", "William Shatner", "Earth Day", "American Idol", "Heather Locklear", "McAfee Anti-Virus", "PETA", "Rihanna", "South Park", "Tiger Woods", "Kate Gosselin", "Unemployment", "Dukan Diet", "Oil Rig Explosion", "Crystal Bowersox", "New 100 Dollar Bill", "Beastie Boys", "Melanie Griffith", "Borders", "Tara Reid", "7-Eleven", "Dorothy Height", "Volcanic Ash", "Space Shuttle Discovery", "Gang Starr", "Star Trek", "Michael Douglas", "NASCAR", "Isla Fisher", "Beef Recall", "Rolling Stone Magazine", "ACM Awards", "NASA Space Shuttle", "Boston Marathon", "Iraq", "Jennifer Aniston"];
     var tmnLogs = [];
@@ -72,7 +74,7 @@ TRACKMENOT.TMNSearch = function() {
         /Developers/, /cashback/, /Health/, /Products/, /QnABeta/,
         /<more>/, /Travel/, /Personals/, /Local/, /Trademarks/,
         /cache/i, /similar/i, /login/i, /mail/i, /feed/i
-    )
+    );
     
      function trim(s) {
         return s.replace(/\n/g, '');
@@ -122,42 +124,21 @@ TRACKMENOT.TMNSearch = function() {
 
 
 
-    var default_engines = [
+    var default_engines = {"list":[
         {
-        id: 'google',
-        name: 'Google Search',
-        urlmap: "https://www.google.com/search?hl=en&q=|",
-        enabled: true,
-		regexmap: "^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z]{2,3}\/(search){1}[\?]?.*?[&\?]{1}q=)([^&]*)(.*)$",
-        testad: function(ac, al) {
-            return (al && (ac == 'l' || ac == 'l vst') && al.indexOf('http') == 0 && al.indexOf('https') != 0);
-        },
-        box: function() {
-            var button = getElementsByAttrValue(document, 'button', 'name', 'btnG');
-            if (!button) button = getElementsByAttrValue(document, 'button', 'name', 'btnK');
-            return button;
-        },
-        button: function() {
-            var button = getElementsByAttrValue(document, 'button', 'name', 'btnG');
-            if (!button) button = getElementsByAttrValue(document, 'button', 'name', 'btnK');
-            return button;
-        }},
+			id: 'google',
+			name: 'Google Search',
+			urlmap: "https://www.google.com/search?hl=en&q=|",
+			enabled: true,
+			regexmap: "^(https?:\/\/[a-z]+\.google\.(co\\.|com\\.)?[a-z]{2,3}\/(search){1}[\?]?.*?[&\?]{1}q=)([^&]*)(.*)$"
+		},
         {
             id: 'yahoo',
             name: 'Yahoo! Search',
             urlmap: "http://search.yahoo.com/search;_ylt=" + getYahooId() + "?ei=UTF-8&fr=sfp&fr2=sfp&p=|&fspl=1",
             enabled: true,
             regexmap: "^(https?:\/\/[a-z.]*?search\.yahoo\.com\/search.*?p=)([^&]*)(.*)$",
-            host: "([a-z.]*?search\.yahoo\.com)$",
-            testad: function(ac, al) {
-                return (ac == '\"yschttl spt\"' || ac == 'yschttl spt');
-            },
-            box: function() {
-                return document.getElementById('yschsp');
-            },
-            button: function() {
-                return getElementsByAttrValue(document, 'input', 'class', 'sbb');
-            }
+            host: "([a-z.]*?search\.yahoo\.com)$"
         },
         {
             id: 'bing',
@@ -165,12 +146,7 @@ TRACKMENOT.TMNSearch = function() {
             urlmap: "http://www.bing.com/search?q=|",
             enabled: true,
             regexmap: "^(https?:\/\/www\.bing\.com\/search\?[^&]*q=)([^&]*)(.*)$",
-            host: "(www\.bing\.com)$",
-            testad: function(ac, al) {
-                return (al && al.indexOf('http') == 0 && al.indexOf('https') != 0 && al.indexOf('msn') < 0 && al.indexOf('live') < 0 && al.indexOf('bing') < 0 && al.indexOf('microsoft') < 0 && al.indexOf('WindowsLiveTranslator') < 0)
-            },
-            //'box':SearchBox_bing,
-            //'button':getButton_bing
+            host: "(www\.bing\.com)$"
         },
         {
             id: 'baidu',
@@ -178,12 +154,7 @@ TRACKMENOT.TMNSearch = function() {
             urlmap: "http://www.baidu.com/s?wd=|",
             enabled: false,
             regexmap: "^(https?:\/\/www\.baidu\.com\/s\?.*?wd=)([^&]*)(.*)$",
-            host: "(www\.baidu\.com)$",
-            testad: function(ac, al) {
-                return (al && al.indexOf('baidu') < 0 && al.indexOf('https') != 0);
-            },
-            //'box':SearchBox_baidu,
-            //'button':getButton_baidu
+            host: "(www\.baidu\.com)$"
         },
         {
             id: 'aol',
@@ -191,19 +162,14 @@ TRACKMENOT.TMNSearch = function() {
             urlmap: "http://search.aol.com/aol/search?q=|",
             enabled: false,
             regexmap: "^(https?:\/\/[a-z0-9.]*?search\.aol\.com\/aol\/search\?.*?q=)([^&]*)(.*)$",
-            host: "([a-z0-9.]*?search\.aol\.com)$",
-            testad: function(ac, al) {
-                return (ac == '\"find\"' || ac == 'find' && al.indexOf('https') != 0 && al.indexOf('aol') < 0);
-            },
-            //'box':SearchBox_aol,
-            //'button':getButton_aol
+            host: "([a-z0-9.]*?search\.aol\.com)$"
         }
-    ]
+    ]}
 
 
 
     function getEngineById(id) {
-        return tmn_engines.filter(function(a) {
+        return tmn_engines.list.filter(function(a) {
             return a.id === id;
         })[0];
     }
@@ -280,7 +246,7 @@ TRACKMENOT.TMNSearch = function() {
 
     function iniTab(tab,pendingRequest) {
         tmn_tab_id = tab.id;
-        tmn_win_id = tab.windowId;
+
         
         if (pendingRequest!== null) {
             console.log(JSON.stringify(pendingRequest));
@@ -334,8 +300,8 @@ TRACKMENOT.TMNSearch = function() {
     function checkForSearchUrl(url) {
         var result = null;
 	var eng;
-        for (var i = 0; i < tmn_engines.length; i++) {
-            eng = tmn_engines[i];
+        for (var i = 0; i < tmn_engines.list.length; i++) {
+            eng = tmn_engines.list[i];
             var regex = eng.regexmap;
             debug("  regex: " + regex + "  ->\n                   " + url);
             result = url.match(regex);
@@ -438,7 +404,7 @@ TRACKMENOT.TMNSearch = function() {
     }
 
     function queryOk(a) {
-        for (i = 0; i < skipex.length; i++) {
+        for (let i = 0; i < skipex.length; i++) {
             if (skipex[i].test(a))
                 return false;
         }
@@ -587,7 +553,7 @@ TRACKMENOT.TMNSearch = function() {
         var incQuery = "";
         var randomArray = new Array();
         for (var k = 0; k < queryWords.length; k++) {
-            randomIndex = roll(0, queryWords.length - 1);
+            let randomIndex = roll(0, queryWords.length - 1);
             if (randomArray.indexOf(randomIndex) < 0)
                 randomArray.push(randomIndex);
         }
@@ -652,7 +618,7 @@ TRACKMENOT.TMNSearch = function() {
                 sendQuery(null);
             else {
                 newquery = getQuery();
-                queryWords = newquery.split(' ');
+                let queryWords = newquery.split(' ');
                 if (queryWords.length > 3) {
                     getSubQuery(queryWords);
                     if (useIncrementals) {
@@ -792,7 +758,7 @@ TRACKMENOT.TMNSearch = function() {
         }
         prev_engine = engine;
         if (isBursting()) engine = burstEngine;
-        else engine = chooseElt(tmn_engines.filter(function (x) {return x.enabled})).id;
+        else engine = chooseElt(tmn_engines.list.filter(function (x) {return x.enabled})).id;
         debug('NextSearchScheduled on: ' + engine);
         window.clearTimeout(tmn_errTimeout);
         tmn_errTimeout = window.setTimeout(rescheduleOnError, delay * 3);
@@ -815,8 +781,9 @@ TRACKMENOT.TMNSearch = function() {
 
     function saveOptions() {
         cout("Save option: " + JSON.stringify(tmn_options));
+
         api.storage.local.set({"options_tmn":tmn_options});
-        api.storage.local.set({"engines":tmn_engines});
+        api.storage.local.set({"engines_tmn":tmn_engines});
         api.storage.local.set({"gen_queries":TMNQueries});
     }
 
@@ -993,29 +960,21 @@ TRACKMENOT.TMNSearch = function() {
       console.log(`Error: ${error}`);
     }
 
-function getStorage(keys,callback) {
-    try {
-        let gettingItem = browser.storage.local.get(keys);
-        gettingItem.then(callback, onError);
-    } catch (ex) {
-        chrome.storage.local.get(keys,callback); 
-    }   
-}
+	function getStorage(keys,callback) {
+		try {
+			let gettingItem = api.storage.local.get(keys);
+			gettingItem.then(callback, onError);
+		} catch (ex) {
+			chrome.storage.local.get(keys,callback); 
+		}   
+	}
 
     function setDefaultEngines() {
         tmn_engines = default_engines;
     }
     
-    function setDefaultSettings() {
-        setDefaultOptions();
-        setDefaultEngines();   
-        tmnLogs = [];  
-        initQueries();
-        
-        saveOptions();
-    }
     
-    function setOptions (item) {
+    function restoreOptions (item) {
         tmn_options = item;
         debug("Restore: " + tmn_options.enabled);
         
@@ -1023,8 +982,6 @@ function getStorage(keys,callback) {
             initQueries();  
         }
 
-        if (tmn_options.enabled)  startTMN();
-        else stopTMN();
 
         changeTabStatus(tmn_options.useTab);           
         if (tmn_options.enabled) {
@@ -1036,6 +993,34 @@ function getStorage(keys,callback) {
         }
     }
     
+    function updateOptions (item) {
+        tmn_options = item;
+        debug("Restore: " + tmn_options.enabled);
+        
+        if ( tmn_options.feedList !== item.feedList  ){
+            tmn_options.feedList = item.feedList ;
+            if (tmn_options.feedList) {
+                initQueries();  
+            }
+        }
+
+        if ( tmn_options.enabled !== item.enabled  ){
+            tmn_options.enabled = item.enabled;
+            if (tmn_options.enabled)  startTMN();
+            else stopTMN();
+        }
+
+        changeTabStatus(tmn_options.useTab);           
+        if (tmn_options.enabled) {
+            api.browserAction.setBadgeText({'text': 'ON'});
+            api.browserAction.setTitle({'title': 'TMN is ON'});
+        } else {
+            api.browserAction.setBadgeText({'text': 'OFF'});
+            api.browserAction.setTitle({'title': 'TMN is OFF'});
+        }
+    }
+    
+    
 
     
     function setEngines(item) {
@@ -1043,9 +1028,15 @@ function getStorage(keys,callback) {
             tmn_engines = item;
         } else {
             tmn_engines = default_engines;
-            api.storage.local.set({"engines":tmn_engines});
+            api.storage.local.set({"engines_tmn":tmn_engines});
         }
     }
+	
+	function restoreQueries(item) {
+		if (item) {
+			TMNQueries = item;
+		}
+	}
 
 
     return {
@@ -1055,32 +1046,39 @@ function getStorage(keys,callback) {
         },
 
         _logStorageChange: function (items) {
-            if (items.options_tmn) 
-                setOptions(items.options_tmn.newValue);
+            if ('options_tmn' in items) 
+                updateOptions(items.options_tmn.newValue);
            // if (items["gen_queries"])
            //     restoreQueries(items["gen_queries"]);
-            if (items.engines)
+            if ('engines' in items)
                 setEngines(items.engines.newValue);        
         },
         
         _restoreTMN: function (items) {
-            //api.storage.local.get(["options_tmn","gen_queries","engines","logs_tmn"])
+            //api.storage.local.get(["options_tmn","gen_queries","engines_tmn","logs_tmn"])
+            if (!items["engines_tmn"]) {			
+               setDefaultEngines(); 
+            } else {       
+			   restoreQueries(items["gen_queries"]);
+               setEngines(items["engines_tmn"]); 
+            }
+            
             if (!items["options_tmn"]) {
-                setDefaultSettings();
+                setDefaultOptions();
                 cout("Init: " + tmn_options.enabled);
             } else {
-                setOptions(items["options_tmn"]);
-               // restoreQueries(items.gen_queries);
-                setEngines(items["engines"]);
-                 
-                try {
-                    tmnLogs = items(["logs_tmn"]);
-                } catch (ex) {
-                    tmnLogs = [];
-                    cout("can not restore logs")
-                }
+                restoreOptions(items["options_tmn"]);
             }
+            initQueries();
 
+                 
+            try {
+                tmnLogs = items(["logs_tmn"]);
+            } catch (ex) {
+                tmnLogs = [];
+                cout("can not restore logs")
+            }
+            saveOptions();
             startTMN();
 
         },
@@ -1099,9 +1097,15 @@ function getStorage(keys,callback) {
         
          _getStorage: function(keys,callback) {
             getStorage(keys,callback);
-         }
+         },
 
-
+		  _preserveTMNTab: function(tab_id) {
+            if (tmn_tab_id===tab_id) {
+                tmn_tab_id = -1;
+                cout('TMN tab has been deleted by the user, reload it');
+                return;
+            }
+        }
 
     }
 
@@ -1111,8 +1115,8 @@ function getStorage(keys,callback) {
 
 api.runtime.onMessage.addListener(TRACKMENOT.TMNSearch._handleRequest);
 
-//api.tabs.onSelectionChanged.addListener(TRACKMENOT.TMNSearch._hideTMNTab);
-//api.tabs.onRemoved.addListener(TRACKMENOT.TMNSearch._preserveTMNTab);
+//browser.tabs.onSelectionChanged.addListener(TRACKMENOT.TMNSearch._hideTMNTab);
+api.tabs.onRemoved.addListener(TRACKMENOT.TMNSearch._preserveTMNTab);
 
-TRACKMENOT.TMNSearch._getStorage(["options_tmn","gen_queries","engines","logs_tmn"],TRACKMENOT.TMNSearch._restoreTMN);
+TRACKMENOT.TMNSearch._getStorage(["options_tmn","gen_queries","engines_tmn","logs_tmn"],TRACKMENOT.TMNSearch._restoreTMN);
 api.storage.onChanged.addListener(TRACKMENOT.TMNSearch._logStorageChange);
