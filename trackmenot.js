@@ -1025,9 +1025,9 @@ TRACKMENOT.TMNSearch = function() {
             else stopTMN();
         }
 
-        changeTabStatus(tmn_options.useTab); 
+        changeTabStatus(item.useTab); 
 		try {
-			if (tmn_options.enabled) {
+			if (item.enabled) {
 				api.browserAction.setBadgeText({'text': 'ON'});
 				api.browserAction.setTitle({'title': 'TMN is ON'});
 			} else {
@@ -1037,6 +1037,8 @@ TRACKMENOT.TMNSearch = function() {
 		} catch (ex) {
 			debug("browserAction are not supported on mobile")
 		}
+		tmn_options = item;
+		
     }
     
     
