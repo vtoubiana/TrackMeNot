@@ -1149,7 +1149,11 @@ TRACKMENOT.TMNSearch = function() {
 
 }();
 
-api.windows.onRemoved.addListener(TRACKMENOT.TMNSearch._deleteTab)
+try {
+	api.windows.onRemoved.addListener(TRACKMENOT.TMNSearch._deleteTab)
+} catch(ex) {
+	console.log("Running on firefox mobile")
+}
 
 api.runtime.onMessage.addListener(TRACKMENOT.TMNSearch._handleRequest);
 

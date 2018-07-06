@@ -3,6 +3,11 @@
     "background": {
         "page": "background.html"
     },
+	"applications": {
+		"gecko": {
+		   "id": "trackmenot@mrl.nyu.edu"
+		}
+	 },
   "browser_action": {
     "default_icon": "tmn.png",
     "default_popup": "tmn_menu.html"
@@ -37,5 +42,5 @@
         "webNavigation",
         "storage"
     ],
-    "version": "0.10.3"
+    "version": "0.10.4"
 }
