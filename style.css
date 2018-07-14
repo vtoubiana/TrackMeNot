@@ -3,14 +3,25 @@
         text-decoration: none;
         font-family: Verdana;
         font-weight: bold;
-        font-size: 1vw;
+        font-size: small;
         line-height: 10%;
     }
+	
+
+	input {
+	  padding: 0;
+	  margin:0;
+	  vertical-align: bottom;
+	  position: relative;
+	  font-size: medium;
+	  top: -1px;
+	  *overflow: hidden;
+	}
 
     .optiontable, .optiontable TD, #tmn_logs_container table
     {
         font-family:verdana;
-        font-size: 1.3vw;
+        font-size: small;
     }
     
     table td{
@@ -38,43 +49,42 @@
         text-decoration: none;
         font-family: Verdana;
         font-weight: bold;
-        font-size: 1.2vw;
+        font-size: small;
     }
     
     a:link.linkperso {
         color: #413F3F;
         text-decoration: none;
         font-family: Verdana;
-        font-size: 1.2vw;
+        font-size: small;
     }
     
     .linkperso:visited {
         color: #413F3F;
         text-decoration: none;
         font-family: Verdana;
-        font-size: 1vw;
+        font-size: small;
     }
     .smLink {
         color: #006ec4;
         text-decoration: none;
         font-family: Verdana;
-        font-size: 1vw;
+        font-size: small;
         font-weight: bold;
     }
     .lgLink {
         color: #006ec4;
         text-decoration: none;
         font-family: Verdana;
-        font-size: 1vw;
+        font-size: medium;
         font-weight: bold;
     }
 	
 	.smallbutton {
         background: #E6EAE2;
-        width: 15px;
         padding:1px 0;
         border:1px solid #608925;
-        font-size: 1.2vw;
+        font-size: small;
         text-align:center;
         color:#00446D;
         border-radius: 5px;
@@ -90,15 +100,28 @@
     }
     
     table.optiontable {
-	font-size: 1.2vw;
+	font-size: small;
 	text-align: center;
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
     }
+	label.menu-label {
+	  display: inline;
+	  padding-left: 0px;
+	  text-indent: -0px;
+	}
+	label {
+	  display: block;
+	  	font-size: small;
+	  padding-left: 15px;
+	  text-indent: -15px;
+	}
+	
+
 	
 	.optionheader{
-		font-size: 2vw;
+		font-size: medium;
 		text-align: center;
         border-radius: 5px;
         -moz-border-radius: 5px;
@@ -106,14 +129,16 @@
     }
     
 	.optiontext{	
-		font-size: 1.3vw;
+		font-size: small;
 	}
+	
+
 	
 	
     #tmn-table-header{
         padding:1px 0;
         border:1px solid #608925;
-		font-size: 1.3vw;
+		font-size: medium;
         border-radius: 2px;
         -moz-border-radius: 2px;
         -webkit-border-radius:2px;
@@ -121,12 +146,10 @@
       }
 
     #tmn_logs_container {
-        width:0%; 
         overflow-y: scroll;
-        overflow-x: hidden; 
+        /*overflow-x: hidden; */
         height: 100%;
         margin:2%;
-        visibility:hidden;
         background-color: #F0F0F0;
         border:1px solid #608925;
         border-radius: 5px;
@@ -134,7 +157,7 @@
         -webkit-border-radius: 5px;
     }
     #tmn_logs_container table {
-        width:0%;
+        width:100%;
         margin:0;  
         line-height: 1.2em;
     }
@@ -142,6 +165,31 @@
         padding-left:2%;
         width:20%;
      }
+	 
+	 
+    .overlay {
+		position: fixed; /* Sit on top of the page content */
+		display: none; /* Hidden by default */
+		max-width: 700px;
+		width: 90%; /* Full width (cover the whole page) */
+		height: 80%; /* Full height (cover the whole page) */
+		top: 20%;
+		left: 10%;
+		background-color: #F0F0F0; /* Black background with opacity */
+		z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		cursor: pointer; /* Add a pointer on hover */
+}
+
+	.overlay_text{
+		position: relative;
+		top: 0;
+		left: 50%;
+		font-size: 12px;
+		transform: translate(-50%,0%);
+		-ms-transform: translate(-50%,-0%);
+	}
+	
+	
 
     #wrapper, #wrapper > table{
         height:100vh;
@@ -152,7 +200,7 @@
         display:block;
         background: #E6EAE2;
         border:1px solid #608925;
-        font-size: 1.7vw;
+        font-size: medium;
         color:#00446D;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -169,5 +217,4 @@
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
       }
 
-    
     DIV.block {text-align:justify}

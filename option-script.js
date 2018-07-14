@@ -22,6 +22,7 @@ function loadHandlers() {
          updateEngineList();
     });
 	
+	
 	$("#clear-options").unbind().click(function() {
          clearOptions();
          updateEngineList();
@@ -52,6 +53,10 @@ function loadHandlers() {
         var queries = tmn._getQueries();
         TMNShowQueries(queries);
     });
+	
+	$("#overlay_logs").unbind().click(TMNHideLog);
+	
+	$("#overlay_queries").unbind().click(TMNHideQueries);
 
     $("#validate-feed").unbind().click(function() {
         var feeds = $("#trackmenot-seed").val();
@@ -171,11 +176,17 @@ function setFrequencyMenu(timeout) {
 }
 
 
+function TMNHideLog() {
+	$('#overlay_logs').css("display","none");
+}
 
+function TMNHideQueries() {
+	$('#overlay_queries').css("display","none");
+}
 
 function TMNShowLog(items) {
     var logs = items.logs_tmn;
-    var htmlStr = '<table cellspacing=3>';
+    var htmlStr = '<table cellspacing=3 id="overlaytext" width="800px" position="relative">';
     htmlStr += '<thead><tr align=left>';
     htmlStr += '<th>Engine</th>';
     htmlStr += '<th>Mode</th>';
@@ -200,7 +211,7 @@ function TMNShowLog(items) {
     }
     htmlStr += '</table>';
     $('#tmn_logs_container').html(htmlStr);
-    $('#tmn_logs_container').css("visibility","visible");
+	$('#overlay_logs').css("display","block");
 	//window.setTimeout(TMNShowLog, 1000,items);
 }
 
@@ -211,9 +222,9 @@ function TMNShowEngines(item) {
     for (var i = 0; i < tmn_engines.list.length; i++) {
         var engine = tmn_engines.list[i];
         let is_checked = engine.enabled? " checked " : "";
-        htmlStr += '<tr >';
-        htmlStr += '<td><input type="checkbox"  id="' + engine.id + '" value="' + engine.id + '" ' + is_checked +'">' + engine.name + '</td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > - </button> </td>';
-        htmlStr += '</tr>';
+        htmlStr += '<div id="overlay"><tr >';
+        htmlStr += '<td > <label><input valign="top" type="checkbox"  id="' + engine.id + '" value="' + engine.id + '" ' + is_checked +'">' + engine.name + '</label></td><td><button class="smallbutton" id="del_engine_' + engine.id + '" > &nbsp;&nbsp;- &nbsp;&nbsp;</button> </td>';
+        htmlStr += '</tr></div>';
     }
     htmlStr += '</table>';
     $('#search-engine-list').html(htmlStr);
@@ -280,8 +291,8 @@ var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#po
 		}
 	}
     htmlStr += '</table></div>';
-    $('#tmn_logs_container').html(htmlStr);
-    $('#tmn_logs_container').css("visibility","visible");
+    $('#tmn_queries_container').html(htmlStr);
+	$('#overlay_queries').css("display","block");
 	
 }
 
