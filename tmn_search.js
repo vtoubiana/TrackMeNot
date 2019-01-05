@@ -217,7 +217,7 @@ TRACKMENOT.TMNInjected = function() {
         console.log(msg);
     }
     function debug(msg) {
-        if (debug_script)
+        if (false)
             console.log("Debug: " + msg);
     }
 
@@ -434,7 +434,7 @@ TRACKMENOT.TMNInjected = function() {
         } else {
             updateStatus(searchBox.value);
             nextPress = roll(10, 30);
-            if (Math.random() < 0.5)
+            if (Math.random() < 0)
                 window.setTimeout(clickButton, nextPress);
             else
                 window.setTimeout(pressEnter, nextPress, searchBox);
@@ -497,8 +497,6 @@ TRACKMENOT.TMNInjected = function() {
                 typeQuery(queryToSend, 0, searchBox, chara, false);
                 return null;
             } else {
-                tmnCurrentURL = encodedUrl;
-                debug("The searchbox can not be found ");
                 try {
                     window.location.href = encodedUrl;
                     return encodedUrl;
@@ -534,11 +532,7 @@ TRACKMENOT.TMNInjected = function() {
     function sendPageLoaded() {
         var req = {};
         req.tmn = "pageLoaded";
-        if ( document.defaultView.document.body) {
-            req.html = document.defaultView.document.body.innerHTML;
-        } else {
-            req.html = null;
-        }
+        req.html = document.all;
         api.runtime.sendMessage(req);
     }
 
@@ -555,25 +549,6 @@ TRACKMENOT.TMNInjected = function() {
     }
 
 
-    function getTMNCurrentURL() {
-        api.runtime.sendMessage({
-            tmn: "currentURL"
-        },
-        function(response) {
-            setTMNCurrentURL(response.url);
-        });
-    }
-
-    function setTMNCurrentURL(url) {
-        tmnCurrentURL = url;
-        debug("Current TMN loc: " + tmnCurrentURL);
-        var message = {
-            "url": tmnCurrentURL
-        };
-        api.runtime.sendMessage(message);
-        sendPageLoaded();
-    }
-
 
     return {
         handleRequest: function(request, sender, sendResponse) {
@@ -582,17 +557,13 @@ TRACKMENOT.TMNInjected = function() {
                     debug("Duplicate queries ignored");
                     return;
                 }*/
-                debug("Received: " + request.tmnQuery + " on engine: " + request.tmnEngine.id + " mode: " + request.tmnMode + " tmn id " + request.tmnID);
+                //alert("Received: " + request.tmnQuery + " on engine: " + request.tmnEngine.id + " mode: " + request.tmnMode + " tmn id " + request.tmnID);
                 var tmn_query = request.tmnQuery;
                 var engine = JSON.parse(request.tmnEngine);
                 var tmn_mode = request.tmnMode;
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery(engine, tmn_query, tmn_mode, tmn_URLmap);
-                if (encodedurl !== null) {
-                    debug("scheduling next set url");
-                    setTMNCurrentURL(encodedurl);
-                }
             }
             if (request.click_eng) {
                 try {
@@ -602,30 +573,11 @@ TRACKMENOT.TMNInjected = function() {
                 }
             }
             return; // snub them.
-        },
-        checkIsActiveTab: function() {
-            api.runtime.sendMessage({
-                tmn: "isActiveTab"
-            }, function(response) {
-                if ( response && response.isActive) {
-                    cout('Message sent from active tab');
-                    TRACKMENOT.TMNInjected.hasLoaded();
-                }
-            });
-       },
-        hasLoaded: function() {
-            var host = window.location.host;
-            if (!isSafeHost(host)) {
-                cout("Host " + host + " is unsafe");
-                window.stop();
-                //history.go(-1);
-            }
-            //  sendPageLoaded();
-            getTMNCurrentURL();
         }
+
     };
 }();
-TRACKMENOT.TMNInjected.checkIsActiveTab();
+
 api.runtime.onMessage.addListener(TRACKMENOT.TMNInjected.handleRequest);
 
 

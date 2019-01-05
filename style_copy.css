@@ -1,0 +1,211 @@
+    .linkList {
+        color: #006ec4;
+        text-decoration: none;
+        font-family: Verdana;
+        font-weight: bold;
+        font-size: 1vw;
+        line-height: 10%;
+    }
+	
+
+	input {
+	  padding: 0;
+	  margin:0;
+	  vertical-align: bottom;
+	  position: relative;
+	  top: -1px;
+	  *overflow: hidden;
+	}
+
+    .optiontable, .optiontable TD, #tmn_logs_container table
+    {
+        font-family:verdana;
+        font-size: 1.3vw;
+    }
+    
+    table td{
+        padding:0;
+    }
+    table {
+        table-layout: fixed;
+        /*word-break: break-all;*/
+    }
+    table, tr, td{
+        overflow:hidden;
+    }
+
+    #whiteSpace {
+        position:absolute;
+        top:15%;
+        left:0;
+        width:30px;
+        height:85%;
+        background-color: white;
+    }
+
+    a:link, a:visited {
+        color: #006ec4;
+        text-decoration: none;
+        font-family: Verdana;
+        font-weight: bold;
+        font-size: 1.2vw;
+    }
+    
+    a:link.linkperso {
+        color: #413F3F;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 1.2vw;
+    }
+    
+    .linkperso:visited {
+        color: #413F3F;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 1vw;
+    }
+    .smLink {
+        color: #006ec4;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 1vw;
+        font-weight: bold;
+    }
+    .lgLink {
+        color: #006ec4;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 1vw;
+        font-weight: bold;
+    }
+	
+	.smallbutton {
+        background: #E6EAE2;
+        width: 15px;
+        padding:1px 0;
+        border:1px solid #608925;
+        font-size: 1.2vw;
+        text-align:center;
+        color:#00446D;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        opacity:.85;
+    }
+    
+    
+    A:hover {
+        color: #ff5500;
+        text-decoration: none;
+    }
+    
+    table.optiontable {
+	font-size: 1.2vw;
+	text-align: center;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
+	label.menu-label {
+	  display: inline;
+	  padding-left: 0px;
+	  text-indent: -0px;
+	}
+	label {
+	  display: block;
+	  padding-left: 15px;
+	  text-indent: -15px;
+	}
+	
+
+	
+	.optionheader{
+		font-size: 2vw;
+		text-align: center;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
+    
+	.optiontext{	
+		font-size: 1.3vw;
+	}
+	
+
+	
+	
+    #tmn-table-header{
+        padding:1px 0;
+        border:1px solid #608925;
+		font-size: 1.3vw;
+        border-radius: 2px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius:2px;
+        text-decoration: none;
+      }
+
+    #tmn_logs_container {
+        width:0%; 
+        overflow-y: scroll;
+        overflow-x: hidden; 
+        height: 100%;
+        margin:2%;
+        visibility:hidden;
+        background-color: #F0F0F0;
+        border:1px solid #608925;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
+    #tmn_logs_container table {
+        width:0%;
+        margin:0;  
+        line-height: 1.2em;
+    }
+     #tmn_logs_container table#queries td {
+        padding-left:2%;
+        width:20%;
+     }
+	 
+	 
+    #overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+    #wrapper, #wrapper > table{
+        height:100vh;
+        float:left;
+    }
+
+    button, button:visited {
+        display:block;
+        background: #E6EAE2;
+        border:1px solid #608925;
+        font-size: 1.7vw;
+        color:#00446D;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        text-decoration: none;
+        opacity:.85;
+      }
+      
+      button:hover {
+        border-color:#49671d;
+      }
+      
+      button:active {
+        padding:2px 0 ;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+      }
+
+    DIV.block {text-align:justify}

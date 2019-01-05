@@ -32,7 +32,7 @@ TRACKMENOT.Menus = function() {
    },
       
    toggleTabFrame: function() {
-        options.useTab = !options.useTab
+       // options.useTab = !options.useTab
         api.storage.local.set({"options_tmn":options});
         TRACKMENOT.Menus.onLoadMenu({"options_tmn":options});  
       },
@@ -49,14 +49,14 @@ TRACKMENOT.Menus = function() {
 			 $("#trackmenot-img-enabled").attr("src", "images/skin/on_icon.png");
 		}
 			
-		if (options.useTab)  $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/stealth_icon.png" /> Stealth');
-		else $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/tab_icon.png" /> Tab')
+		//if (options.useTab)  $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/stealth_icon.png" /> Stealth');
+		//else $("#trackmenot-menu-useTab").html('<img  width="16" height="16" src="images/skin/tab_icon.png" /> Tab')
       }
   }
 }(); 
 
 document.addEventListener('DOMContentLoaded', function () {
-  $("#trackmenot-menu-useTab").click(TRACKMENOT.Menus.toggleTabFrame);
+  //$("#trackmenot-menu-useTab").click(TRACKMENOT.Menus.toggleTabFrame);
   $("#trackmenot-enabled").click(TRACKMENOT.Menus.toggleOnOff);
   $("#trackmenot-menu-win").click(function() { window.open(api.extension.getURL('options.html'));});
   $("#trackmenot-menu-help").click(TRACKMENOT.Menus.showHelp)
