@@ -357,7 +357,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function extractQueries(html) {
-        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'’{}:?%|\^~`=]", "g");
+        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'Â’{}:?%|\^~`=]", "g");
         var splitRegExp = new RegExp('^[\\[\\]\\(\\)\\"\']', "g");
 
         if (!html) {
@@ -441,7 +441,7 @@ TRACKMENOT.TMNSearch = function() {
     // returns # of keywords added
     function filterKeyWords(rssTitles) {
         var addStr = ""; //tmp-debugging
-        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'Õ{}:?%|\^~`=]+", "g");
+        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'Ã•{}:?%|\^~`=]+", "g");
         var splitRegExp = new RegExp('[\\[\\]\\(\\)\\"\']+', "g");
         var wordArray = rssTitles.split(forbiddenChar);
 
@@ -453,7 +453,7 @@ TRACKMENOT.TMNSearch = function() {
                             wordArray[i + 1].match(splitRegExp))) {
                         var nextWord = wordArray[i + 1]; // added new check here -dch
                         if (nextWord !== nextWord.toLowerCase()) {
-                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'Õ&]/g, ''));
+                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'Ã•&]/g, ''));
                             if (nextWord.length > 1) {
                                 word += ' ' + nextWord;
                             }
@@ -925,7 +925,9 @@ TRACKMENOT.TMNSearch = function() {
             readDHSList();
             typeoffeeds.push('dhs');
          } else {
-            typeoffeeds.splice(typeoffeeds.indexOf('dhs'), 1);
+            if (typeoffeeds.indexOf('dhs') !== -1) { 
+		    typeoffeeds.splice(typeoffeeds.indexOf('dhs'), 1);
+	    }
             TMNQueries.dhs = null;
         }
     }
