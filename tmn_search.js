@@ -45,7 +45,8 @@ TRACKMENOT.TMNInjected = function() {
     }
 
     var testAd_yahoo = function(anchorClass, anchorlink) {
-        return (anchorClass === '\"yschttl spt\"' || anchorClass === 'yschttl spt');
+		return false;
+        //return (anchorClass === '\"yschttl spt\"' || anchorClass === 'yschttl spt');
     }
 
     var testAd_aol = function(anchorClass, anchorlink) {

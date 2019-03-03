@@ -235,7 +235,7 @@ TRACKMENOT.TMNSearch = function() {
             api.tabs.create({
                 'active': false,
 				'url': 'http://www.google.com',
-				'pinned' : true
+				'pinned' : false
             }, function (e) {initTab(e,pendingRequest)});
         } catch (ex) {
             cerr('Can no create TMN tab:', ex);
@@ -357,7 +357,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function extractQueries(html) {
-        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'Â’{}:?%|\^~`=]", "g");
+        var forbiddenChar = new RegExp("^[ @#<>\"\\\/,;'?{}:?%|\^~`=]", "g");
         var splitRegExp = new RegExp('^[\\[\\]\\(\\)\\"\']', "g");
 
         if (!html) {
@@ -441,7 +441,7 @@ TRACKMENOT.TMNSearch = function() {
     // returns # of keywords added
     function filterKeyWords(rssTitles) {
         var addStr = ""; //tmp-debugging
-        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'Ã•{}:?%|\^~`=]+", "g");
+        var forbiddenChar = new RegExp("[ @#<>\"\\\/,;'Õ{}:?%|\^~`=]+", "g");
         var splitRegExp = new RegExp('[\\[\\]\\(\\)\\"\']+', "g");
         var wordArray = rssTitles.split(forbiddenChar);
 
@@ -453,7 +453,7 @@ TRACKMENOT.TMNSearch = function() {
                             wordArray[i + 1].match(splitRegExp))) {
                         var nextWord = wordArray[i + 1]; // added new check here -dch
                         if (nextWord !== nextWord.toLowerCase()) {
-                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'Ã•&]/g, ''));
+                            nextWord = trim(nextWord.toLowerCase().replace(/\s/g, '').replace(/[(<>"'Õ&]/g, ''));
                             if (nextWord.length > 1) {
                                 word += ' ' + nextWord;
                             }
@@ -872,7 +872,7 @@ TRACKMENOT.TMNSearch = function() {
                     tmn_hasloaded = true;
                     clearTimeout(tmn_errTimeout);
                     reschedule();
-                    if (Math.random() < 1) {
+                    if (tmn_options.sim_clicks && (Math.random() < 0.3) ) {
                         var time = roll(10, 1000);
                         window.setTimeout(sendClickEvent, time);
                     }
@@ -901,6 +901,7 @@ TRACKMENOT.TMNSearch = function() {
         tmn_options.burstMode = true;
         tmn_options.useTab= true;
         tmn_options.use_black_list = true;
+		tmn_options.sim_clicks = false;
         tmn_options.use_dhs_list = false;
         tmn_options.kwBlackList = ['bomb', 'porn', 'pornographie'];
         tmn_options.saveLogs= true;
@@ -926,8 +927,8 @@ TRACKMENOT.TMNSearch = function() {
             typeoffeeds.push('dhs');
          } else {
             if (typeoffeeds.indexOf('dhs') !== -1) { 
-		    typeoffeeds.splice(typeoffeeds.indexOf('dhs'), 1);
-	    }
+				typeoffeeds.splice(typeoffeeds.indexOf('dhs'), 1);
+			}
             TMNQueries.dhs = null;
         }
     }
@@ -950,8 +951,10 @@ TRACKMENOT.TMNSearch = function() {
     }
     
     
-    function restoreOptions (item) {
-        tmn_options = item;
+    function restoreOptions (items) {
+		for (var key in items) {
+			tmn_options[key] = items[key];
+		}
         debug("Restore: " + tmn_options.enabled);
        
         if (tmn_options.feedList) {
@@ -1045,8 +1048,8 @@ TRACKMENOT.TMNSearch = function() {
                setEngines(items["engines_tmn"]); 
             }
             
-            if (!items["options_tmn"]) {
-                setDefaultOptions();
+			setDefaultOptions();
+            if (!items["options_tmn"]) {         
                 cout("Init: " + tmn_options.enabled);
             } else {
                 restoreOptions(items["options_tmn"]);
@@ -1056,7 +1059,7 @@ TRACKMENOT.TMNSearch = function() {
 			if (!items["tab_url"]) {
 				tmn_tab_id = -1; 
 			} else {
-				api.tabs.query({'pinned':true, 'url': items["tab_url"]}, function(tabs) {
+				api.tabs.query({'pinned':false, 'url': items["tab_url"]}, function(tabs) {
 					if (tabs.length !==0 ) {
 						cout("Restoring tab "+ tabs[0].id)
 						tmn_tab_id = tabs[0].id;
@@ -1129,7 +1132,7 @@ TRACKMENOT.TMNSearch = function() {
 					api.tabs.get(tabId, function(tab) {
 						 api.storage.local.set({"tab_url":tab.url});
 					});					
-                    if (Math.random() < 1) {
+                    if (tmn_options.sim_clicks &&  Math.random() < 0.3 ) {
                         var time = roll(10, 1000);
                         window.setTimeout(sendClickEvent, time);
                     }

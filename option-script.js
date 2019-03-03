@@ -155,6 +155,7 @@ function TMNSetOptionsMenu(item) {
     $("#add-engine-table").hide();
     $("#trackmenot-opt-enabled").prop('checked', options.enabled);
     $("#trackmenot-opt-burstMode").prop('checked', options.burstMode);
+	$("#trackmenot-opt-sim-clicks").prop('checked', options.sim_clicks);
     $("#trackmenot-opt-save-logs").prop('checked', options.saveLogs);
     $("#trackmenot-opt-disable-logs").prop('checked', options.disableLogs);
 
@@ -301,6 +302,7 @@ function saveOptions() {
 
     console.log("Saved Enabled: " + options.enabled);
     options.burstMode = $("#trackmenot-opt-burstMode").is(':checked');
+	options.sim_clicks = $("#trackmenot-opt-sim-clicks").is(':checked');
     options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked');
     options.saveLogs = $("#trackmenot-opt-save-logs").is(':checked');
     options.timeout = $("#trackmenot-opt-timeout").val();
