@@ -29,7 +29,7 @@ if (!TRACKMENOT) var TRACKMENOT = {};
 TRACKMENOT.TMNSearch = function() {
     var tmn_tab_id = -1;
 
-    var debug_ = true;
+    var debug_ = false;
     var useIncrementals = true;
     var incQueries = [];
     var engine = 'google';
@@ -211,6 +211,32 @@ TRACKMENOT.TMNSearch = function() {
 // Tab functions
 
 
+    function changeTabStatus(useT) {
+        if (useT === tmn_options.useTab) return;
+        tmn_options.useTab= useT;
+        if (useT) {
+            createTab();
+        } else {
+            deleteTab();
+        }
+    }									
+						  
+															
+						  
+	 
+
+						  
+									  
+  
+												
+								 
+				   
+						
+				
+						
+		 
+	 
+
     function getTMNTab() {
         debug("Trying to access to the tab: " + tmn_tab_id);
         return tmn_tab_id;
@@ -231,6 +257,8 @@ TRACKMENOT.TMNSearch = function() {
 
     function createTab( pendingRequest) {
         if ( tmn_tab_id !== -1) return;
+														
+													   
         try {
             api.tabs.create({
                 'active': false,
@@ -504,6 +532,8 @@ TRACKMENOT.TMNSearch = function() {
         try {
             req.open('GET', "dhs_keywords.json", true);
             req.onreadystatechange = function() {
+				  
+											
 				if (req.readyState === 4) {
 					var keywords = JSON.parse(req.responseText).keywords;           
 					for (var cat of keywords) {
@@ -516,7 +546,15 @@ TRACKMENOT.TMNSearch = function() {
 					}
 					return;
 				} 
+												 
+										   
+											  
+																			   
+								  
+				 
             }
+					   
+		   
 			req.send();
 		  } catch (ex) {
 			cout("[WARN]  Can not load DHS list: " + ex.message);
@@ -619,6 +657,8 @@ TRACKMENOT.TMNSearch = function() {
 
     function doSearch() {
         var newquery = getQuery();
+
+			   
 		if (incQueries && incQueries.length > 0)
 			sendQuery(null);
 		else {
@@ -637,6 +677,12 @@ TRACKMENOT.TMNSearch = function() {
 			}
 			sendQuery(newquery);
 		}
+								   
+									  
+												  
+					   
+										 
+		   
     }
 
 
@@ -654,28 +700,75 @@ TRACKMENOT.TMNSearch = function() {
         if (Math.random() < 0.9) queryToSend = queryToSend.toLowerCase();
         if (queryToSend[0] === ' ') queryToSend = queryToSend.substr(1); //remove the first space ;
         tmn_hasloaded = false;
-		TMNReq = {};
-		TMNReq.tmnQuery = queryToSend;
-		TMNReq.tmnEngine = JSON.stringify(getEngineById(engine));
-		TMNReq.tmnUrlMap = url;
-		TMNReq.tmnMode = tmn_mode;
-		TMNReq.tmnID = (tmn_options.tmn_id++);
-		
-		console.log(JSON.stringify(TMNReq));
-		if (tmn_tab_id === -1) {
-			createTab(TMNReq);
-		} else {		
-			api.tabs.get(tmn_tab_id, function( tab) {
-				if (chrome.runtime.lastError) {
-					console.log(chrome.runtime.lastError.message);
-					tmn_tab_id = -1;
-					createTab(TMNReq);
-				} else {
-					api.tabs.sendMessage(tab.id, TMNReq);
-				}
-			});
-			cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + TMNReq);
+		if (tmn_options.useTab) {
+			TMNReq = {};
+			TMNReq.tmnQuery = queryToSend;
+			TMNReq.tmnEngine = JSON.stringify(getEngineById(engine));
+			TMNReq.tmnUrlMap = url;
+			TMNReq.tmnMode = tmn_mode;
+			TMNReq.tmnID = (tmn_options.tmn_id++);
+			
+			console.log(JSON.stringify(TMNReq));
+			if (tmn_tab_id === -1) {
+				createTab(TMNReq);
+			} else {		
+				api.tabs.get(tmn_tab_id, function( tab) {
+					if (chrome.runtime.lastError) {
+						console.log(chrome.runtime.lastError.message);
+						tmn_tab_id = -1;
+						createTab(TMNReq);
+					} else {
+						api.tabs.sendMessage(tab.id, TMNReq);
+					}
+				});
+				cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + TMNReq);
+			}
 		}
+		else {
+            var queryURL = queryToURL(url, queryToSend);
+            cout("The encoded URL is " + queryURL)
+			fetch(queryURL, {  credentials: 'include'}).then(function(response) {
+				if (response.ok){
+					clearTimeout(tmn_errTimeout);
+					 var logEntry = {
+                            'type': 'query',
+                            "engine": engine,
+                            'mode': tmn_mode,
+                            'query': queryToSend,
+                            'id': tmn_options.tmn_id++
+                     };
+                     log(logEntry);
+                     tmn_hasloaded = true;
+                     reschedule();
+				}
+			})
+            /*var xhr = new XMLHttpRequest();
+            xhr.open("GET", queryURL, true);
+			xhr.withCredentials = true;
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    clearTimeout(tmn_errTimeout);
+                    if (xhr.status >= 200 && xhr.status < 400) {
+                        var logEntry = {
+                            'type': 'query',
+                            "engine": engine,
+                            'mode': tmn_mode,
+                            'query': queryToSend,
+                            'id': tmn_options.tmn_id++
+                        };
+                        log(logEntry);
+                        tmn_hasloaded = true;
+                        reschedule();
+                    } else {
+                        rescheduleOnError();
+                    }
+                }
+            }          
+            xhr.send();*/
+			updateOnSend(queryToSend);
+            currentTMNURL = queryURL;
+
+        }
     }
 
 
@@ -867,6 +960,16 @@ TRACKMENOT.TMNSearch = function() {
         }
 
         switch (request.tmn) {
+									  
+				   
+					   
+								  
+											 
+							  
+							  
+										
+				   
+					   
             case "pageLoaded": 
                 if (!tmn_hasloaded) {
                     tmn_hasloaded = true;
@@ -876,6 +979,8 @@ TRACKMENOT.TMNSearch = function() {
                         var time = roll(10, 1000);
                         window.setTimeout(sendClickEvent, time);
                     }
+										  
+									 
                 }
 				sendResponse({});
                 break;
@@ -884,6 +989,20 @@ TRACKMENOT.TMNSearch = function() {
                 rescheduleOnError();
                 sendResponse({});
                 break;
+							
+										 
+		
+						
+											
+		
+		
+							   
+																		   
+										  
+							  
+									  
+				   
+					   
             case "TMNValideFeeds":
                 validateFeeds(request.param);
                 break;
@@ -899,7 +1018,7 @@ TRACKMENOT.TMNSearch = function() {
         tmn_options.enabled= true;
         tmn_options.timeout = 6000;
         tmn_options.burstMode = true;
-        tmn_options.useTab= true;
+        tmn_options.useTab= false;
         tmn_options.use_black_list = true;
 		tmn_options.sim_clicks = false;
         tmn_options.use_dhs_list = false;
@@ -960,6 +1079,13 @@ TRACKMENOT.TMNSearch = function() {
         if (tmn_options.feedList) {
             initQueries();  
         }
+		changeTabStatus(tmn_options.useTab);   
+				
+													 
+   
+
+
+												 
 		try{
 			if (tmn_options.enabled) {
 				api.browserAction.setBadgeText({'text': 'ON'});
@@ -989,6 +1115,8 @@ TRACKMENOT.TMNSearch = function() {
             else stopTMN();
         }
 
+
+		changeTabStatus(item.useTab); 							  
 		try {
 			if (item.enabled) {
 				api.browserAction.setBadgeText({'text': 'ON'});
@@ -1050,6 +1178,8 @@ TRACKMENOT.TMNSearch = function() {
             
 			setDefaultOptions();
             if (!items["options_tmn"]) {         
+											   
+									
                 cout("Init: " + tmn_options.enabled);
             } else {
                 restoreOptions(items["options_tmn"]);
@@ -1090,6 +1220,8 @@ TRACKMENOT.TMNSearch = function() {
 
        
         _getQueries: function() {
+	  
+   
             return TMNQueries; 
         },
         
@@ -1158,6 +1290,16 @@ TRACKMENOT.TMNSearch = function() {
 
 }();
 
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+	 
+																   
+			 
+										 
+ 
 
 
 api.runtime.onMessage.addListener(TRACKMENOT.TMNSearch._handleRequest);

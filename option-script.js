@@ -112,6 +112,7 @@ function loadHandlers() {
             tmn_engines.list[getEngIndexById($(this).val())].enabled = true ;
         });
         api.storage.local.set({'engines_tmn':tmn_engines});
+									
     }
     
     function clearOptions() {
@@ -154,6 +155,8 @@ function TMNSetOptionsMenu(item) {
     //console.log("Enabled: " +options.enabled)
     $("#add-engine-table").hide();
     $("#trackmenot-opt-enabled").prop('checked', options.enabled);
+	$("#trackmenot-opt-useTab").prop('checked', options.useTab);
+																
     $("#trackmenot-opt-burstMode").prop('checked', options.burstMode);
 	$("#trackmenot-opt-sim-clicks").prop('checked', options.sim_clicks);
     $("#trackmenot-opt-save-logs").prop('checked', options.saveLogs);
@@ -301,6 +304,8 @@ function saveOptions() {
     options.enabled = $("#trackmenot-opt-enabled").is(':checked');
 
     console.log("Saved Enabled: " + options.enabled);
+	$("#trackmenot-opt-useTab").prop('checked', options.useTab);
+																
     options.burstMode = $("#trackmenot-opt-burstMode").is(':checked');
 	options.sim_clicks = $("#trackmenot-opt-sim-clicks").is(':checked');
     options.disableLogs = $("#trackmenot-opt-disable-logs").is(':checked');
