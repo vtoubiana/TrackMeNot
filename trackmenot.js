@@ -37,7 +37,7 @@ TRACKMENOT.TMNSearch = function() {
     var TMNQueries = {};
     var zeit_queries = ["facebook", "youtube", "myspace", "craigslist", "ebay", "yahoo", "walmart", "netflix", "amazon", "home depot", "best buy", "Kentucky Derby", "NCIS", "Offshore Drilling", "Halle Berry", "iPad Cases", "Dorothy Provine", "Emeril", "Conan O'Brien", "Blackberry", "Free Comic Book Day", " American Idol", "Palm", "Montreal Canadiens", "George Clooney", "Crib Recall", "Auto Financing", "Katie Holmes", "Madea's Big Happy Family", "Old Navy Coupon", "Sandra Bullock", "Dancing With the Stars", "M.I.A.", "Matt Damon", "Santa Clara County", "Joey Lawrence", "Southwest Airlines", "Malcolm X", "Milwaukee Bucks", "Goldman Sachs", "Hugh Hefner", "Tito Ortiz", "David McLaughlin", "Box Jellyfish", "Amtrak", "Molly Ringwald", "Einstein Horse", "Oil Spill", " Bret Michaels", "Mississippi Tornado", "Stephen Hawking", "Kelley Blue Book", "Hertz", "Mariah Carey", "Taiwan Earthquake", "Justin Bieber", "Public Bike Rental", "BlackBerry Pearl", "NFL Draft", "Jillian Michaels", "Face Transplant", "Dell", "Jack in the Box", "Rebbie Jackson", "Xbox", "Pampers", "William Shatner", "Earth Day", "American Idol", "Heather Locklear", "McAfee Anti-Virus", "PETA", "Rihanna", "South Park", "Tiger Woods", "Kate Gosselin", "Unemployment", "Dukan Diet", "Oil Rig Explosion", "Crystal Bowersox", "New 100 Dollar Bill", "Beastie Boys", "Melanie Griffith", "Borders", "Tara Reid", "7-Eleven", "Dorothy Height", "Volcanic Ash", "Space Shuttle Discovery", "Gang Starr", "Star Trek", "Michael Douglas", "NASCAR", "Isla Fisher", "Beef Recall", "Rolling Stone Magazine", "ACM Awards", "NASA Space Shuttle", "Boston Marathon", "Iraq", "Jennifer Aniston"];
     var tmnLogs = [];
-    var typeoffeeds = ['zeitgeist'];
+    //var typeoffeeds = ['zeitgeist','rss'];
     var prev_engine = null;  
     var burstEngine = '';
     var burstTimeout = 6000;
@@ -362,6 +362,7 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function randomQuery() {
+		var typeoffeeds = Object.keys(TMNQueries);
         var qtype = randomElt(typeoffeeds);
         var queries = [];
         if (qtype !== 'zeitgeist' && qtype !== 'extracted') {
@@ -400,22 +401,27 @@ TRACKMENOT.TMNSearch = function() {
         for (var i = 0; i < l.length; i++) {
             if (!l[i] || l[i] == "undefined") continue;
             l[i] = l[i].replace(/(<([^>]+)>)/ig, " ");
-            //if (/([a-z]+ [a-z]+)/i.test(l[i])) {
-            //var reg = /([a-z]{4,} [a-z]{4,} [a-z]{4,} ([a-z]{4,} ?) {0,3})/i;
-            var matches = l[i].split(" "); //reg.exec(l[i]);
-            if (!matches || matches.length < 2) continue;
-            var newQuery = trim(matches[1]);
-            // if ( phrases.length >0 ) newQuery.unshift(" ");
-            if (newQuery && phrases.indexOf(newQuery) < 0)
-                phrases.push(newQuery);
+            if (/([a-z]+ [a-z]+)/i.test(l[i])) {
+				var reg = /([a-z]{4,} [a-z]{4,} [a-z]{4,} ([a-z]{4,} ?) {0,3})/i;
+				var matches = reg.exec(l[i]);
+				if (!matches || matches.length < 2) continue;
+				var newQuery = trim(matches[1]);
+				// if ( phrases.length >0 ) newQuery.unshift(" ");
+				if (newQuery && phrases.indexOf(newQuery) < 0)
+					phrases.push(newQuery);
+			}
         }
         var queryToAdd = phrases.join(" ");
+		if (queryToAdd.length < 4)
+			return;
         TMNQueries.extracted = [].concat(TMNQueries.extracted);
         while (TMNQueries.extracted.length > 200) {
             var rand = roll(0, TMNQueries.extracted.length - 1);
             TMNQueries.extracted.splice(rand, 1);
         }
         cout(TMNQueries.extracted)
+		//if (typeoffeeds.indexOf('extracted') == -1)
+		//	typeoffeeds.push('extracted');
         addQuery(queryToAdd, TMNQueries.extracted);
     }
 
@@ -688,7 +694,7 @@ TRACKMENOT.TMNSearch = function() {
 
     function sendQuery(queryToSend) {
         tmn_scheduledSearch = false;
-        var url = getEngineById(engine).urlmap;
+        var url_map = getEngineById(engine).urlmap;
         if (queryToSend === null) {
             if (incQueries && incQueries.length > 0)
                 queryToSend = incQueries.pop();
@@ -704,7 +710,7 @@ TRACKMENOT.TMNSearch = function() {
 			TMNReq = {};
 			TMNReq.tmnQuery = queryToSend;
 			TMNReq.tmnEngine = JSON.stringify(getEngineById(engine));
-			TMNReq.tmnUrlMap = url;
+			TMNReq.tmnUrlMap = url_map;
 			TMNReq.tmnMode = tmn_mode;
 			TMNReq.tmnID = (tmn_options.tmn_id++);
 			
@@ -713,8 +719,8 @@ TRACKMENOT.TMNSearch = function() {
 				createTab(TMNReq);
 			} else {		
 				api.tabs.get(tmn_tab_id, function( tab) {
-					if (chrome.runtime.lastError) {
-						console.log(chrome.runtime.lastError.message);
+					if (api.runtime.lastError) {
+						console.log(api.runtime.lastError.message);
 						tmn_tab_id = -1;
 						createTab(TMNReq);
 					} else {
@@ -725,51 +731,38 @@ TRACKMENOT.TMNSearch = function() {
 			}
 		}
 		else {
-            var queryURL = queryToURL(url, queryToSend);
-            cout("The encoded URL is " + queryURL)
-			fetch(queryURL, {  credentials: 'include'}).then(function(response) {
-				if (response.ok){
-					clearTimeout(tmn_errTimeout);
-					 var logEntry = {
-                            'type': 'query',
-                            "engine": engine,
-                            'mode': tmn_mode,
-                            'query': queryToSend,
-                            'id': tmn_options.tmn_id++
-                     };
-                     log(logEntry);
-                     tmn_hasloaded = true;
-                     reschedule();
-				}
-			})
-            /*var xhr = new XMLHttpRequest();
-            xhr.open("GET", queryURL, true);
-			xhr.withCredentials = true;
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    clearTimeout(tmn_errTimeout);
-                    if (xhr.status >= 200 && xhr.status < 400) {
-                        var logEntry = {
-                            'type': 'query',
-                            "engine": engine,
-                            'mode': tmn_mode,
-                            'query': queryToSend,
-                            'id': tmn_options.tmn_id++
-                        };
-                        log(logEntry);
-                        tmn_hasloaded = true;
-                        reschedule();
-                    } else {
-                        rescheduleOnError();
-                    }
-                }
-            }          
-            xhr.send();*/
-			updateOnSend(queryToSend);
-            currentTMNURL = queryURL;
-
+            var queryURL = queryToURL(url_map, queryToSend);
+			api.cookies.getAll({'url': queryURL}, function(cookies) {sendBackgroundQuery( cookies, queryURL,queryToSend)} );
         }
     }
+	
+	
+	function sendBackgroundQuery( cookies, queryURL,queryToSend) {
+		var cookies_string = cookies.map(function (x) {return x.name + "="+ x.value;}).join("; ");
+		cout("The encoded URL is " + queryURL)
+		fetch(queryURL, {
+				headers: {
+					"cookie": cookies_string
+				}
+				}
+			).then(function(response) {
+			if (response.ok){
+				clearTimeout(tmn_errTimeout);
+				 var logEntry = {
+						'type': 'query',
+						"engine": engine,
+						'mode': tmn_mode,
+						'query': queryToSend,
+						'id': tmn_options.tmn_id++
+				 };
+				 log(logEntry);
+				 tmn_hasloaded = true;
+				 reschedule();
+			}
+		})
+		updateOnSend(queryToSend);
+		currentTMNURL = queryURL;
+	}
 
 
     function queryToURL(url, query) {
@@ -959,18 +952,10 @@ TRACKMENOT.TMNSearch = function() {
             return;
         }
 
-        switch (request.tmn) {
-									  
-				   
-					   
-								  
-											 
-							  
-							  
-										
-				   
-					   
+        switch (request.tmn) {			   
             case "pageLoaded": 
+				cout("The content of the page is:" + request.html);
+				extractQueries(request.html);
                 if (!tmn_hasloaded) {
                     tmn_hasloaded = true;
                     clearTimeout(tmn_errTimeout);
@@ -989,20 +974,6 @@ TRACKMENOT.TMNSearch = function() {
                 rescheduleOnError();
                 sendResponse({});
                 break;
-							
-										 
-		
-						
-											
-		
-		
-							   
-																		   
-										  
-							  
-									  
-				   
-					   
             case "TMNValideFeeds":
                 validateFeeds(request.param);
                 break;
@@ -1029,9 +1000,7 @@ TRACKMENOT.TMNSearch = function() {
         tmn_options.tmn_id = 0;     
     }
     
-    function initQueries() {
-        typeoffeeds =['zeitgeist','rss'];
-        
+    function initQueries() {    
         TMNQueries = {};
         TMNQueries.zeitgeist = zeit_queries;
         
@@ -1039,17 +1008,10 @@ TRACKMENOT.TMNSearch = function() {
         TMNQueries.rss = [];
         let feeds = tmn_options.feedList;
         feeds.forEach(doRssFetch); 
-        
-        
+           
         if (tmn_options.use_dhs_list ) {
             readDHSList();
-            typeoffeeds.push('dhs');
-         } else {
-            if (typeoffeeds.indexOf('dhs') !== -1) { 
-				typeoffeeds.splice(typeoffeeds.indexOf('dhs'), 1);
-			}
-            TMNQueries.dhs = null;
-        }
+         } 
     }
 
     function onError(error) {

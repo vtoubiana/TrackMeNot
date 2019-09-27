@@ -244,7 +244,7 @@ TRACKMENOT.TMNInjected = function() {
         window.setTimeout(function() {
             elt.dispatchEvent(evtUp);
         }, timers[2]);
-        window.setTimeout(sendPageLoaded, timers[3])
+        window.setTimeout(TRACKMENOT.TMNInjected.sendPageLoaded, timers[3])
     }
     ;
 
@@ -320,7 +320,7 @@ TRACKMENOT.TMNInjected = function() {
         var button = get_button(engine.id, document);
         clickElt(button);
         debug("send page loaded");
-        sendPageLoaded();
+        TRACKMENOT.TMNInjected.sendPageLoaded();
     }
 
 
@@ -530,12 +530,7 @@ TRACKMENOT.TMNInjected = function() {
 
 
 
-    function sendPageLoaded() {
-        var req = {};
-        req.tmn = "pageLoaded";
-        req.html = document.all;
-        api.runtime.sendMessage(req);
-    }
+
 
 
     function log(msg) {
@@ -552,7 +547,15 @@ TRACKMENOT.TMNInjected = function() {
 
 
     return {
-        handleRequest: function(request, sender, sendResponse) {
+	
+	sendPageLoaded: function() {
+        var req = {};
+        req.tmn = "pageLoaded";
+        req.html = document.body.innerHTML;
+        api.runtime.sendMessage(req);
+    },
+	
+     handleRequest: function(request, sender, sendResponse) {
             if (request.tmnQuery) {
                 /*if (tmn_id >= request.tmnID) {
                     debug("Duplicate queries ignored");
@@ -565,6 +568,7 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery(engine, tmn_query, tmn_mode, tmn_URLmap);
+				window.onload = function() {setTimeout(TRACKMENOT.TMNInjected.sendPageLoaded,1000)};
             }
             if (request.click_eng) {
                 try {
