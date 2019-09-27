@@ -77,7 +77,7 @@ TRACKMENOT.TMNSearch = function() {
     );
     
      function trim(s) {
-        return s.replace(/\n/g, '');
+        return s.replace(/\n/g, '').replace(/^\s+|\s+$/g,'');
     }
 
     function cerr(msg, e) {
@@ -362,7 +362,9 @@ TRACKMENOT.TMNSearch = function() {
 
 
     function randomQuery() {
-		var typeoffeeds = Object.keys(TMNQueries);
+	var typeoffeeds = Object.keys(TMNQueries);
+	//filter out empty feeds
+	typeoffeeds = typeoffeeds.filter(function(feed_type){return TMNQueries[feed_type].length;});
         var qtype = randomElt(typeoffeeds);
         var queries = [];
         if (qtype !== 'zeitgeist' && qtype !== 'extracted') {
@@ -414,7 +416,7 @@ TRACKMENOT.TMNSearch = function() {
         var queryToAdd = phrases.join(" ");
 		if (queryToAdd.length < 4)
 			return;
-        TMNQueries.extracted = [].concat(TMNQueries.extracted);
+        TMNQueries.extracted = TMNQueries.extracted || [];
         while (TMNQueries.extracted.length > 200) {
             var rand = roll(0, TMNQueries.extracted.length - 1);
             TMNQueries.extracted.splice(rand, 1);
@@ -525,6 +527,7 @@ TRACKMENOT.TMNSearch = function() {
             addQuery(queryToAdd, feedObject.words);
         }
         cout(feedObject.name + " : " + feedObject.words);
+        if (feedObject.words.length == 0) return 0;
         TMNQueries.rss.push(feedObject);
 
         return 1;
