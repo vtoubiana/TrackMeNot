@@ -59,7 +59,7 @@ function loadHandlers() {
 	$("#overlay_queries").unbind().click(TMNHideQueries);
 
     $("#validate-feed").unbind().click(function() {
-        var feeds = $("#trackmenot-seed").val();
+        var feeds = $("#trackmenot-seed").val().split('|');
         var param = {
             "feeds": feeds
         };
