@@ -17,7 +17,7 @@
                 "tmn_search.js"
             ],
             "run_at": "document_start",
-            "all_frames": true
+            "all_frames": false
         }
     ],
     "description": "Protect against data profiling by search engines",
@@ -38,5 +38,5 @@
         "webNavigation",
         "storage"
     ],
-    "version": "0.10.42"
+    "version": "0.10.45"
 }

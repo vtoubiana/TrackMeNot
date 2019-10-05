@@ -551,11 +551,16 @@ TRACKMENOT.TMNInjected = function() {
 	sendPageLoaded: function() {
         var req = {};
         req.tmn = "pageLoaded";
-        req.html = document.body.innerHTML;
         api.runtime.sendMessage(req);
     },
 	
      handleRequest: function(request, sender, sendResponse) {
+			if  (request.getTMNHTML) {
+			    var req = {};
+				req.tmn = "setHTML";
+				req.html = document.body.innerHTML;
+				api.runtime.sendMessage(req);
+			}
             if (request.tmnQuery) {
                 /*if (tmn_id >= request.tmnID) {
                     debug("Duplicate queries ignored");
@@ -568,8 +573,9 @@ TRACKMENOT.TMNInjected = function() {
                 tmn_id = request.tmnID;
                 var tmn_URLmap = request.tmnUrlMap;
                 var encodedurl = sendQuery(engine, tmn_query, tmn_mode, tmn_URLmap);
-				window.onload = function() {setTimeout(TRACKMENOT.TMNInjected.sendPageLoaded,1000)};
+				TRACKMENOT.TMNInjected.sendPageLoaded();
             }
+
             if (request.click_eng) {
                 try {
                     simulateClick(request.click_eng);

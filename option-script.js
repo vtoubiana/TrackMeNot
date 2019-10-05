@@ -236,8 +236,7 @@ function TMNShowEngines(item) {
 
 function TMNShowQueries(tmn_queries) {
 
-var htmlStr =  '<a href="#dhs">DHS</a> | <a href="#rss"> RSS </a> | <a href="#popular"> Popular </a>|<a href="#extracted"> Extracted</a>';
-	htmlStr += '<div style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
+var htmlStr =  '<div id="quarryarray" style="height:1000px;overflow:auto;"><table witdh=500 cellspacing=3 bgcolor=white  frame=border>';
     if ( tmn_queries.dhs ) {
 		htmlStr += '<tr style="color:Black"  bgcolor=#D6E0E0 align=center>';
 		htmlStr += '<td > DHS Monitored <td>';

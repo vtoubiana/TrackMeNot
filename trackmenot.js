@@ -104,7 +104,7 @@ TRACKMENOT.TMNSearch = function() {
 
     function randomElt(array) {
         debug("Array length: " + array.length);
-        var index = roll(0, array.length - 1);
+		var index = Math.floor(Math.random() * array.length)
         return array[index];
     }
 
@@ -395,7 +395,6 @@ TRACKMENOT.TMNSearch = function() {
         }
 
         var phrases = new Array();
-
         // Parse the HTML into phrases
         var l = html.split(/((<\?tr>)|(<br>)|(<\/?p>))/i);
         for (var i = 0; i < l.length; i++) {
@@ -407,22 +406,20 @@ TRACKMENOT.TMNSearch = function() {
 				if (!matches || matches.length < 2) continue;
 				var newQuery = trim(matches[1]);
 				// if ( phrases.length >0 ) newQuery.unshift(" ");
-				if (newQuery && phrases.indexOf(newQuery) < 0)
-					phrases.push(newQuery);
+				if (newQuery && phrases.indexOf(newQuery.toLowerCase()) < 0) {
+					phrases.push(newQuery.toLowerCase());
+					if (!TMNQueries.extracted) TMNQueries.extracted  = [];
+					addQuery(newQuery, TMNQueries.extracted);
+				}
 			}
         }
-        var queryToAdd = phrases.join(" ");
-		if (queryToAdd.length < 4)
-			return;
-        TMNQueries.extracted = [].concat(TMNQueries.extracted);
-        while (TMNQueries.extracted.length > 200) {
-            var rand = roll(0, TMNQueries.extracted.length - 1);
-            TMNQueries.extracted.splice(rand, 1);
-        }
+		
+		
+		
         cout(TMNQueries.extracted)
 		//if (typeoffeeds.indexOf('extracted') == -1)
 		//	typeoffeeds.push('extracted');
-        addQuery(queryToAdd, TMNQueries.extracted);
+       
     }
 
     function isBlackList(term) {
@@ -899,7 +896,7 @@ TRACKMENOT.TMNSearch = function() {
         cout("Will send click event on: " + prev_engine);
         try {
             api.tabs.sendMessage(tmn_tab_id, {
-                click_eng: getEngineById(prev_engine)
+                "click_eng": getEngineById(prev_engine)
             });
         } catch (ex) {
             cout(ex);
@@ -915,6 +912,13 @@ TRACKMENOT.TMNSearch = function() {
             });
 
     }
+	function getTMNHTML() {
+			var  req = {}
+			req.getTMNHTML ="gethtml";
+			api.tabs.sendMessage(tmn_tab_id, req);
+			cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + JSON.stringify(req));
+	}
+
 
 
     function handleRequest(request, sender, sendResponse) {
@@ -954,8 +958,6 @@ TRACKMENOT.TMNSearch = function() {
 
         switch (request.tmn) {			   
             case "pageLoaded": 
-				cout("The content of the page is:" + request.html);
-				extractQueries(request.html);
                 if (!tmn_hasloaded) {
                     tmn_hasloaded = true;
                     clearTimeout(tmn_errTimeout);
@@ -963,13 +965,17 @@ TRACKMENOT.TMNSearch = function() {
                     if (tmn_options.sim_clicks && (Math.random() < 0.3) ) {
                         var time = roll(10, 1000);
                         window.setTimeout(sendClickEvent, time);
-                    }
-										  
-									 
+                    } else {
+						window.setTimeout(getTMNHTML, 1000);
+					}					
                 }
 				sendResponse({});
                 break;
-            case "tmnError": //Remove timer and then reschedule;
+            case "setHTML":
+				cout("The content of the page is:" + request.html);
+				extractQueries(request.html);
+				brek;
+			case "tmnError": //Remove timer and then reschedule;
                 clearTimeout(tmn_errTimeout);
                 rescheduleOnError();
                 sendResponse({});
@@ -1226,10 +1232,12 @@ TRACKMENOT.TMNSearch = function() {
 					api.tabs.get(tabId, function(tab) {
 						 api.storage.local.set({"tab_url":tab.url});
 					});					
-                    if (tmn_options.sim_clicks &&  Math.random() < 0.3 ) {
+                    if (tmn_options.sim_clicks && (Math.random() < 0.3) ) {
                         var time = roll(10, 1000);
                         window.setTimeout(sendClickEvent, time);
-                    }
+                    } else {
+						window.setTimeout(getTMNHTML, 1000);
+					}	
                 }
 			}
 		},
