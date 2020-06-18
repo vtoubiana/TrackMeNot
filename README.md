@@ -1,6 +1,4 @@
----
-TrackMeNOT
----
+<h1 id="Trackmenot">TrackMeNot</h1>
 <p><strong><em>TrackMeNot</em></strong>  is a lightweight browser extension that helps protect web searchers from surveillance and data-profiling by search engines. It does so not by means of concealment or encryption (i.e. covering one’s tracks), but instead by the opposite strategy: noise and obfuscation. With TrackMeNot, actual web searches, lost in a cloud of false leads, are essentially hidden in plain view. User-installed TrackMeNot works with Firefox and Chrome browsers, integrates with all popular search engines, and requires no 3rd-party servers or services.</p>
 <h1 id="installation">Installation</h1>
 <p>TrackMeNot can be installed from corresponding app stores on Google-Chrome and Mozilla-Firefox browsers.<br>
