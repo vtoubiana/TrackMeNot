@@ -416,7 +416,7 @@ TRACKMENOT.TMNSearch = function() {
 		
 		
 		
-        cout(TMNQueries.extracted)
+        //cout(TMNQueries.extracted)
 		//if (typeoffeeds.indexOf('extracted') == -1)
 		//	typeoffeeds.push('extracted');
        
@@ -916,7 +916,7 @@ TRACKMENOT.TMNSearch = function() {
 			var  req = {}
 			req.getTMNHTML ="gethtml";
 			api.tabs.sendMessage(tmn_tab_id, req);
-			cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + JSON.stringify(req));
+			//cout('Message sent to the tab: ' + tmn_tab_id + ' : ' + JSON.stringify(req));
 	}
 
 
@@ -972,7 +972,7 @@ TRACKMENOT.TMNSearch = function() {
 				sendResponse({});
                 break;
             case "setHTML":
-				cout("The content of the page is:" + request.html);
+				//cout("The content of the page is:" + request.html);
 				extractQueries(request.html);
 				brek;
 			case "tmnError": //Remove timer and then reschedule;
