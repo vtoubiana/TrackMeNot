@@ -35,17 +35,17 @@ TrackMeNot is a work in progress -- we welcome feedback from the community!
   	
 Daniel C. Howe <br>
 School of Creative Media, HK<br>
-https://rednoise.org/daniel
-email: daniel<at>rednoise.org 	
+https://rednoise.org/daniel <br>
+email: daniel<at>rednoise.org <br>
 	
-Helen Nissenbaum
-Media, Culture & Communication / CS
-http://www.nyu.edu/projects/nissenbaum
-email: hfn1<at>nyu.edu
+Helen Nissenbaum<br>
+Media, Culture & Communication / CS<br>
+http://www.nyu.edu/projects/nissenbaum <br>
+email: hfn1<at>nyu.edu<br>
   	
-Vincent Toubiana
-http://unsearcher.org
-email: v.toubiana<at>free.fr 	 	
+Vincent Toubiana<br>
+http://unsearcher.org <br>
+email: v.toubiana<at>free.fr 	 <br>	
 	
  
 Special thanks to the NYU Dept of Computer Science, the Media Research Lab, the Mozilla Foundation, Missing Pixel, the Portia Project, Babelzilla, Ernest Davis, Michael Zimmer, John Fanning, and Robb Bifano.
