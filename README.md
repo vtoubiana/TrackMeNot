@@ -29,11 +29,16 @@ Public awareness of the vulnerability of searches to systematic surveillance and
 
 While viewed from the perspective of user privacy this seems a good outcome, yet it does bring to light several disquieting points. First, from court documents we learn that AOL, Yahoo!, and Microsoft have complied with the government's request, though details are not given. Second, we must face the reality that logs of our online searches are in the hands of search companies and can be quite easily linked to our identities. Thirdly, it is clear we have little idea of, or say in, what can be done with these logs. While, in this instance, Google withheld such records from the Government, it would be foolish to count on this outcome in the future.
 
+----------
+
 TrackMeNot is a work in progress -- we welcome feedback from the community!
   	
 Daniel C. Howe
+
 School of Creative Media, HK
+
 https://rednoise.org/daniel
+
 email: daniel<at>rednoise.org 	
 	
 Helen Nissenbaum
