@@ -33,12 +33,9 @@ While viewed from the perspective of user privacy this seems a good outcome, yet
 
 TrackMeNot is a work in progress -- we welcome feedback from the community!
   	
-Daniel C. Howe
-
-School of Creative Media, HK
-
+Daniel C. Howe <br>
+School of Creative Media, HK<br>
 https://rednoise.org/daniel
-
 email: daniel<at>rednoise.org 	
 	
 Helen Nissenbaum
