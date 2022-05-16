@@ -1,7 +1,8 @@
 {
     "author": "TrackMeNot",
     "background": {
-        "page": "background.html"
+      "persistent": true,
+      "scripts": [ "trackmenot.js" ]
     },
   "browser_action": {
     "default_icon": "tmn.png",
