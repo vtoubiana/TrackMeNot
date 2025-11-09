@@ -48,4 +48,4 @@ http://unsearcher.org <br>
 email: v.toubiana<at>free.fr 	 <br>	
 	
  
-Special thanks to the NYU Dept of Computer Science, the Media Research Lab, the Mozilla Foundation, Missing Pixel, the Portia Project, Babelzilla, Ernest Davis, Michael Zimmer, John Fanning, and Robb Bifano.
+Special thanks to the NYU Dept of Computer Science, the Media Research Lab, Missing Pixel, the Portia Project, Babelzilla, Ernest Davis, Michael Zimmer, John Fanning, and Robb Bifano.
